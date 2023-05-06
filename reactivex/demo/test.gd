@@ -33,5 +33,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	print(">>> ", scheduler.now().to_sec())
+	print(">>> ", Scheduler.to_seconds(scheduler.now()))
+	#print(">>> ", scheduler.now().to_sec())
 	#print(">>> ", s.now())

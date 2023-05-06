@@ -33,7 +33,7 @@ public:
     Ref<AbsoluteTime> now() override;
     Ref<DisposableBase> invoke_action(Callable action, Variant state = Variant());
 
-    static float to_seconds(const Variant& t);
+    static int64_t to_seconds(const Variant& t);
     static Ref<RelativeTime> to_timedelta(const Variant& t);
     static Ref<AbsoluteTime> to_datetime(const Variant& t);
 

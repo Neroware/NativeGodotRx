@@ -6,6 +6,8 @@
 #include <exception>
 #include <iostream>
 
+#define CAST_OR_NULL(x, cls) x.get_type() == Variant::Type::OBJECT && Object::cast_to<Object>(x)->get_class() == #cls ? Object::cast_to<cls>(x) : nullptr
+
 namespace basic {
 
 template <typename T>

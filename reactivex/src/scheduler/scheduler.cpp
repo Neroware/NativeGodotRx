@@ -1,6 +1,7 @@
 #include "scheduler.h"
 
 #include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 #include "internal/basic.h"
 #include "disposable/disposable.h"
@@ -22,31 +23,31 @@ void Scheduler::_bind_methods() {
     ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &Scheduler::invoke_action);
 }
 
-float Scheduler::to_seconds(const Variant& value) {
-    if (auto t = Object::cast_to<AbsoluteTime>(value)) {
+int64_t Scheduler::to_seconds(const Variant& value) {
+    if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
         return t->to_sec();
     }
-    if (auto dt = Object::cast_to<RelativeTime>(value)) {
+    if (auto dt = CAST_OR_NULL(value, RelativeTime)) {
         return dt->to_sec();
     }
     throw BadArgumentException();
 }
 
 Ref<RelativeTime> Scheduler::to_timedelta(const Variant& value) {
-    if (auto dt = Object::cast_to<RelativeTime>(value)) {
+    if (auto dt = CAST_OR_NULL(value, RelativeTime)) {
         return dt;
     }
-    if (auto t = Object::cast_to<AbsoluteTime>(value)) {
+    if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
         return t->time_since_epoch();
     }
     throw BadArgumentException();
 }
 
 Ref<AbsoluteTime> Scheduler::to_datetime(const Variant& value) {
-    if (auto t = Object::cast_to<AbsoluteTime>(value)) {
+    if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
         return t;
     }
-    if (auto dt = Object::cast_to<RelativeTime>(value)) {
+    if (auto dt = CAST_OR_NULL(value, RelativeTime)) {
         throw NotImplementedException();
     }
     throw BadArgumentException();
@@ -58,7 +59,7 @@ Ref<AbsoluteTime> Scheduler::now() {
 
 Ref<DisposableBase> Scheduler::invoke_action(Callable action, Variant state) {
     auto res = action.callv(Array::make(Ref<SchedulerBase>(this), state));
-    if (auto ret = Object::cast_to<DisposableBase>(res)) {
+    if (auto ret = CAST_OR_NULL(res, DisposableBase)) {
         return ret;
     }
     return Disposable::Empty();
