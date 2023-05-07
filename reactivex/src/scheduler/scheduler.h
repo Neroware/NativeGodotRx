@@ -16,10 +16,6 @@ using namespace godot;
 class Scheduler : public SchedulerBase {
     GDCLASS(Scheduler, SchedulerBase);
 
-public:
-    static const int UTC_ZERO = 0;
-    static const int UTC_DELTA = 0;
-
 protected:
 	static void _bind_methods();
 
@@ -31,9 +27,9 @@ public:
     static Scheduler* Get();
 
     Ref<AbsoluteTime> now() override;
-    Ref<DisposableBase> invoke_action(Callable action, Variant state = Variant());
+    Ref<DisposableBase> invoke_action(const Callable& action, const Variant& state = Variant());
 
-    static int64_t to_seconds(const Variant& t);
+    static double to_seconds(const Variant& t);
     static Ref<RelativeTime> to_timedelta(const Variant& t);
     static Ref<AbsoluteTime> to_datetime(const Variant& t);
 

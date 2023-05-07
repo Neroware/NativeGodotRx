@@ -29,7 +29,7 @@ protected:
     }
 
 public:
-    virtual void on_next(Variant i) {
+    virtual void on_next(const Variant& i) {
         throw NotImplementedException();
     }
     virtual void on_error(Ref<RxError> e) {

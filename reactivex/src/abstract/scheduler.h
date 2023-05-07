@@ -33,19 +33,19 @@ public:
         throw NotImplementedException();
     }
 
-    virtual Ref<DisposableBase> schedule(Callable action, Variant state = Variant()) {
+    virtual Ref<DisposableBase> schedule(const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 
-    virtual Ref<DisposableBase> schedule_absolute(float duetime, Callable action, Variant state = Variant()) {
+    virtual Ref<DisposableBase> schedule_absolute(const Variant& duetime, const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 
-    virtual Ref<DisposableBase> schedule_relative(float duetime, Callable action, Variant state = Variant()) {
+    virtual Ref<DisposableBase> schedule_relative(const Variant& duetime, const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 
-    static float to_seconds(const Variant& value) {
+    static double to_seconds(const Variant& value) {
         throw NotImplementedException();
     }
 

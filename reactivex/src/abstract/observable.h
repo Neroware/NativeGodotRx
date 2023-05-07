@@ -26,7 +26,7 @@ protected:
     }
 
 public:
-    virtual Ref<DisposableBase> subscribe(Callable on_next, Callable on_error, Callable on_completed, Ref<SchedulerBase> scheduler) {
+    virtual Ref<DisposableBase> subscribe(const Callable& on_next, const Callable& on_error, const Callable& on_completed, Ref<SchedulerBase> scheduler) {
         throw NotImplementedException();
     }
 

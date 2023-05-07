@@ -32,10 +32,10 @@ protected:
     }
 
 public:
-    virtual Ref<DisposableBase> subscribe(Callable on_next, Callable on_error, Callable on_completed, Ref<SchedulerBase> scheduler) {
+    virtual Ref<DisposableBase> subscribe(const Callable& on_next, const Callable& on_error, const Callable& on_completed, Ref<SchedulerBase> scheduler) {
         throw NotImplementedException();
     }
-    virtual void on_next(Variant i) {
+    virtual void on_next(const Variant& i) {
         throw NotImplementedException();
     }
     virtual void on_error(Ref<RxError> e) {
@@ -71,7 +71,7 @@ protected:
     }
 
 public:
-    void on_next(Variant i) override {
+    void on_next(const Variant& i) override {
         subject->on_next(i);
     }
     void on_error(Ref<RxError> e) override {
@@ -100,7 +100,7 @@ protected:
     }
 
 public:
-    Ref<DisposableBase> subscribe(Callable on_next, Callable on_error, Callable on_completed, Ref<SchedulerBase> scheduler) override {
+    Ref<DisposableBase> subscribe(const Callable& on_next, const Callable& on_error, const Callable& on_completed, Ref<SchedulerBase> scheduler) override {
         return subject->subscribe(on_next, on_error, on_completed, scheduler);
     }
 

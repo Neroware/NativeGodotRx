@@ -23,14 +23,24 @@ void Scheduler::_bind_methods() {
     ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &Scheduler::invoke_action);
 }
 
-int64_t Scheduler::to_seconds(const Variant& value) {
+double Scheduler::to_seconds(const Variant& value) {
     if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
         return t->to_sec();
     }
     if (auto dt = CAST_OR_NULL(value, RelativeTime)) {
         return dt->to_sec();
     }
-    throw BadArgumentException();
+    return value.operator double();
+}
+
+Ref<AbsoluteTime> Scheduler::to_datetime(const Variant& value) {
+    if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
+        return t;
+    }
+    if (auto dt = CAST_OR_NULL(value, RelativeTime)) {
+        return memnew(AbsoluteTime(UTC_ZERO + dt->dt));
+    }
+    return AbsoluteTime::Get(value.operator double());
 }
 
 Ref<RelativeTime> Scheduler::to_timedelta(const Variant& value) {
@@ -40,24 +50,14 @@ Ref<RelativeTime> Scheduler::to_timedelta(const Variant& value) {
     if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
         return t->time_since_epoch();
     }
-    throw BadArgumentException();
-}
-
-Ref<AbsoluteTime> Scheduler::to_datetime(const Variant& value) {
-    if (auto t = CAST_OR_NULL(value, AbsoluteTime)) {
-        return t;
-    }
-    if (auto dt = CAST_OR_NULL(value, RelativeTime)) {
-        throw NotImplementedException();
-    }
-    throw BadArgumentException();
+    return RelativeTime::Get(value.operator double());
 }
 
 Ref<AbsoluteTime> Scheduler::now() {
-    return memnew(AbsoluteTime(basic::now<time_point_>()));
+    return memnew(AbsoluteTime(basic::now<time_point_t>()));
 }
 
-Ref<DisposableBase> Scheduler::invoke_action(Callable action, Variant state) {
+Ref<DisposableBase> Scheduler::invoke_action(const Callable& action, const Variant& state) {
     auto res = action.callv(Array::make(Ref<SchedulerBase>(this), state));
     if (auto ret = CAST_OR_NULL(res, DisposableBase)) {
         return ret;

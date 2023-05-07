@@ -15,8 +15,11 @@
 class AbsoluteTime;
 class RelativeTime;
 
-typedef std::chrono::time_point<std::chrono::system_clock> time_point_;
-typedef std::chrono::time_point<std::chrono::system_clock>::duration time_delta_;
+typedef std::chrono::time_point<std::chrono::system_clock> time_point_t;
+typedef std::chrono::time_point<std::chrono::system_clock>::duration time_delta_t;
+
+const time_point_t UTC_ZERO = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>(std::chrono::nanoseconds(0));
+const time_delta_t DELTA_ZERO = UTC_ZERO - UTC_ZERO;
 
 using namespace godot;
 
@@ -25,23 +28,19 @@ class AbsoluteTime : public RefCounted {
     GDCLASS(AbsoluteTime, RefCounted);
 
 public:
-    time_point_ t;
+    time_point_t t;
 
 protected:
 	static void _bind_methods();
 
 public:
     AbsoluteTime();
-    AbsoluteTime(time_point_ t);
+    AbsoluteTime(time_point_t t);
     ~AbsoluteTime();
 
-    int64_t to_hrs();
-    int64_t to_min();
-    int64_t to_sec();
-    int64_t to_msec();
-    int64_t to_usec();
-    int64_t to_nsec();
+    static Ref<AbsoluteTime> Get(double t);
 
+    double to_sec();
     Ref<RelativeTime> time_since_epoch();
 
     Ref<AbsoluteTime> timeshift(Ref<RelativeTime> dt);
@@ -54,23 +53,20 @@ class RelativeTime : public RefCounted {
     GDCLASS(RelativeTime, RefCounted);
 
 public:
-    time_delta_ dt;
+    time_delta_t dt;
 
 protected:
 	static void _bind_methods();
 
 public:
     RelativeTime();
-    RelativeTime(time_delta_ dt);
+    RelativeTime(time_delta_t dt);
     ~RelativeTime();
 
-    int64_t to_hrs();
-    int64_t to_min();
-    int64_t to_sec();
-    int64_t to_msec();
-    int64_t to_usec();
-    int64_t to_nsec();
+    static Ref<RelativeTime> Get(double dt);
 
+    double to_sec();
+    
     Ref<RelativeTime> timedelta(Ref<RelativeTime> dt);
     Ref<AbsoluteTime> timeshift(Ref<AbsoluteTime> t);
 
