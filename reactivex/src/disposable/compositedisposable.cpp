@@ -95,15 +95,15 @@ void CompositeDisposable::clear() {
     }
 }
 
-bool CompositeDisposable::contains(Ref<DisposableBase> item) {
+bool CompositeDisposable::contains(Ref<DisposableBase> item) const {
     return this->disposable.find(item) >= 0;
 }
 
-Array CompositeDisposable::to_list() {
+Array CompositeDisposable::to_list() const {
     return this->disposable.duplicate();
 }
 
-int CompositeDisposable::size() {
+int CompositeDisposable::size() const {
     return this->disposable.size();
 }
 

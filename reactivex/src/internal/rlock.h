@@ -1,5 +1,5 @@
-#ifndef RX_INTERNAL_RLOCK_H
-#define RX_INTERNAL_RLOCK_H
+#ifndef RX_RLOCK_H
+#define RX_RLOCK_H
 
 #include <mutex>
 
@@ -34,4 +34,4 @@ public:
     bool try_lock() override;
 };
 
-#endif // RX_INTERNAL_RLOCK_H
+#endif // RX_RLOCK_H

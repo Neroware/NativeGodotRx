@@ -34,6 +34,15 @@ Ref<RelativeTime> AbsoluteTime::timedelta(Ref<AbsoluteTime> t) {
     return memnew(RelativeTime(t->t - this->t));
 }
 
+bool AbsoluteTime::operator==(const AbsoluteTime& other) {
+    return this->t == other.t;
+}
+bool AbsoluteTime::operator<(const AbsoluteTime& other) {
+    return this->t < other.t;
+}
+bool AbsoluteTime::operator>(const AbsoluteTime& other) {
+    return this->t > other.t;
+}
 
 RelativeTime::RelativeTime() : dt(basic::now<time_point_t>().time_since_epoch()) {}
 RelativeTime::RelativeTime(time_delta_t dt) : dt(dt) {}
@@ -62,4 +71,14 @@ Ref<RelativeTime> RelativeTime::timedelta(Ref<RelativeTime> dt) {
 
 Ref<AbsoluteTime> RelativeTime::timeshift(Ref<AbsoluteTime> t) {
     return memnew(AbsoluteTime(t->t + this->dt));
+}
+
+bool RelativeTime::operator==(const RelativeTime& other) {
+    return this->dt == other.dt;
+}
+bool RelativeTime::operator<(const RelativeTime& other) {
+    return this->dt < other.dt;
+}
+bool RelativeTime::operator>(const RelativeTime& other) {
+    return this->dt > other.dt;
 }

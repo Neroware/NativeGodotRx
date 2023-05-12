@@ -33,6 +33,8 @@
 #include "disposable/scheduleddisposable.h"
 #include "disposable/serialdisposable.h"
 
+#include "scheduler/scheduleditem.h" // Remove later
+
 #include "scheduler/scheduler.h"
 
 using namespace godot;

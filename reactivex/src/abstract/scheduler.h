@@ -37,11 +37,11 @@ public:
         throw NotImplementedException();
     }
 
-    virtual Ref<DisposableBase> schedule_absolute(const Variant& duetime, const Callable& action, const Variant& state = Variant()) {
+    virtual Ref<DisposableBase> schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 
-    virtual Ref<DisposableBase> schedule_relative(const Variant& duetime, const Callable& action, const Variant& state = Variant()) {
+    virtual Ref<DisposableBase> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 

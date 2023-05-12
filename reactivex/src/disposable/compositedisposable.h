@@ -37,9 +37,9 @@ public:
     void add(Ref<DisposableBase> item);
     bool remove(Ref<DisposableBase> item);
     void clear();
-    bool contains(Ref<DisposableBase> item);
-    Array to_list();
-    int size();
+    bool contains(Ref<DisposableBase> item) const;
+    Array to_list() const;
+    int size() const;
 
     // Setters and Getters
     // Setters and Getters
