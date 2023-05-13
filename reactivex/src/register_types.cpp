@@ -17,11 +17,13 @@
 #include "abstract/lock.h"
 #include "abstract/disposable.h"
 #include "abstract/scheduler.h"
+#include "abstract/periodicscheduler.h"
 #include "abstract/observer.h"
 #include "abstract/observable.h"
 #include "abstract/subject.h"
 
 #include "internal/rlock.h"
+#include "internal/lock.h"
 #include "internal/time.h"
 
 #include "disposable/disposable.h"
@@ -33,9 +35,8 @@
 #include "disposable/scheduleddisposable.h"
 #include "disposable/serialdisposable.h"
 
-#include "scheduler/scheduleditem.h" // Remove later
-
 #include "scheduler/scheduler.h"
+#include "scheduler/trampoline.h"
 
 using namespace godot;
 
@@ -49,12 +50,14 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<LockBase>();
 	ClassDB::register_abstract_class<DisposableBase>();
 	ClassDB::register_abstract_class<SchedulerBase>();
+	ClassDB::register_abstract_class<PeriodicSchedulerBase>();
 	ClassDB::register_abstract_class<ObservableBase>();
 	ClassDB::register_abstract_class<ObserverBase>();
 	ClassDB::register_abstract_class<SubjectAsObserver>();
 	ClassDB::register_abstract_class<SubjectAsObservable>();
 	// internal
 	ClassDB::register_class<RLock>();
+	ClassDB::register_class<Lock>();
 	ClassDB::register_abstract_class<AbsoluteTime>();
 	ClassDB::register_abstract_class<RelativeTime>();
 	// disposable
