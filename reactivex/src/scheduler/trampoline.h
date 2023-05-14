@@ -7,6 +7,7 @@
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
+#include <deque>
 #include <queue>
 #include <condition_variable>
 
@@ -22,9 +23,9 @@ class Trampoline : public RefCounted {
 
 private:
     bool _idle;
-    std::priority_queue<ScheduledItem> _queue;
+    std::priority_queue<Ref<ScheduledItem>, std::vector<Ref<ScheduledItem>>, ScheduledItem::compare> _queue;
     Ref<Lock> _lock;
-    std::condition_variable _condition;
+    std::condition_variable_any _condition;
 
 protected:
 	static void _bind_methods();
@@ -36,7 +37,7 @@ public:
     static Ref<Trampoline> Get();
 
     bool idle();
-    void run();
+    void run(Ref<ScheduledItem> item);
 
 private:
     void _run();

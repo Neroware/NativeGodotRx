@@ -30,14 +30,17 @@ Ref<RelativeTime> AbsoluteTime::timedelta(Ref<AbsoluteTime> t) {
     return memnew(RelativeTime(t->t - this->t));
 }
 
-bool AbsoluteTime::operator==(const AbsoluteTime& other) {
+bool AbsoluteTime::operator==(const AbsoluteTime& other) const {
     return this->t == other.t;
 }
-bool AbsoluteTime::operator<(const AbsoluteTime& other) {
+bool AbsoluteTime::operator<(const AbsoluteTime& other) const {
     return this->t < other.t;
 }
-bool AbsoluteTime::operator>(const AbsoluteTime& other) {
+bool AbsoluteTime::operator>(const AbsoluteTime& other) const {
     return this->t > other.t;
+}
+Ref<RelativeTime> AbsoluteTime::operator-(const AbsoluteTime& other) const {
+    return memnew(RelativeTime(this->t - other.t));
 }
 
 Ref<RelativeTime> RelativeTime::Get(double t) {
@@ -65,12 +68,15 @@ Ref<AbsoluteTime> RelativeTime::timeshift(Ref<AbsoluteTime> t) {
     return memnew(AbsoluteTime(t->t + this->dt));
 }
 
-bool RelativeTime::operator==(const RelativeTime& other) {
+bool RelativeTime::operator==(const RelativeTime& other) const {
     return this->dt == other.dt;
 }
-bool RelativeTime::operator<(const RelativeTime& other) {
+bool RelativeTime::operator<(const RelativeTime& other) const {
     return this->dt < other.dt;
 }
-bool RelativeTime::operator>(const RelativeTime& other) {
+bool RelativeTime::operator>(const RelativeTime& other) const {
     return this->dt > other.dt;
+}
+Ref<RelativeTime> RelativeTime::operator-(const RelativeTime& other) const {
+    return memnew(RelativeTime(this->dt - other.dt));
 }

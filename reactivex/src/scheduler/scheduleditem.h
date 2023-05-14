@@ -2,7 +2,11 @@
 #define RX_SCHEDULER_SCHEDULEDITEM_H
 
 #include <godot_cpp/core/binder_common.hpp>
+
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/variant.hpp>
+#include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/core/class_db.hpp>
 
 #include "scheduler/scheduler.h"
 #include "disposable/singleassignmentdisposable.h"
@@ -10,7 +14,11 @@
 
 using namespace godot;
 
-class ScheduledItem {
+class ScheduledItem : public RefCounted{
+    GDCLASS(ScheduledItem, RefCounted);
+
+protected:
+    static void _bind_methods();
 
 public:
     Ref<Scheduler> scheduler;
@@ -19,15 +27,30 @@ public:
     Ref<AbsoluteTime> duetime;
     Ref<SingleAssignmentDisposable> disposable;
 
-    ScheduledItem(Ref<Scheduler> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime);
+    ScheduledItem(){}
+    ~ScheduledItem(){}
+
+    static Ref<ScheduledItem> Get(Ref<Scheduler> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime);
 
     void invoke();
     void cancel();
     bool is_cancelled();
 
-    bool operator==(const ScheduledItem& other);
-    bool operator<(const ScheduledItem& other);
-    bool operator>(const ScheduledItem& other);
+    Ref<Scheduler> __get__scheduler__();
+    Variant __get__state__();
+    Callable __get__action__();
+    Ref<AbsoluteTime> __get__duetime__();
+    Ref<SingleAssignmentDisposable> __get__disposable__();
+
+    bool operator==(const ScheduledItem& other) const;
+    bool operator<(const ScheduledItem& other) const;
+    bool operator>(const ScheduledItem& other) const;
+
+    struct compare {
+        bool operator()(Ref<ScheduledItem> lhs, Ref<ScheduledItem> rhs) const {
+            return **lhs < **rhs;
+        }
+    };
 };
 
 #endif // RX_SCHEDULER_SCHEDULEDITEM_H

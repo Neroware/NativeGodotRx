@@ -46,9 +46,10 @@ public:
     Ref<AbsoluteTime> timeshift(Ref<RelativeTime> dt);
     Ref<RelativeTime> timedelta(Ref<AbsoluteTime> t);
 
-    bool operator==(const AbsoluteTime& other);
-    bool operator<(const AbsoluteTime& other);
-    bool operator>(const AbsoluteTime& other);
+    bool operator==(const AbsoluteTime& other) const;
+    bool operator<(const AbsoluteTime& other) const;
+    bool operator>(const AbsoluteTime& other) const;
+    Ref<RelativeTime> operator-(const AbsoluteTime& other) const;
 
 }; // END AbsoluteTime
 
@@ -74,9 +75,10 @@ public:
     Ref<RelativeTime> timedelta(Ref<RelativeTime> dt);
     Ref<AbsoluteTime> timeshift(Ref<AbsoluteTime> t);
 
-    bool operator==(const RelativeTime& other);
-    bool operator<(const RelativeTime& other);
-    bool operator>(const RelativeTime& other);
+    bool operator==(const RelativeTime& other) const;
+    bool operator<(const RelativeTime& other) const;
+    bool operator>(const RelativeTime& other) const;
+    Ref<RelativeTime> operator-(const RelativeTime& other) const;
 
 }; // END RelativeTime
 

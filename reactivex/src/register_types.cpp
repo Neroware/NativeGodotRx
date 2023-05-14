@@ -35,6 +35,7 @@
 #include "disposable/scheduleddisposable.h"
 #include "disposable/serialdisposable.h"
 
+#include "scheduler/scheduleditem.h"
 #include "scheduler/scheduler.h"
 #include "scheduler/trampoline.h"
 
@@ -71,6 +72,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<ScheduledDisposable>();
 	ClassDB::register_abstract_class<SerialDisposable>();
 	// scheduler
+	ClassDB::register_abstract_class<ScheduledItem>();
 	ClassDB::register_abstract_class<Scheduler>();
 	ClassDB::register_abstract_class<Trampoline>();
 }
