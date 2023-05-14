@@ -2,9 +2,6 @@
 
 #include "disposable.h"
 
-InnerDisposable::InnerDisposable() : parent(), is_disposed(false), lock(memnew(RLock)) {}
-InnerDisposable::~InnerDisposable() {}
-
 void InnerDisposable::_bind_methods() {
     ClassDB::bind_static_method("InnerDisposable", D_METHOD("Get", "parent"), &InnerDisposable::Get);
     ClassDB::bind_method(D_METHOD("dispose"), &InnerDisposable::dispose);
@@ -21,9 +18,11 @@ void InnerDisposable::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "parent"), "", "__get__parent__");
 }
 
-InnerDisposable* InnerDisposable::Get(Ref<RefCountDisposable> parent) {
+Ref<InnerDisposable> InnerDisposable::Get(Ref<RefCountDisposable> parent) {
     auto disp = memnew(InnerDisposable);
     disp->parent = parent;
+    disp->is_disposed = false;
+    disp->lock = RLock::Get();
     return disp;
 }
 
@@ -42,9 +41,6 @@ void InnerDisposable::dispose_with(Object* obj) {
     // TODO Implement AutoDisposer!!!
     throw NotImplementedException();
 }
-
-RefCountDisposable::RefCountDisposable() : underlying_disposable(), is_primary_disposed(false), is_disposed(false), lock(memnew(RLock)), count(0) {}
-RefCountDisposable::~RefCountDisposable() {}
 
 void RefCountDisposable::_bind_methods() {
     ClassDB::bind_static_method("RefCountDisposable", D_METHOD("Get", "disposable"), &RefCountDisposable::Get);
@@ -72,9 +68,13 @@ void RefCountDisposable::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::INT, "count"), "", "__get__count__");
 }
 
-RefCountDisposable* RefCountDisposable::Get(Ref<DisposableBase> disposable) {
+Ref<RefCountDisposable> RefCountDisposable::Get(Ref<DisposableBase> disposable) {
     auto disp = memnew(RefCountDisposable);
     disp->underlying_disposable = disposable;
+    disp->is_primary_disposed = false;
+    disp->is_disposed = false;
+    disp->lock = RLock::Get();
+    disp->count = 0;
     return disp;
 }
 

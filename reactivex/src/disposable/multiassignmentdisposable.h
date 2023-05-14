@@ -9,6 +9,7 @@
 #include <godot_cpp/core/class_db.hpp>
 
 #include "abstract/disposable.h"
+#include "internal/basic.h"
 #include "internal/rlock.h"
 #include "exception/exception.h"
 
@@ -26,10 +27,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    MultiAssignmentDisposable();
-    ~MultiAssignmentDisposable();
+    MultiAssignmentDisposable(){}
+    ~MultiAssignmentDisposable(){}
 
-    static MultiAssignmentDisposable* Get();
+    static Ref<MultiAssignmentDisposable> Get();
 
     void dispose() override;
     void dispose_with(Object* obj) override;

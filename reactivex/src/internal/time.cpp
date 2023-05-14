@@ -1,9 +1,5 @@
 #include "time.h"
 
-AbsoluteTime::AbsoluteTime() : t(basic::now<time_point_t>()) {}
-AbsoluteTime::AbsoluteTime(time_point_t t) : t(t) {}
-AbsoluteTime::~AbsoluteTime() {}
-
 Ref<AbsoluteTime> AbsoluteTime::Get(double t) {
     std::chrono::nanoseconds shift_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t));
     return memnew(AbsoluteTime(UTC_ZERO + shift_ns));
@@ -43,10 +39,6 @@ bool AbsoluteTime::operator<(const AbsoluteTime& other) {
 bool AbsoluteTime::operator>(const AbsoluteTime& other) {
     return this->t > other.t;
 }
-
-RelativeTime::RelativeTime() : dt(basic::now<time_point_t>().time_since_epoch()) {}
-RelativeTime::RelativeTime(time_delta_t dt) : dt(dt) {}
-RelativeTime::~RelativeTime() {}
 
 Ref<RelativeTime> RelativeTime::Get(double t) {
     std::chrono::nanoseconds shift_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t));

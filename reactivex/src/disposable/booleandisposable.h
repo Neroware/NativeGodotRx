@@ -10,6 +10,7 @@
 
 #include "abstract/disposable.h"
 #include "internal/rlock.h"
+#include "internal/basic.h"
 #include "exception/exception.h"
 
 using namespace godot;
@@ -25,10 +26,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    BooleanDisposable();
-    ~BooleanDisposable();
+    BooleanDisposable(){}
+    ~BooleanDisposable(){}
 
-    static BooleanDisposable* Get();
+    static Ref<BooleanDisposable> Get();
 
     void dispose() override;
     void dispose_with(Object* obj) override;

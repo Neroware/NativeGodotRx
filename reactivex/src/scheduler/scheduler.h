@@ -21,10 +21,10 @@ protected:
 
 public:
 
-    Scheduler();
-    ~Scheduler();
+    Scheduler(){}
+    ~Scheduler(){}
 
-    static Scheduler* Get();
+    static Ref<Scheduler> Get();
 
     Ref<AbsoluteTime> now() override;
     Ref<DisposableBase> invoke_action(const Callable& action, const Variant& state = Variant());

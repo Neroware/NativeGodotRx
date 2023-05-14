@@ -3,17 +3,16 @@
 
 #include <godot_cpp/variant/callable.hpp>
 
-Disposable::Disposable() : is_disposed(false), action(), lock(memnew(RLock)) {}
-Disposable::~Disposable(){}
-
-Disposable* Disposable::Get(const Callable& action) {
+Ref<Disposable> Disposable::Get(const Callable& action) {
     auto disp = memnew(Disposable);
+    disp->is_disposed = false;
     disp->action = action;
+    disp->lock = RLock::Get();
     return disp;
 }
 
-Disposable* Disposable::Empty() {
-    return memnew(Disposable);
+Ref<Disposable> Disposable::Empty() {
+    return Disposable::Get(Callable());
 }
 
 void Disposable::_bind_methods() {

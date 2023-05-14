@@ -56,22 +56,23 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<SubjectAsObserver>();
 	ClassDB::register_abstract_class<SubjectAsObservable>();
 	// internal
-	ClassDB::register_class<RLock>();
-	ClassDB::register_class<Lock>();
+	ClassDB::register_abstract_class<RLock>();
+	ClassDB::register_abstract_class<Lock>();
 	ClassDB::register_abstract_class<AbsoluteTime>();
 	ClassDB::register_abstract_class<RelativeTime>();
 	// disposable
-	ClassDB::register_class<Disposable>();
-	ClassDB::register_class<BooleanDisposable>();
-	ClassDB::register_class<CompositeDisposable>();
-	ClassDB::register_class<MultiAssignmentDisposable>();
-	ClassDB::register_class<InnerDisposable>();
-	ClassDB::register_class<RefCountDisposable>();
-	ClassDB::register_class<SingleAssignmentDisposable>();
-	ClassDB::register_class<ScheduledDisposable>();
-	ClassDB::register_class<SerialDisposable>();
+	ClassDB::register_abstract_class<Disposable>();
+	ClassDB::register_abstract_class<BooleanDisposable>();
+	ClassDB::register_abstract_class<CompositeDisposable>();
+	ClassDB::register_abstract_class<MultiAssignmentDisposable>();
+	ClassDB::register_abstract_class<InnerDisposable>();
+	ClassDB::register_abstract_class<RefCountDisposable>();
+	ClassDB::register_abstract_class<SingleAssignmentDisposable>();
+	ClassDB::register_abstract_class<ScheduledDisposable>();
+	ClassDB::register_abstract_class<SerialDisposable>();
 	// scheduler
-	ClassDB::register_class<Scheduler>();
+	ClassDB::register_abstract_class<Scheduler>();
+	ClassDB::register_abstract_class<Trampoline>();
 }
 
 void uninitialize_rx_module(ModuleInitializationLevel p_level) {

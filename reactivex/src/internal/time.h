@@ -34,9 +34,9 @@ protected:
 	static void _bind_methods();
 
 public:
-    AbsoluteTime();
-    AbsoluteTime(time_point_t t);
-    ~AbsoluteTime();
+    AbsoluteTime() : t(basic::now<time_point_t>()){}
+    AbsoluteTime(time_point_t t) : t(t){}
+    ~AbsoluteTime(){}
 
     static Ref<AbsoluteTime> Get(double t);
 
@@ -63,9 +63,9 @@ protected:
 	static void _bind_methods();
 
 public:
-    RelativeTime();
-    RelativeTime(time_delta_t dt);
-    ~RelativeTime();
+    RelativeTime() : dt(basic::now<time_point_t>().time_since_epoch()) {}
+    RelativeTime(time_delta_t dt) : dt(dt) {}
+    ~RelativeTime() {}
 
     static Ref<RelativeTime> Get(double dt);
 

@@ -1,13 +1,9 @@
 #include "lock.h"
 
-#include <atomic>
-#include <mutex>
-
-Lock::Lock() : flag(), m(), cv() {}
-Lock::~Lock() {}
-
-Lock* Lock::Get() {
-    return memnew(Lock);
+Ref<Lock> Lock::Get() {
+    auto lk = memnew(Lock);
+    lk->flag = false;
+    return lk;
 }
 
 void Lock::_bind_methods() {

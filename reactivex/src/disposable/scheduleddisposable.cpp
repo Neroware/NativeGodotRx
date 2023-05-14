@@ -1,12 +1,11 @@
 #include "scheduleddisposable.h"
 
-ScheduledDisposable::ScheduledDisposable() : scheduler(), disposable(memnew(SingleAssignmentDisposable)), lock(memnew(RLock)) {}
-ScheduledDisposable::~ScheduledDisposable() {}
-
-ScheduledDisposable* ScheduledDisposable::Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable) {
+Ref<ScheduledDisposable> ScheduledDisposable::Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable) {
     auto disp = memnew(ScheduledDisposable);
     disp->scheduler = scheduler;
+    disp->disposable = SingleAssignmentDisposable::Get();
     disp->disposable->set_disposable(disposable);
+    disp->lock = RLock::Get();
     return disp;
 }
 

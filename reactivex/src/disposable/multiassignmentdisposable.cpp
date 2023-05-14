@@ -1,10 +1,10 @@
 #include "multiassignmentdisposable.h"
 
-MultiAssignmentDisposable::MultiAssignmentDisposable() : current(), is_disposed(false), lock(memnew(RLock)) {}
-MultiAssignmentDisposable::~MultiAssignmentDisposable() {}
-
-MultiAssignmentDisposable* MultiAssignmentDisposable::Get() {
-    return memnew(MultiAssignmentDisposable);
+Ref<MultiAssignmentDisposable> MultiAssignmentDisposable::Get() {
+    auto disp = memnew(MultiAssignmentDisposable);
+    disp->is_disposed = false;
+    disp->lock = RLock::Get();
+    return disp;
 }
 
 void MultiAssignmentDisposable::_bind_methods() {

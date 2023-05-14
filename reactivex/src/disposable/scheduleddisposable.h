@@ -10,6 +10,7 @@
 
 #include "abstract/disposable.h"
 #include "abstract/scheduler.h"
+#include "internal/basic.h"
 #include "internal/rlock.h"
 #include "exception/exception.h"
 #include "singleassignmentdisposable.h"
@@ -28,10 +29,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    ScheduledDisposable();
-    ~ScheduledDisposable();
+    ScheduledDisposable(){}
+    ~ScheduledDisposable(){}
 
-    static ScheduledDisposable* Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable);
+    static Ref<ScheduledDisposable> Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable);
 
     void dispose() override;
     void dispose_with(Object* obj) override;

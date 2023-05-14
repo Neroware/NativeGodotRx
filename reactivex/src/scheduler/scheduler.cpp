@@ -7,10 +7,7 @@
 #include "disposable/disposable.h"
 #include "exception/exception.h"
 
-Scheduler::Scheduler(){}
-Scheduler::~Scheduler(){}
-
-Scheduler* Scheduler::Get() {
+Ref<Scheduler> Scheduler::Get() {
     return memnew(Scheduler);
 }
 

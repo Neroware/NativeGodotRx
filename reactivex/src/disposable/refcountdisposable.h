@@ -9,6 +9,7 @@
 #include <godot_cpp/core/class_db.hpp>
 
 #include "abstract/disposable.h"
+#include "internal/basic.h"
 #include "internal/rlock.h"
 #include "exception/exception.h"
 
@@ -29,10 +30,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    RefCountDisposable();
-    ~RefCountDisposable();
+    RefCountDisposable(){}
+    ~RefCountDisposable(){}
 
-    static RefCountDisposable* Get(Ref<DisposableBase> disp);
+    static Ref<RefCountDisposable> Get(Ref<DisposableBase> disp);
 
     void dispose() override;
     void dispose_with(Object* obj) override;
@@ -62,10 +63,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    InnerDisposable();
-    ~InnerDisposable();
+    InnerDisposable(){}
+    ~InnerDisposable(){}
 
-    static InnerDisposable* Get(Ref<RefCountDisposable> parent);
+    static Ref<InnerDisposable> Get(Ref<RefCountDisposable> parent);
 
     void dispose() override;
     void dispose_with(Object* obj) override;

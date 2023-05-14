@@ -1,10 +1,10 @@
 #include "singleassignmentdisposable.h"
 
-SingleAssignmentDisposable::SingleAssignmentDisposable() : is_disposed(false), current(), lock(memnew(RLock)) {}
-SingleAssignmentDisposable::~SingleAssignmentDisposable() {}
-
-SingleAssignmentDisposable* SingleAssignmentDisposable::Get() {
-    return memnew(SingleAssignmentDisposable);
+Ref<SingleAssignmentDisposable> SingleAssignmentDisposable::Get() {
+    auto disp = memnew(SingleAssignmentDisposable);
+    disp->is_disposed = false;
+    disp->lock = RLock::Get();
+    return disp;
 }
 
 void SingleAssignmentDisposable::_bind_methods() {

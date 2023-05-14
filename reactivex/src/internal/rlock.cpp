@@ -1,9 +1,6 @@
 #include "rlock.h"
 
-RLock::RLock() : rm(){}
-RLock::~RLock(){}
-
-RLock* RLock::Get() {
+Ref<RLock> RLock::Get() {
     return memnew(RLock);
 }
 

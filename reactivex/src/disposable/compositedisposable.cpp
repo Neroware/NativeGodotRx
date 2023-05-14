@@ -1,11 +1,10 @@
 #include "compositedisposable.h"
 
-CompositeDisposable::CompositeDisposable() : disposable(), is_disposed(false), lock(memnew(RLock)) {}
-CompositeDisposable::~CompositeDisposable() {}
-
-CompositeDisposable* CompositeDisposable::Get(const Array& items) {
+Ref<CompositeDisposable> CompositeDisposable::Get(const Array& items) {
     auto disp = memnew(CompositeDisposable);
     disp->disposable = items;
+    disp->is_disposed = false;
+    disp->lock = RLock::Get();
     return disp;
 }
 

@@ -24,10 +24,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    RLock();
-    ~RLock();
+    RLock(){}
+    ~RLock(){}
 
-    static RLock* Get();
+    static Ref<RLock> Get();
 
     void lock() override;
     void unlock() override;

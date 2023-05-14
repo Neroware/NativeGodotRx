@@ -10,6 +10,7 @@
 #include <godot_cpp/variant/callable.hpp>
 
 #include "abstract/disposable.h"
+#include "internal/basic.h"
 #include "internal/rlock.h"
 #include "exception/exception.h"
 
@@ -27,10 +28,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    SingleAssignmentDisposable();
-    ~SingleAssignmentDisposable();
+    SingleAssignmentDisposable(){}
+    ~SingleAssignmentDisposable(){}
 
-    static SingleAssignmentDisposable* Get();
+    static Ref<SingleAssignmentDisposable> Get();
 
     void dispose() override;
     void dispose_with(Object* obj) override;

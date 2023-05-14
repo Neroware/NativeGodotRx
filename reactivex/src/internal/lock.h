@@ -18,7 +18,7 @@ class Lock : public LockBase {
     GDCLASS(Lock, LockBase);
 
 private:
-    bool flag = false;
+    bool flag;
     std::mutex m;
     std::condition_variable cv;
 
@@ -26,10 +26,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    Lock();
-    ~Lock();
+    Lock(){}
+    ~Lock(){}
 
-    static Lock* Get();
+    static Ref<Lock> Get();
 
     void lock() override;
     void unlock() override;
