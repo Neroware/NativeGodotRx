@@ -29,12 +29,14 @@ Ref<DisposableBase> MultiAssignmentDisposable::get_disposable() {
 }
 
 void MultiAssignmentDisposable::set_disposable(Ref<DisposableBase> value) {
-    this->lock->lock();
-    bool should_dispose = this->is_disposed;
-    if (!should_dispose) {
-        this->current = value;
+    bool should_dispose;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        should_dispose = this->is_disposed;
+        if (!should_dispose) {
+            this->current = value;
+        }
     }
-    this->lock->unlock();
 
     if (should_dispose && !value.is_null()) {
         value->dispose();
@@ -43,13 +45,14 @@ void MultiAssignmentDisposable::set_disposable(Ref<DisposableBase> value) {
 
 void MultiAssignmentDisposable::dispose() {
     Ref<DisposableBase> old;
-
-    this->lock->lock();
-    if (!this->is_disposed) {
-        this->is_disposed = true;
-        old = this->current;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (!this->is_disposed) {
+            this->is_disposed = true;
+            old = this->current;
+            this->current = Ref<DisposableBase>();
+        }
     }
-    this->lock->unlock();
 
     if (!old.is_null()) {
         old->dispose();

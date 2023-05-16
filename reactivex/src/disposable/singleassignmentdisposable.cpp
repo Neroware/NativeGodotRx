@@ -33,12 +33,14 @@ void SingleAssignmentDisposable::set_disposable(Ref<DisposableBase> value) {
         throw DisposedException();
     }
 
-    this->lock->lock();
-    bool should_dispose = this->is_disposed;
-    if (!should_dispose) {
-        this->current = value;
+    bool should_dispose;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        should_dispose = this->is_disposed;
+        if (!should_dispose) {
+            this->current = value;
+        }
     }
-    this->lock->unlock();
 
     if (this->is_disposed && !value.is_null()) {
         value->dispose();
@@ -48,13 +50,14 @@ void SingleAssignmentDisposable::set_disposable(Ref<DisposableBase> value) {
 void SingleAssignmentDisposable::dispose() {
     Ref<DisposableBase> old;
 
-    this->lock->lock();
-    if (!this->is_disposed) {
-        this->is_disposed = true;
-        old = this->current;
-        this->current = Ref<DisposableBase>();
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (!this->is_disposed) {
+            this->is_disposed = true;
+            old = this->current;
+            this->current = Ref<DisposableBase>();
+        }
     }
-    this->lock->unlock();
 
     if (!old.is_null()) {
         old->dispose();

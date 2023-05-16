@@ -31,15 +31,15 @@ void CompositeDisposable::_bind_methods() {
 
 void CompositeDisposable::add(Ref<DisposableBase> item) {
     bool should_dispose = false;
-    this->lock->lock();
-    if (this->is_disposed) {
-        should_dispose = true;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (this->is_disposed) {
+            should_dispose = true;
+        }
+        else {
+            this->disposable.append(item);
+        }
     }
-    else {
-        this->disposable.append(item);
-    }
-    this->lock->unlock();
-
     if (should_dispose) {
         item->dispose();
     }
@@ -51,12 +51,13 @@ bool CompositeDisposable::remove(Ref<DisposableBase> item) {
     }
 
     bool should_dispose = false;
-    this->lock->lock();
-    if (this->disposable.find(item) >= 0) {
-        this->disposable.erase(item);
-        should_dispose = true;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (this->disposable.find(item) >= 0) {
+            this->disposable.erase(item);
+            should_dispose = true;
+        }
     }
-    this->lock->unlock();
 
     if (should_dispose) {
         item->dispose();
@@ -70,11 +71,13 @@ void CompositeDisposable::dispose() {
         return;
     }
 
-    this->lock->lock();
-    this->is_disposed = true;
-    auto current_disposable = this->disposable;
-    this->disposable = Array();
-    this->lock->unlock();
+    Array current_disposable;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        this->is_disposed = true;
+        current_disposable = this->disposable;
+        this->disposable = Array();
+    }
 
     for (auto i = 0ul; i < current_disposable.size(); i++) {
         Ref<DisposableBase> disp = current_disposable[i];
@@ -83,10 +86,12 @@ void CompositeDisposable::dispose() {
 }
 
 void CompositeDisposable::clear() {
-    this->lock->lock();
-    auto current_disposable = this->disposable;
-    this->disposable = Array();
-    this->lock->unlock();
+    Array current_disposable;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        current_disposable = this->disposable;
+        this->disposable = Array();
+    }
 
     for (auto i = 0ul; i < current_disposable.size(); i++) {
         Ref<DisposableBase> disp = current_disposable[i];

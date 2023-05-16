@@ -31,13 +31,15 @@ Ref<DisposableBase> SerialDisposable::get_disposable() {
 void SerialDisposable::set_disposable(Ref<DisposableBase> value) {
     Ref<DisposableBase> old;
 
-    this->lock->lock();
-    bool should_dispose = this->is_disposed;
-    if (!should_dispose) {
-        old = this->current;
-        this->current = value;
+    bool should_dispose;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        should_dispose = this->is_disposed;
+        if (!should_dispose) {
+            old = this->current;
+            this->current = value;
+        }
     }
-    this->lock->unlock();
 
     if (!old.is_null()) {
         old->dispose();
@@ -51,12 +53,14 @@ void SerialDisposable::set_disposable(Ref<DisposableBase> value) {
 void SerialDisposable::dispose() {
     Ref<DisposableBase> old;
 
-    this->lock->lock();
-    if (!this->is_disposed) {
-        this->is_disposed = true;
-        old = this->current;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (!this->is_disposed) {
+            this->is_disposed = true;
+            old = this->current;
+            this->current = Ref<DisposableBase>();
+        }
     }
-    this->lock->unlock();
 
     if (!old.is_null()) {
         old->dispose();

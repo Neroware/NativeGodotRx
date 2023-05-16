@@ -27,10 +27,12 @@ Ref<InnerDisposable> InnerDisposable::Get(Ref<RefCountDisposable> parent) {
 }
 
 void InnerDisposable::dispose() {
-    this->lock->lock();
-    auto parent = this->parent;
-    this->parent = Ref<RefCountDisposable>();
-    this->lock->unlock();
+    Ref<RefCountDisposable> parent;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        parent = this->parent;
+        this->parent = Ref<RefCountDisposable>();
+    }
 
     if (!parent.is_null()) {
         parent->release();
@@ -84,15 +86,16 @@ void RefCountDisposable::dispose() {
     }
 
     Ref<DisposableBase> _underlying_disposable;
-    this->lock->lock();
-    if (!this->is_primary_disposed) {
-        this->is_primary_disposed = true;
-        if (!this->count) {
-            this->is_disposed = true;
-            _underlying_disposable = this->underlying_disposable;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (!this->is_primary_disposed) {
+            this->is_primary_disposed = true;
+            if (!this->count) {
+                this->is_disposed = true;
+                _underlying_disposable = this->underlying_disposable;
+            }
         }
     }
-    this->lock->unlock();
 
     if (!_underlying_disposable.is_null()) {
         _underlying_disposable->dispose();
@@ -105,13 +108,14 @@ void RefCountDisposable::release() {
     }
 
     bool should_dispose = false;
-    this->lock->lock();
-    this->count--;
-    if (!this->count && this->is_primary_disposed) {
-        this->is_disposed = true;
-        should_dispose = true;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        this->count--;
+        if (!this->count && this->is_primary_disposed) {
+            this->is_disposed = true;
+            should_dispose = true;
+        }
     }
-    this->lock->unlock();
 
     if (should_dispose) {
         this->underlying_disposable->dispose();
@@ -119,15 +123,13 @@ void RefCountDisposable::release() {
 }
 
 Ref<DisposableBase> RefCountDisposable::get_disposable() {
-    this->lock->lock();
+    std::lock_guard<RLock> guard(**lock);
     if (this->is_disposed) {
-        this->lock->unlock();
-        return memnew(Disposable);
+        return Disposable::Empty();
     }
+
     this->count++;
-    auto disp = InnerDisposable::Get(this);
-    this->lock->unlock();
-    return disp;
+    return InnerDisposable::Get(this);
 }
 
 void RefCountDisposable::dispose_with(Object* obj) {

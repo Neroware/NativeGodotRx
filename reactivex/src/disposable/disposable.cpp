@@ -35,12 +35,13 @@ void Disposable::_bind_methods() {
 
 void Disposable::dispose() {
     bool disposed = false;
-    this->lock->lock();
-    if (!this->is_disposed) {
-        disposed = true;
-        this->is_disposed = true;
+    {
+        std::lock_guard<RLock> guard(**lock);
+        if (!this->is_disposed) {
+            disposed = true;
+            this->is_disposed = true;
+        }
     }
-    this->lock->unlock();
 
     if (disposed) {
         this->action.callv(Array());
