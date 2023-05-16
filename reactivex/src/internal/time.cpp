@@ -5,8 +5,13 @@ Ref<AbsoluteTime> AbsoluteTime::Get(double t) {
     return memnew(AbsoluteTime(UTC_ZERO + shift_ns));
 }
 
+Ref<AbsoluteTime> AbsoluteTime::utc_zero() {
+    return memnew(AbsoluteTime(UTC_ZERO));
+}
+
 void AbsoluteTime::_bind_methods() {
     ClassDB::bind_static_method("AbsoluteTime", D_METHOD("Get", "t_sec"), &AbsoluteTime::Get);
+    ClassDB::bind_static_method("AbsoluteTime", D_METHOD("UTC_ZERO"), &AbsoluteTime::utc_zero);
     ClassDB::bind_method(D_METHOD("to_sec"), &AbsoluteTime::to_sec);
     ClassDB::bind_method(D_METHOD("time_since_epoch"), &AbsoluteTime::time_since_epoch);
     ClassDB::bind_method(D_METHOD("timeshift", "dt"), &AbsoluteTime::timeshift);
@@ -39,8 +44,17 @@ bool AbsoluteTime::operator<(const AbsoluteTime& other) const {
 bool AbsoluteTime::operator>(const AbsoluteTime& other) const {
     return this->t > other.t;
 }
+bool AbsoluteTime::operator<=(const AbsoluteTime& other) const {
+    return this->t < other.t;
+}
+bool AbsoluteTime::operator>=(const AbsoluteTime& other) const {
+    return this->t > other.t;
+}
 Ref<RelativeTime> AbsoluteTime::operator-(const AbsoluteTime& other) const {
     return memnew(RelativeTime(this->t - other.t));
+}
+Ref<AbsoluteTime> AbsoluteTime::operator+(const RelativeTime& other) const {
+    return memnew(AbsoluteTime(this->t + other.dt));
 }
 
 Ref<RelativeTime> RelativeTime::Get(double t) {
@@ -48,8 +62,13 @@ Ref<RelativeTime> RelativeTime::Get(double t) {
     return memnew(RelativeTime(DELTA_ZERO + shift_ns));
 }
 
+Ref<RelativeTime> RelativeTime::delta_zero() {
+    return memnew(RelativeTime(DELTA_ZERO));
+}
+
 void RelativeTime::_bind_methods() {
     ClassDB::bind_static_method("RelativeTime", D_METHOD("Get", "dt_sec"), &RelativeTime::Get);
+    ClassDB::bind_static_method("RelativeTime", D_METHOD("DELTA_ZERO"), &RelativeTime::delta_zero);
     ClassDB::bind_method(D_METHOD("to_sec"), &RelativeTime::to_sec);
     ClassDB::bind_method(D_METHOD("timeshift", "dt"), &RelativeTime::timeshift);
     ClassDB::bind_method(D_METHOD("timedelta", "t"), &RelativeTime::timedelta);
@@ -77,6 +96,15 @@ bool RelativeTime::operator<(const RelativeTime& other) const {
 bool RelativeTime::operator>(const RelativeTime& other) const {
     return this->dt > other.dt;
 }
+bool RelativeTime::operator<=(const RelativeTime& other) const {
+    return this->dt <= other.dt;
+}
+bool RelativeTime::operator>=(const RelativeTime& other) const {
+    return this->dt >= other.dt;
+}
 Ref<RelativeTime> RelativeTime::operator-(const RelativeTime& other) const {
     return memnew(RelativeTime(this->dt - other.dt));
+}
+Ref<RelativeTime> RelativeTime::operator+(const RelativeTime& other) const {
+    return memnew(RelativeTime(this->dt + other.dt));
 }

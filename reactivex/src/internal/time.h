@@ -23,7 +23,6 @@ const time_delta_t DELTA_ZERO = UTC_ZERO - UTC_ZERO;
 
 using namespace godot;
 
-
 class AbsoluteTime : public RefCounted {
     GDCLASS(AbsoluteTime, RefCounted);
 
@@ -39,6 +38,8 @@ public:
     ~AbsoluteTime(){}
 
     static Ref<AbsoluteTime> Get(double t);
+    
+    static Ref<AbsoluteTime> utc_zero();
 
     double to_sec();
     Ref<RelativeTime> time_since_epoch();
@@ -49,7 +50,10 @@ public:
     bool operator==(const AbsoluteTime& other) const;
     bool operator<(const AbsoluteTime& other) const;
     bool operator>(const AbsoluteTime& other) const;
+    bool operator<=(const AbsoluteTime& other) const;
+    bool operator>=(const AbsoluteTime& other) const;
     Ref<RelativeTime> operator-(const AbsoluteTime& other) const;
+    Ref<AbsoluteTime> operator+(const RelativeTime& other) const;
 
 }; // END AbsoluteTime
 
@@ -70,6 +74,8 @@ public:
 
     static Ref<RelativeTime> Get(double dt);
 
+    static Ref<RelativeTime> delta_zero();
+
     double to_sec();
     
     Ref<RelativeTime> timedelta(Ref<RelativeTime> dt);
@@ -78,7 +84,10 @@ public:
     bool operator==(const RelativeTime& other) const;
     bool operator<(const RelativeTime& other) const;
     bool operator>(const RelativeTime& other) const;
+    bool operator<=(const RelativeTime& other) const;
+    bool operator>=(const RelativeTime& other) const;
     Ref<RelativeTime> operator-(const RelativeTime& other) const;
+    Ref<RelativeTime> operator+(const RelativeTime& other) const;
 
 }; // END RelativeTime
 

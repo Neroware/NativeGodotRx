@@ -50,7 +50,7 @@ void Trampoline::_run() {
             std::lock_guard<Lock> guard(**_lock);
             while (this->_queue.size() > 0) {
                 auto item = this->_queue.top();
-                if (*(item->duetime) <= *(item->scheduler->now())) {
+                if (**(item->duetime) <= **(item->scheduler->now())) {
                     this->_queue.pop();
                     ready.push_back(item);
                 }
@@ -58,6 +58,7 @@ void Trampoline::_run() {
                     break;
             }
         }
+
         while (ready.size() > 0) {
             auto item = ready.front();
             ready.pop_front();
@@ -65,6 +66,7 @@ void Trampoline::_run() {
                 item->invoke();
             }
         }
+
         {
             std::lock_guard<Lock> guard(**_lock);
             if (this->_queue.size() == 0)

@@ -38,6 +38,7 @@
 #include "scheduler/scheduleditem.h"
 #include "scheduler/scheduler.h"
 #include "scheduler/trampoline.h"
+#include "scheduler/trampolinescheduler.h"
 
 using namespace godot;
 
@@ -75,6 +76,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<ScheduledItem>();
 	ClassDB::register_abstract_class<Scheduler>();
 	ClassDB::register_abstract_class<Trampoline>();
+	ClassDB::register_abstract_class<TrampolineScheduler>();
 }
 
 void uninitialize_rx_module(ModuleInitializationLevel p_level) {
