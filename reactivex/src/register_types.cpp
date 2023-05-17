@@ -9,6 +9,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/godot.hpp>
 
 #include "exception/exceptionwrapper.h"
@@ -39,6 +40,8 @@
 #include "scheduler/scheduler.h"
 #include "scheduler/trampoline.h"
 #include "scheduler/trampolinescheduler.h"
+
+#include "godotrx.h"
 
 using namespace godot;
 
@@ -77,6 +80,10 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<Scheduler>();
 	ClassDB::register_abstract_class<Trampoline>();
 	ClassDB::register_abstract_class<TrampolineScheduler>();
+
+	ClassDB::register_abstract_class<__GDRxSingleton__>();
+
+	Engine::get_singleton()->register_singleton(__GDRxSingleton__::get_class_static(), memnew(__GDRxSingleton__));
 }
 
 void uninitialize_rx_module(ModuleInitializationLevel p_level) {
