@@ -11,15 +11,15 @@
 
 namespace basic {
 
-template <typename T>
-void noop(T args...) {}
+template <typename... T>
+void noop(T... args) {}
 
 template <typename T>
 T identity(T x) {
     return x;
 }
-template <typename T0, typename T1>
-T0 identity(T0 x, T1 args...) {
+template <typename T0, typename... T1>
+T0 identity(T0 x, T1... args) {
     return x;
 }
 
@@ -54,8 +54,8 @@ void default_crash(T err) {
     exit(1);
 }
 
-template <typename T>
-bool default_condition(T args...) {
+template <typename... T>
+bool default_condition(T... args) {
     return true;
 }
 

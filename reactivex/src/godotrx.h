@@ -8,9 +8,6 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
-#include "abstract/scheduler.h"
-#include "internal/time.h"
-
 using namespace godot;
 
 class __GDRxSingleton__ : public RefCounted {
