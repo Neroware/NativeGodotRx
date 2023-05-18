@@ -2,6 +2,7 @@
 #define RX_EXCEPTION_EXCEPTION_H
 
 #include <exception>
+#include <string>
 
 class NotImplementedException : public std::exception
 {
@@ -21,7 +22,12 @@ public:
 
 class BadArgumentException : public std::exception
 {
+private:
+    std::string _what;
+
 public:
+    BadArgumentException(const std::string& what_) : _what(what_) {}
+
     virtual char const* what() { 
         return "A function argument has a bad value!"; 
     }

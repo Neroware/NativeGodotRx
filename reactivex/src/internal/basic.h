@@ -6,7 +6,8 @@
 #include <exception>
 #include <iostream>
 
-#define CAST_OR_NULL(x, cls) x.get_type() == Variant::Type::OBJECT && Object::cast_to<Object>(x)->get_class() == #cls ? Object::cast_to<cls>(x) : nullptr
+#define CAST_OR_NULL(x, cls) x.get_type() == Variant::Type::OBJECT && Object::cast_to<Object>(x)->is_class(#cls) ? Object::cast_to<cls>(x) : nullptr
+#define CAST(x, cls) Ref<cls>(Object::cast_to<cls>(x))
 #define GD_NEW(cls) Ref<cls>(memnew(cls))
 
 namespace basic {

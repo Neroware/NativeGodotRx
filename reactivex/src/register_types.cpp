@@ -26,6 +26,7 @@
 #include "internal/rlock.h"
 #include "internal/lock.h"
 #include "internal/time.h"
+#include "internal/weakkeydictionary.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -66,6 +67,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<Lock>();
 	ClassDB::register_abstract_class<AbsoluteTime>();
 	ClassDB::register_abstract_class<RelativeTime>();
+	ClassDB::register_abstract_class<WeakKeyDictionary>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();
