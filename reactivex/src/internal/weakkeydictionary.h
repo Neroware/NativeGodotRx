@@ -21,9 +21,10 @@ using namespace godot;
 class WeakKeyDictionary : public RefCounted {
     GDCLASS(WeakKeyDictionary, RefCounted);
 
+    using KeyEntry = std::tuple<Ref<WeakRef>, Variant, Ref<WeakRef>>;
+
 private:
-    std::unordered_map<int64_t, std::pair<Ref<WeakRef>, Ref<WeakRef>>> _weakkeys;
-    std::unordered_map<int64_t, Variant> _values;
+    std::unordered_map<int64_t, KeyEntry> _data;
 
     static inline int64_t _hash_key(const Variant& key) {
         return UtilityFunctions::hash(key);
@@ -32,7 +33,7 @@ private:
     inline Ref<AutoDisposable> _add_disposer(Object* key, int64_t hkey) const {
         Variant ref = UtilityFunctions::weakref(this);
         auto ad = memnew(AutoDisposable([ref, hkey](){
-            Ref<WeakRef> _ref = CAST(ref, WeakRef);
+            Ref<WeakRef> _ref = REF_CAST(ref, WeakRef);
             if (auto _dict = CAST_OR_NULL(_ref->get_ref(), WeakKeyDictionary)) {
                 _dict->_remove_pair(hkey);
             }
@@ -41,13 +42,12 @@ private:
         return ad;
     }
 
-    inline void _set_pair(int64_t hkey, Ref<WeakRef> wkey, Ref<WeakRef> disp, const Variant& value) {
-        this->_weakkeys[hkey] = std::make_pair(wkey, disp);
-        this->_values[hkey] = value;
+    inline void _set_pair(int64_t hkey, Ref<WeakRef> wkey, const Variant& value, Ref<WeakRef> disp) {
+        this->_data[hkey] = std::make_tuple(wkey, value, disp);
     }
 
     inline bool _remove_pair(int64_t hkey) {
-        return this->_values.erase(hkey) && this->_weakkeys.erase(hkey);
+        return this->_data.erase(hkey);
     }
 
 protected:
