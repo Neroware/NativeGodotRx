@@ -37,9 +37,19 @@ void AutoDisposable::dispose() {
 }
 
 void AutoDisposable::dispose_with(Object* obj) {
-    uint64_t id = obj->get_instance_id();
+    uint64_t id = this->get_instance_id();
     String meta_entry = "autodisposer" + String::num_uint64(id);
     obj->set_meta(meta_entry, Ref<AutoDisposable>(this));
+}
+
+void AutoDisposable::cancel(Object* obj) {
+    {
+        std::lock_guard<RLock> guard(**_lock);
+        this->_is_disposed = true;
+    }
+    uint64_t id = this->get_instance_id();
+    String meta_entry = "autodisposer" + String::num_uint64(id);
+    obj->remove_meta(meta_entry);
 }
 
 void AutoDisposable::_notification(int p_what) {

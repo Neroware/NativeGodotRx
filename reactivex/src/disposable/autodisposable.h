@@ -44,6 +44,8 @@ public:
     void dispose() override;
     void dispose_with(Object* obj) override;
 
+    void cancel(Object* obj);
+
     void _notification(int p_what);
 };
 

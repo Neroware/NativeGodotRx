@@ -10,7 +10,9 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
+#include <shared_mutex>
 #include <unordered_map>
+#include <memory>
 
 #include "internal/basic.h"
 #include "disposable/autodisposable.h"
@@ -25,16 +27,19 @@ class WeakKeyDictionary : public RefCounted {
 
 private:
     std::unordered_map<int64_t, KeyEntry> _data;
+    std::unique_ptr<std::shared_mutex> _lock;
 
     static inline int64_t _hash_key(const Variant& key) {
         return UtilityFunctions::hash(key);
     }
 
-    inline Ref<AutoDisposable> _add_disposer(Object* key, int64_t hkey) const {
+    inline Ref<AutoDisposable> _create_disposer(Object* key, int64_t hkey) const {
         Variant ref = UtilityFunctions::weakref(this);
         auto ad = memnew(AutoDisposable([ref, hkey](){
             Ref<WeakRef> _ref = REF_CAST(ref, WeakRef);
             if (auto _dict = CAST_OR_NULL(_ref->get_ref(), WeakKeyDictionary)) {
+                std::unique_lock<std::shared_mutex> writeLock(*(_dict->_lock));
+                // UtilityFunctions::print("*");
                 _dict->_remove_pair(hkey);
             }
         }));
@@ -54,7 +59,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    WeakKeyDictionary(){}
+    WeakKeyDictionary() : _lock(std::make_unique<std::shared_mutex>()) {}
     ~WeakKeyDictionary(){}
 
     static Ref<WeakKeyDictionary> Get();

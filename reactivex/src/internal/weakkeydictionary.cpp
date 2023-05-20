@@ -1,5 +1,8 @@
 #include "weakkeydictionary.h"
 
+#define SAFE_READ std::shared_lock<std::shared_mutex> readLock(*_lock);
+#define SAFE_WRITE std::unique_lock<std::shared_mutex> writeLock(*_lock);
+
 void WeakKeyDictionary::_bind_methods() {
     ClassDB::bind_static_method("WeakKeyDictionary", D_METHOD("Get"), &WeakKeyDictionary::Get);
     ClassDB::bind_method(D_METHOD("set_pair", "key", "value"), &WeakKeyDictionary::set_pair);
@@ -21,85 +24,111 @@ Ref<WeakKeyDictionary> WeakKeyDictionary::Get() {
 }
 
 void WeakKeyDictionary::set_pair(const Variant& key, const Variant& value) {
-    auto okey = CAST_OR_NULL(key, Object);
-    if (!okey) {
-        throw BadArgumentException("Key needs to be of type 'Object' and not null!");
-    }
-    auto hkey = this->_hash_key(key);
-    auto wkey = REF_CAST(UtilityFunctions::weakref(key), WeakRef);
-    auto disp = REF_CAST(UtilityFunctions::weakref(this->_add_disposer(okey, hkey)), WeakRef);
-    this->_set_pair(hkey, wkey, value, disp);
+    SAFE_WRITE
+        auto okey = CAST_OR_NULL(key, Object);
+        if (!okey) {
+            throw BadArgumentException("Key needs to be of type 'Object' and not null!");
+        }
+        auto hkey = this->_hash_key(key);
+        try {
+            KeyEntry entry = this->_data.at(hkey);
+            this->_set_pair(hkey, std::get<0>(entry), value, std::get<2>(entry));
+        }
+        catch (std::out_of_range) {
+            auto wkey = REF_CAST(UtilityFunctions::weakref(key), WeakRef);
+            auto disp = REF_CAST(UtilityFunctions::weakref(this->_create_disposer(okey, hkey)), WeakRef);
+            this->_set_pair(hkey, wkey, value, disp);
+        }
 }
 
 Variant WeakKeyDictionary::get_value(const Variant& key) const {
-    auto hkey = this->_hash_key(key);
-    try {
-        return std::get<1>(this->_data.at(hkey));
-    }
-    catch(std::out_of_range) {
-        return Variant();
-    }
+    SAFE_READ
+        auto hkey = this->_hash_key(key);
+        try {
+            return std::get<1>(this->_data.at(hkey));
+        }
+        catch(std::out_of_range) {
+            return Variant();
+        }
 }
 
 Variant WeakKeyDictionary::find_key(const Variant& value) const {
-    for (auto pair : this->_data) {
-        if (std::get<1>(pair.second) == value) {
-            return std::get<0>(pair.second)->get_ref();
+    SAFE_READ
+        for (auto pair : this->_data) {
+            if (std::get<1>(pair.second) == value) {
+                return std::get<0>(pair.second)->get_ref();
+            }
         }
-    }
-    return Variant();
+        return Variant();
 }
 
 bool WeakKeyDictionary::is_empty() const {
-    return this->_data.empty();
-}
-
-void WeakKeyDictionary::clear() {
-    auto keys = this->keys();
-    for (auto i = 0ul; i < keys.size(); i++) {
-        this->erase(keys[i]);
-    }
+    SAFE_READ return this->_data.empty();
 }
 
 bool WeakKeyDictionary::erase(const Variant& key) {
-    auto hkey = this->_hash_key(key);
-    try {
-        REF_CAST(std::get<2>(this->_data[hkey])->get_ref(), AutoDisposable)->dispose();
-        return true;
-    }
-    catch(std::out_of_range) {
-        return false;
-    }
+    SAFE_WRITE
+        auto hkey = this->_hash_key(key);
+        try {
+            KeyEntry entry = this->_data.at(hkey);
+            if (Object* key = CAST_OR_NULL(std::get<0>(entry)->get_ref(), Object)) {
+                REF_CAST(std::get<2>(entry)->get_ref(), AutoDisposable)->cancel(key);
+                this->_remove_pair(hkey);
+            }
+            return true;
+        }
+        catch(std::out_of_range) {
+            return false;
+        }
+}
+
+void WeakKeyDictionary::clear() {
+    SAFE_WRITE
+        Array hkeys;
+        for (auto pair : this->_data) {
+            hkeys.push_back(pair.first);
+        }
+        for (auto i = 0ul; i < hkeys.size(); i++) {
+            auto hkey = hkeys[i];
+            KeyEntry entry = this->_data.at(hkey);
+            if (Object* key = CAST_OR_NULL(std::get<0>(entry)->get_ref(), Object)) {
+                REF_CAST(std::get<2>(entry)->get_ref(), AutoDisposable)->cancel(key);
+                this->_remove_pair(hkey);
+            }
+        }
 }
 
 Array WeakKeyDictionary::values() const {
-    Array values;
-    for (auto pair : this->_data) {
-        values.push_back(std::get<1>(pair.second));
-    }
-    return values;
+    SAFE_READ
+        Array values;
+        for (auto pair : this->_data) {
+            values.push_back(std::get<1>(pair.second));
+        }
+        return values;
 }
 
 size_t WeakKeyDictionary::size() const {
-    return this->_data.size();
+    SAFE_READ return this->_data.size();
 }
 
 Array WeakKeyDictionary::keys() const {
-    Array keys;
-    for (auto pair : this->_data) {
-        keys.push_back(OBJ_CAST(std::get<0>(pair.second)->get_ref(), Object));
-    }
-    return keys;
+    SAFE_READ
+        Array keys;
+        for (auto pair : this->_data) {
+            keys.push_back(OBJ_CAST(std::get<0>(pair.second)->get_ref(), Object));
+        }
+        return keys;
 }
 
 bool WeakKeyDictionary::has_key(const Variant& key) const {
-    return this->_data.find(this->_hash_key(key)) != this->_data.end();
+    SAFE_READ return this->_data.find(this->_hash_key(key)) != this->_data.end();
 }
 
 bool WeakKeyDictionary::has_all(const Array& keys) const {
-    for (auto i = 0ul; i < keys.size(); i++) {
-        if (!has_key(keys[i])) 
-            return false;
-    }
-    return true;
+    SAFE_READ
+        for (auto i = 0ul; i < keys.size(); i++) {
+            if (!has_key(keys[i])) 
+                return false;
+        }
+        return true;
 }
