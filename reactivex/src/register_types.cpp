@@ -44,6 +44,7 @@
 #include "scheduler/scheduler.h"
 #include "scheduler/trampoline.h"
 #include "scheduler/trampolinescheduler.h"
+#include "scheduler/currentthreadscheduler.h"
 
 #include "godotrx.h"
 
@@ -88,6 +89,9 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<Scheduler>();
 	ClassDB::register_abstract_class<Trampoline>();
 	ClassDB::register_abstract_class<TrampolineScheduler>();
+	ClassDB::register_abstract_class<CurrentThreadScheduler>();
+	ClassDB::register_abstract_class<_CurrentThreadScheduler_Local>();
+	ClassDB::register_abstract_class<CurrentThreadSchedulerSingleton>();
 
 	ClassDB::register_abstract_class<__GDRxSingleton__>();
 

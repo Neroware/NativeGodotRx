@@ -11,6 +11,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
+#include "internal/weakkeydictionary.h"
 #include "scheduler/trampolinescheduler.h"
 
 using namespace godot;
@@ -18,11 +19,14 @@ using namespace godot;
 class CurrentThreadScheduler : public TrampolineScheduler {
     GDCLASS(CurrentThreadScheduler, TrampolineScheduler);
 
+private:
+    Ref<WeakKeyDictionary> _tramps;
+
 protected:
 	static void _bind_methods();
 
 public:
-    CurrentThreadScheduler(){}
+    CurrentThreadScheduler() : _tramps(WeakKeyDictionary::Get()) {}
     ~CurrentThreadScheduler(){}
     static Ref<CurrentThreadScheduler> Get();
 
@@ -35,14 +39,19 @@ public:
 class _CurrentThreadScheduler_Local : public RefCounted {
     GDCLASS(_CurrentThreadScheduler_Local, RefCounted);
 
+private:
+    Ref<WeakKeyDictionary> _tramp;
+
 protected:
 	static void _bind_methods();
 
 public:
     _CurrentThreadScheduler_Local(){}
     ~_CurrentThreadScheduler_Local(){}
+    static Ref<_CurrentThreadScheduler_Local> Get();
 
-    Ref<Trampoline> _trampoline();
+    Ref<Trampoline> get_trampoline();
+
 }; // END _CurrentThreadScheduler_Local
 
 
@@ -55,6 +64,7 @@ protected:
 public:
     CurrentThreadSchedulerSingleton(){}
     ~CurrentThreadSchedulerSingleton(){}
+    static Ref<CurrentThreadSchedulerSingleton> Get();
 
     Ref<Trampoline> get_trampoline();
 

@@ -6,7 +6,8 @@ func _ready():
 #	self.__test_schedulers()
 #	self.__test_disposables()
 #	self.__test_weakkeydict()
-	self.__test_threads()
+#	self.__test_threads()
+	self.__test_currthreadscheduler()
 
 
 
@@ -93,6 +94,19 @@ func __test_threads():
 		assert(threads[i].wait_to_finish())
 	print(":)")
 	print(">>> ", RxThread.get_current_thread() is RxMainThread)
+
+
+func __test_currthreadscheduler():
+	var cts = CurrentThreadScheduler.singleton()
+	print(">> ", cts.get_instance_id())
+	var threads : Array[RxThread]
+	for i in range(1000):
+		var t = RxThread.Get()
+		threads.push_back(t)
+		t.start(func(): print(">>> ", CurrentThreadScheduler.singleton().get_instance_id()), Thread.PRIORITY_NORMAL)
+	
+	for i in range(1000):
+		threads[i].wait_to_finish()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
