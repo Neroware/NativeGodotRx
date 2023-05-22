@@ -3,9 +3,10 @@ extends Node
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
-	self.__test_schedulers()
-	self.__test_disposables()
-	self._test_weakkeydict()
+#	self.__test_schedulers()
+#	self.__test_disposables()
+#	self.__test_weakkeydict()
+	self.__test_threads()
 
 
 
@@ -15,7 +16,7 @@ var n3 : Node
 var n4 : Node
 var c = 100
 var dict : WeakKeyDictionary
-func _test_weakkeydict():
+func __test_weakkeydict():
 	n1 = Node.new()
 	n2 = Node.new()
 	n3 = Node.new()
@@ -80,20 +81,32 @@ func __test_disposables():
 	rd.dispose()
 
 
+func __test_threads():
+	
+	var threads : Array[RxThread]
+	for i in range(1000):
+		var t = RxThread.Get()
+		threads.push_back(t)
+		t.start(func(): return RxThread.get_current_thread() == t, Thread.PRIORITY_NORMAL)
+	
+	for i in range(1000):
+		assert(threads[i].wait_to_finish())
+	print(":)")
+	print(">>> ", RxThread.get_current_thread() is RxMainThread)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	var dt = RelativeTime.Get(0.0)
-	var t0 = AbsoluteTime.Get(1.123)
-	var t1 = AbsoluteTime.Get(0.023)
-	var dt0 = t1.timedelta(t0)
-#	
-	c -= 1
-	if (c == 0): 
-		print("DELETE NODE")
-		n1.queue_free()
-	if (c == -100):
-		dict.clear()
-	print(">>> ", dict.keys())
+#func _process(delta):
+#	var dt = RelativeTime.Get(0.0)
+#	var t0 = AbsoluteTime.Get(1.123)
+#	var t1 = AbsoluteTime.Get(0.023)
+#	var dt0 = t1.timedelta(t0)
+##	
+#	c -= 1
+#	if (c == 0): 
+#		print("DELETE NODE")
+#		n1.queue_free()
+#	if (c == -100):
+#		dict.clear()
+#	print(">>> ", dict.keys())
 #	print(">> ", dict.length)

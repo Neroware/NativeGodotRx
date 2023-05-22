@@ -12,8 +12,9 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/godot.hpp>
 
-#include "exception/exceptionwrapper.h"
 #include "internal/basic.h"
+
+#include "exception/exceptionwrapper.h"
 
 #include "abstract/lock.h"
 #include "abstract/disposable.h"
@@ -27,6 +28,7 @@
 #include "internal/lock.h"
 #include "internal/time.h"
 #include "internal/weakkeydictionary.h"
+#include "internal/thread.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -68,6 +70,8 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<AbsoluteTime>();
 	ClassDB::register_abstract_class<RelativeTime>();
 	ClassDB::register_abstract_class<WeakKeyDictionary>();
+	ClassDB::register_abstract_class<RxThread>();
+	ClassDB::register_abstract_class<RxMainThread>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();

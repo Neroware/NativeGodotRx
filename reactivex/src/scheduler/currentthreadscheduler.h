@@ -24,8 +24,40 @@ protected:
 public:
     CurrentThreadScheduler(){}
     ~CurrentThreadScheduler(){}
-
     static Ref<CurrentThreadScheduler> Get();
-};
+
+    static Ref<CurrentThreadScheduler> singleton();
+    Ref<Trampoline> get_trampoline();
+
+}; // END CurrentThreadScheduler
+
+
+class _CurrentThreadScheduler_Local : public RefCounted {
+    GDCLASS(_CurrentThreadScheduler_Local, RefCounted);
+
+protected:
+	static void _bind_methods();
+
+public:
+    _CurrentThreadScheduler_Local(){}
+    ~_CurrentThreadScheduler_Local(){}
+
+    Ref<Trampoline> _trampoline();
+}; // END _CurrentThreadScheduler_Local
+
+
+class CurrentThreadSchedulerSingleton : public CurrentThreadScheduler {
+    GDCLASS(CurrentThreadSchedulerSingleton, CurrentThreadScheduler);
+
+protected:
+    static void _bind_methods();
+
+public:
+    CurrentThreadSchedulerSingleton(){}
+    ~CurrentThreadSchedulerSingleton(){}
+
+    Ref<Trampoline> get_trampoline();
+
+}; // END CurrentThreadSchedulerSingleton
 
 #endif // RX_SCHEDULER_CURRENTTHREADSCHEDULER_H
