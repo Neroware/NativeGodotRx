@@ -1,12 +1,7 @@
 #include "scheduleddisposable.h"
 
 Ref<ScheduledDisposable> ScheduledDisposable::Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable) {
-    auto disp = memnew(ScheduledDisposable);
-    disp->scheduler = scheduler;
-    disp->disposable = SingleAssignmentDisposable::Get();
-    disp->disposable->set_disposable(disposable);
-    disp->lock = RLock::Get();
-    return disp;
+    return memnew(ScheduledDisposable(scheduler, disposable));
 }
 
 void ScheduledDisposable::_bind_methods() {

@@ -27,7 +27,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    CompositeDisposable(){}
+    CompositeDisposable() : disposable(Array()), is_disposed(false), lock(RLock::Get()) {}
+    CompositeDisposable(const Array& items) : disposable(items), is_disposed(false), lock(RLock::Get()) {}
     ~CompositeDisposable(){}
 
     static Ref<CompositeDisposable> Get(const Array& items);

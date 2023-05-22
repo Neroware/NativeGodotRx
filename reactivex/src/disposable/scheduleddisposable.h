@@ -29,7 +29,10 @@ protected:
 	static void _bind_methods();
 
 public:
-    ScheduledDisposable(){}
+    ScheduledDisposable() : scheduler(Ref<SchedulerBase>()), disposable(SingleAssignmentDisposable::Get()), lock(RLock::Get()) {}
+    ScheduledDisposable(Ref<SchedulerBase> scheduler_, Ref<DisposableBase> disposable_) : scheduler(scheduler_), disposable(SingleAssignmentDisposable::Get()), lock(RLock::Get()) {
+        this->disposable->set_disposable(disposable_);
+    }
     ~ScheduledDisposable(){}
 
     static Ref<ScheduledDisposable> Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable);

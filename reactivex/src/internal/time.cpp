@@ -1,8 +1,7 @@
 #include "time.h"
 
 Ref<AbsoluteTime> AbsoluteTime::Get(double t) {
-    std::chrono::nanoseconds shift_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t));
-    return memnew(AbsoluteTime(UTC_ZERO + shift_ns));
+    return memnew(AbsoluteTime(t));
 }
 
 Ref<AbsoluteTime> AbsoluteTime::utc_zero() {
@@ -58,8 +57,7 @@ Ref<AbsoluteTime> AbsoluteTime::operator+(const RelativeTime& other) const {
 }
 
 Ref<RelativeTime> RelativeTime::Get(double t) {
-    std::chrono::nanoseconds shift_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t));
-    return memnew(RelativeTime(DELTA_ZERO + shift_ns));
+    return memnew(RelativeTime(t));
 }
 
 Ref<RelativeTime> RelativeTime::delta_zero() {

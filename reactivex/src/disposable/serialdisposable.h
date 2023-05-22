@@ -27,7 +27,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    SerialDisposable(){}
+    SerialDisposable() : is_disposed(false), lock(RLock::Get()) {}
     ~SerialDisposable(){}
 
     static Ref<SerialDisposable> Get();

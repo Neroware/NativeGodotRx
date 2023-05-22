@@ -30,7 +30,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    RefCountDisposable(){}
+    RefCountDisposable() : underlying_disposable(Ref<DisposableBase>()), is_primary_disposed(false), is_disposed(false), lock(RLock::Get()), count(0) {}
+    RefCountDisposable(Ref<DisposableBase> disposable) : underlying_disposable(disposable), is_primary_disposed(false), is_disposed(false), lock(RLock::Get()), count(0) {}
     ~RefCountDisposable(){}
 
     static Ref<RefCountDisposable> Get(Ref<DisposableBase> disp);
@@ -63,7 +64,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    InnerDisposable(){}
+    InnerDisposable() : parent(Ref<RefCountDisposable>()), is_disposed(false), lock(RLock::Get()) {}
+    InnerDisposable(Ref<RefCountDisposable> parent_) : parent(parent_), is_disposed(false), lock(RLock::Get()) {}
     ~InnerDisposable(){}
 
     static Ref<InnerDisposable> Get(Ref<RefCountDisposable> parent);

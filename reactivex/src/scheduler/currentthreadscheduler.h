@@ -46,7 +46,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    _CurrentThreadScheduler_Local(){}
+    _CurrentThreadScheduler_Local() : _tramp(WeakKeyDictionary::Get()) {}
     ~_CurrentThreadScheduler_Local(){}
     static Ref<_CurrentThreadScheduler_Local> Get();
 

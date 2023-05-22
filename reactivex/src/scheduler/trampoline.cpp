@@ -1,10 +1,7 @@
 #include "trampoline.h"
 
 Ref<Trampoline> Trampoline::Get() {
-    auto tramp = memnew(Trampoline);
-    tramp->_idle = true;
-    tramp->_lock = Lock::Get();
-    return tramp;
+    return memnew(Trampoline);
 }
 
 void Trampoline::_bind_methods() {

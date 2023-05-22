@@ -28,7 +28,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    SingleAssignmentDisposable(){}
+    SingleAssignmentDisposable() : is_disposed(false), lock(RLock::Get()) {}
     ~SingleAssignmentDisposable(){}
 
     static Ref<SingleAssignmentDisposable> Get();

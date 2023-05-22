@@ -27,7 +27,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    MultiAssignmentDisposable(){}
+    MultiAssignmentDisposable() : is_disposed(false), lock(RLock::Get()) {}
     ~MultiAssignmentDisposable(){}
 
     static Ref<MultiAssignmentDisposable> Get();

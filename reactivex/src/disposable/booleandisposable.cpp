@@ -1,10 +1,7 @@
 #include "booleandisposable.h"
 
 Ref<BooleanDisposable> BooleanDisposable::Get() {
-    auto disp = memnew(BooleanDisposable);
-    disp->is_disposed = false;
-    disp->lock = RLock::Get();
-    return disp;
+    return memnew(BooleanDisposable);
 }
 
 void BooleanDisposable::_bind_methods() {

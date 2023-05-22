@@ -26,7 +26,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    Lock(){}
+    Lock() : flag(false) {}
     ~Lock(){}
 
     static Ref<Lock> Get();

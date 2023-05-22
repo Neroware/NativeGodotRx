@@ -26,7 +26,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    BooleanDisposable(){}
+    BooleanDisposable() : is_disposed(false), lock(RLock::Get()) {}
     ~BooleanDisposable(){}
 
     static Ref<BooleanDisposable> Get();

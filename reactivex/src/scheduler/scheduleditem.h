@@ -27,7 +27,8 @@ public:
     Ref<AbsoluteTime> duetime;
     Ref<SingleAssignmentDisposable> disposable;
 
-    ScheduledItem(){}
+    ScheduledItem() : disposable(SingleAssignmentDisposable::Get()) {}
+    ScheduledItem(Ref<Scheduler> scheduler_, const Variant& state_, const Callable& action_, Ref<AbsoluteTime> duetime_) : scheduler(scheduler_), state(state_), action(action_), duetime(duetime_), disposable(SingleAssignmentDisposable::Get()) {}
     ~ScheduledItem(){}
 
     static Ref<ScheduledItem> Get(Ref<Scheduler> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime);

@@ -19,11 +19,7 @@ void InnerDisposable::_bind_methods() {
 }
 
 Ref<InnerDisposable> InnerDisposable::Get(Ref<RefCountDisposable> parent) {
-    auto disp = memnew(InnerDisposable);
-    disp->parent = parent;
-    disp->is_disposed = false;
-    disp->lock = RLock::Get();
-    return disp;
+    return memnew(InnerDisposable(parent));
 }
 
 void InnerDisposable::dispose() {
@@ -71,13 +67,7 @@ void RefCountDisposable::_bind_methods() {
 }
 
 Ref<RefCountDisposable> RefCountDisposable::Get(Ref<DisposableBase> disposable) {
-    auto disp = memnew(RefCountDisposable);
-    disp->underlying_disposable = disposable;
-    disp->is_primary_disposed = false;
-    disp->is_disposed = false;
-    disp->lock = RLock::Get();
-    disp->count = 0;
-    return disp;
+    return memnew(RefCountDisposable(disposable));
 }
 
 void RefCountDisposable::dispose() {

@@ -35,6 +35,8 @@ protected:
 public:
     AbsoluteTime() : t(basic::now<time_point_t>()){}
     AbsoluteTime(time_point_t t) : t(t){}
+    AbsoluteTime(double t) : t(UTC_ZERO + std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t))) {
+    }
     ~AbsoluteTime(){}
 
     static Ref<AbsoluteTime> Get(double t);
@@ -70,6 +72,7 @@ protected:
 public:
     RelativeTime() : dt(basic::now<time_point_t>().time_since_epoch()) {}
     RelativeTime(time_delta_t dt) : dt(dt) {}
+    RelativeTime(double t) : dt(DELTA_ZERO + std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t))) {}
     ~RelativeTime() {}
 
     static Ref<RelativeTime> Get(double dt);

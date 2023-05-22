@@ -4,15 +4,11 @@
 #include <godot_cpp/variant/callable.hpp>
 
 Ref<Disposable> Disposable::Get(const Callable& action) {
-    auto disp = memnew(Disposable);
-    disp->is_disposed = false;
-    disp->action = action;
-    disp->lock = RLock::Get();
-    return disp;
+    return memnew(Disposable(action));
 }
 
 Ref<Disposable> Disposable::Empty() {
-    return Disposable::Get(Callable());
+    return memnew(Disposable);
 }
 
 void Disposable::_bind_methods() {

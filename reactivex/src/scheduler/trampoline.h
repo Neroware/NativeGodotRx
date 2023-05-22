@@ -31,7 +31,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    Trampoline(){}
+    Trampoline() : _idle(true), _lock(Lock::Get()) {}
     ~Trampoline(){}
 
     static Ref<Trampoline> Get();

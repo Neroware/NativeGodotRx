@@ -27,7 +27,7 @@ private:
     Ref<Trampoline> _tramp;
 
 public:
-    TrampolineScheduler(){}
+    TrampolineScheduler() : _tramp(Trampoline::Get()) {}
     ~TrampolineScheduler(){}
 
     static Ref<TrampolineScheduler> Get();

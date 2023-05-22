@@ -41,9 +41,7 @@ Ref<Trampoline> CurrentThreadScheduler::get_trampoline() {
 }
 
 Ref<_CurrentThreadScheduler_Local> _CurrentThreadScheduler_Local::Get() {
-    auto _local = memnew(_CurrentThreadScheduler_Local);
-    _local->_tramp = WeakKeyDictionary::Get();
-    return _local;
+    return memnew(_CurrentThreadScheduler_Local);
 }
 
 Ref<Trampoline> _CurrentThreadScheduler_Local::get_trampoline() {

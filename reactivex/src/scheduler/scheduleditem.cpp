@@ -1,13 +1,7 @@
 #include "scheduleditem.h"
 
 Ref<ScheduledItem> ScheduledItem::Get(Ref<Scheduler> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime) {
-    auto item = memnew(ScheduledItem);
-    item->scheduler = scheduler;
-    item->state = state;
-    item->action = action;
-    item->duetime = duetime;
-    item->disposable = SingleAssignmentDisposable::Get();
-    return item;
+    return memnew(ScheduledItem(scheduler, state, action, duetime));
 }
 
 void ScheduledItem::_bind_methods() {

@@ -1,9 +1,7 @@
 #include "lock.h"
 
 Ref<Lock> Lock::Get() {
-    auto lk = memnew(Lock);
-    lk->flag = false;
-    return lk;
+    return memnew(Lock);
 }
 
 void Lock::_bind_methods() {

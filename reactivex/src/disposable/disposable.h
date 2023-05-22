@@ -28,7 +28,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    Disposable(){}
+    Disposable() : is_disposed(false), action(Callable()), lock(RLock::Get()){}
+    Disposable(const Callable& action_) : is_disposed(false), action(action_), lock(RLock::Get()) {}
     ~Disposable(){}
 
     static Ref<Disposable> Get(const Callable& action);

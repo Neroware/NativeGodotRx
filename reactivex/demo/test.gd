@@ -3,11 +3,11 @@ extends Node
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
-#	self.__test_schedulers()
+	self.__test_schedulers()
 #	self.__test_disposables()
 #	self.__test_weakkeydict()
 #	self.__test_threads()
-	self.__test_currthreadscheduler()
+#	self.__test_currthreadscheduler()
 
 
 
@@ -43,6 +43,10 @@ func __test_schedulers():
 	var scheduler = TrampolineScheduler.Get()
 	for i in range(10):
 		scheduler.schedule(func(__, ___): OS.delay_msec(10) ; print("!!!"), null)
+	
+	var cts = CurrentThreadScheduler.singleton()
+	assert(cts == CurrentThreadScheduler.singleton())
+	cts.schedule(func(__, ___): print("Scheduled on main thread!"), null)
 
 
 
@@ -100,12 +104,12 @@ func __test_currthreadscheduler():
 	var cts = CurrentThreadScheduler.singleton()
 	print(">> ", cts.get_instance_id())
 	var threads : Array[RxThread]
-	for i in range(1000):
+	for i in range(100):
 		var t = RxThread.Get()
 		threads.push_back(t)
-		t.start(func(): print(">>> ", CurrentThreadScheduler.singleton().get_instance_id()), Thread.PRIORITY_NORMAL)
+		t.start(func(): print(i, ">>> ", CurrentThreadScheduler.singleton().get_instance_id()), Thread.PRIORITY_NORMAL)
 	
-	for i in range(1000):
+	for i in range(100):
 		threads[i].wait_to_finish()
 
 

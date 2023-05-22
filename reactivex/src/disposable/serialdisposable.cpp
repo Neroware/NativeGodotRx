@@ -1,10 +1,7 @@
 #include "serialdisposable.h"
 
 Ref<SerialDisposable> SerialDisposable::Get() {
-    auto disp = memnew(SerialDisposable);
-    disp->is_disposed = false;
-    disp->lock = RLock::Get();
-    return disp;
+    return memnew(SerialDisposable);
 }
 
 void SerialDisposable::_bind_methods() {

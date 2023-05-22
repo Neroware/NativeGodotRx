@@ -1,9 +1,7 @@
 #include "trampolinescheduler.h"
 
 Ref<TrampolineScheduler> TrampolineScheduler::Get() {
-    auto scheduler = memnew(TrampolineScheduler);
-    scheduler->_tramp = Trampoline::Get();
-    return scheduler;
+    return memnew(TrampolineScheduler);
 }
 
 void TrampolineScheduler::_bind_methods() {
