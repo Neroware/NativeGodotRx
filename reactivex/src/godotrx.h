@@ -16,6 +16,7 @@
 #include "internal/thread.h"
 
 #include "scheduler/currentthreadscheduler.h"
+#include "scheduler/immediatescheduler.h"
 
 #define GDRX REF_CAST(Engine::get_singleton()->get_singleton(__GDRxSingleton__::get_class_static()), __GDRxSingleton__)
 
@@ -34,6 +35,7 @@ public:
     const Ref<RefCounted> CurrentThreadScheduler_cls_ = memnew(RefCounted);
     Ref<WeakKeyDictionary> CurrentThreadScheduler_global_;
     Ref<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
+    Ref<ImmediateScheduler> ImmediateScheduler_;
 
 private:
 
@@ -55,6 +57,7 @@ public:
         {
             this->CurrentThreadScheduler_global_ = WeakKeyDictionary::Get();
             this->CurrentThreadScheduler_local_ = _CurrentThreadScheduler_Local::Get();
+            this->ImmediateScheduler_ = ImmediateScheduler::Get();
         }
     }
 

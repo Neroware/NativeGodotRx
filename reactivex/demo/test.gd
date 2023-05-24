@@ -47,6 +47,10 @@ func __test_schedulers():
 	var cts = CurrentThreadScheduler.singleton()
 	assert(cts == CurrentThreadScheduler.singleton())
 	cts.schedule(func(__, ___): print("Scheduled on main thread!"), null)
+	
+	var ims = ImmediateScheduler.singleton()
+	assert(ims == ImmediateScheduler.singleton())
+	ims.schedule(func(__, ___): print("Scheduled immediatly!"), null)
 
 
 

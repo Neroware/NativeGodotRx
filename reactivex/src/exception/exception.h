@@ -20,6 +20,14 @@ public:
     }
 };
 
+class WouldBlockException : public std::exception
+{
+public:
+    virtual char const* what() { 
+        return "Tried to schedule blocking work!"; 
+    }
+};
+
 class BadArgumentException : public std::exception
 {
 private:
