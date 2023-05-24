@@ -14,11 +14,13 @@
 #include "internal/basic.h"
 #include "internal/weakkeydictionary.h"
 #include "internal/thread.h"
+#include "internal/tuple.h"
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
 
-#define GDRX REF_CAST(Engine::get_singleton()->get_singleton(__GDRxSingleton__::get_class_static()), __GDRxSingleton__)
+#define GDRX_SINGLETON_NAME "GDRx"
+#define GDRX REF_CAST(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME), __GDRxSingleton__)
 
 using namespace godot;
 
@@ -41,7 +43,12 @@ private:
 
 protected:
 	static inline void _bind_methods() {
-
+        {
+		    MethodInfo mi;
+		    mi.arguments.push_back(PropertyInfo(Variant::NIL, "data"));
+		    mi.name = "tuple";
+		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "tuple", &__GDRxSingleton__::tuple, mi);
+	    }
     }
 
 public:
@@ -61,8 +68,17 @@ public:
         }
     }
 
-    ~__GDRxSingleton__(){}
+    ~__GDRxSingleton__(){
 
+    }
+
+    Ref<Tuple> tuple(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+        Array data;
+        for (auto i = 0ul; i < arg_count; i++) {
+            data.append(*args[i]);
+        }
+        return Tuple::Get(data);
+    }
 };
 
 #endif // RX_GODOTRX_H

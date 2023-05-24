@@ -29,6 +29,7 @@
 #include "internal/time.h"
 #include "internal/weakkeydictionary.h"
 #include "internal/thread.h"
+#include "internal/tuple.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -74,6 +75,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<WeakKeyDictionary>();
 	ClassDB::register_abstract_class<RxThread>();
 	ClassDB::register_abstract_class<RxMainThread>();
+	ClassDB::register_abstract_class<Tuple>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();
@@ -97,7 +99,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 
 	ClassDB::register_abstract_class<__GDRxSingleton__>();
 
-	Engine::get_singleton()->register_singleton(__GDRxSingleton__::get_class_static(), memnew(__GDRxSingleton__));
+	Engine::get_singleton()->register_singleton(GDRX_SINGLETON_NAME, memnew(__GDRxSingleton__));
 }
 
 void uninitialize_rx_module(ModuleInitializationLevel p_level) {

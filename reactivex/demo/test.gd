@@ -51,7 +51,9 @@ func __test_schedulers():
 	var ims = ImmediateScheduler.singleton()
 	assert(ims == ImmediateScheduler.singleton())
 	ims.schedule(func(__, ___): print("Scheduled immediatly!"), null)
-
+	
+	var tup = GDRx.tuple("1", "2", "3")
+	print(">> ", tup)
 
 
 
