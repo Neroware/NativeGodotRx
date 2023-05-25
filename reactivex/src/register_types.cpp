@@ -23,6 +23,8 @@
 #include "abstract/observer.h"
 #include "abstract/observable.h"
 #include "abstract/subject.h"
+#include "abstract/iterable.h"
+#include "abstract/iterator.h"
 
 #include "internal/rlock.h"
 #include "internal/lock.h"
@@ -30,6 +32,7 @@
 #include "internal/weakkeydictionary.h"
 #include "internal/thread.h"
 #include "internal/tuple.h"
+#include "internal/iterator.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -67,6 +70,8 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<ObserverBase>();
 	ClassDB::register_abstract_class<SubjectAsObserver>();
 	ClassDB::register_abstract_class<SubjectAsObservable>();
+	ClassDB::register_abstract_class<IterableBase>();
+	ClassDB::register_abstract_class<IteratorBase>();
 	// internal
 	ClassDB::register_abstract_class<RLock>();
 	ClassDB::register_abstract_class<Lock>();
@@ -76,6 +81,10 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<RxThread>();
 	ClassDB::register_abstract_class<RxMainThread>();
 	ClassDB::register_abstract_class<Tuple>();
+	ClassDB::register_abstract_class<Iterator>();
+	ClassDB::register_abstract_class<ItEnd>();
+	ClassDB::register_abstract_class<ArrayIterator>();
+	ClassDB::register_abstract_class<DictionaryIterator>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();

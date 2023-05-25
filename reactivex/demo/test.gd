@@ -54,6 +54,11 @@ func __test_schedulers():
 	
 	var tup = GDRx.tuple("1", "2", "3")
 	print(">> ", tup)
+	
+	GDRx.enumerate(tup, func(i1, i2): print(">>> ", GDRx.tuple(i1, i2)))
+	#var it = ArrayIterator.Get(["A", "B", "C"])
+	#it.enumerate(func(i, item): print("> ", i, "; ", item))
+	#GDRx.foreach({"1": "A", "2": "B", "3": "C"}, func(__ = null, ___ = null): print("!"))
 
 
 

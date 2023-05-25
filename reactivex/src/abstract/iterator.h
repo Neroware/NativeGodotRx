@@ -41,6 +41,9 @@ public:
     virtual Variant back() {
         throw NotImplementedException();
     }
+    virtual Variant end() {
+        throw NotImplementedException();
+    }
     virtual bool empty() {
         throw NotImplementedException();
     }

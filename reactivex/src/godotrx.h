@@ -15,6 +15,7 @@
 #include "internal/weakkeydictionary.h"
 #include "internal/thread.h"
 #include "internal/tuple.h"
+#include "internal/iterator.h"
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
@@ -49,6 +50,9 @@ protected:
 		    mi.name = "tuple";
 		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "tuple", &__GDRxSingleton__::tuple, mi);
 	    }
+        ClassDB::bind_method(D_METHOD("iter", "it"), &__GDRxSingleton__::iter);
+        ClassDB::bind_method(D_METHOD("foreach", "it", "cb"), &__GDRxSingleton__::foreach);
+        ClassDB::bind_method(D_METHOD("enumerate", "it", "cb"), &__GDRxSingleton__::enumerate);
     }
 
 public:
@@ -78,6 +82,16 @@ public:
             data.append(*args[i]);
         }
         return Tuple::Get(data);
+    }
+
+    Ref<Iterator> iter(const Variant& iterable) {
+        return create_iterator(iterable);
+    }
+    void foreach(const Variant& it, const Callable& what) {
+        this->iter(it)->foreach(what);
+    }
+    void enumerate(const Variant& it, const Callable& what) {
+        this->iter(it)->enumerate(what);
     }
 };
 
