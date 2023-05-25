@@ -26,12 +26,10 @@ protected:
 public:
     Tuple(){}
     Tuple(const Array& data) : _data(data) {}
-    Tuple(const Variant& data...) : _data(data) {}
     ~Tuple(){}
 
     static Ref<Tuple> Get(const Array& data);
     static Ref<Tuple> Empty();
-    static Ref<Tuple> Pack(const Variant& data...);
 
     uint64_t size() const;
     Variant at(uint64_t index) const;

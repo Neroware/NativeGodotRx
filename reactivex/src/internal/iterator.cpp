@@ -47,25 +47,25 @@ Ref<DictionaryIterator> DictionaryIterator::Get(const Dictionary& dict) {
     return memnew(DictionaryIterator(dict));
 }
 Variant DictionaryIterator::next() {
-    return !this->has_next() ? this->_end : Variant(Tuple::Pack(
-        this->_keys[this->_count], 
-        this->_dict[this->_keys[this->_count++]]
-    ));
+    return !this->has_next() ? this->_end : Variant(Tuple::Get(Array::make(
+        this->_keys[this->_count++], 
+        this->_dict[this->_keys[this->_count]]
+    )));
 }
 bool DictionaryIterator::has_next() {
     return this->_count < this->_keys.size();
 }
 Variant DictionaryIterator::front() {
-    return this->empty() ? this->_end : Variant(Tuple::Pack(
+    return this->empty() ? this->_end : Variant(Tuple::Get(Array::make(
         this->_keys[0], 
         this->_dict[this->_keys[0]]
-    ));
+    )));
 }
 Variant DictionaryIterator::back() {
-    return this->empty() ? this->_end : Variant(Tuple::Pack(
+    return this->empty() ? this->_end : Variant(Tuple::Get(Array::make(
         this->_keys[this->_keys.size() - 1], 
         this->_dict[this->_keys[this->_keys.size() - 1]]
-    ));
+    )));
 }
 Variant DictionaryIterator::end() {
     return this->_end;

@@ -18,9 +18,6 @@ Ref<Tuple> Tuple::Get(const Array& data) {
 Ref<Tuple> Tuple::Empty() {
     return memnew(Tuple);
 }
-Ref<Tuple> Tuple::Pack(const Variant& data...) {
-    return memnew(Tuple(data));
-}
 uint64_t Tuple::size() const {
     return this->_data.size();
 }

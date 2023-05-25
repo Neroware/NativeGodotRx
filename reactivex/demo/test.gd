@@ -52,10 +52,14 @@ func __test_schedulers():
 	assert(ims == ImmediateScheduler.singleton())
 	ims.schedule(func(__, ___): print("Scheduled immediatly!"), null)
 	
-	var tup = GDRx.tuple("1", "2", "3")
-	print(">> ", tup)
+	#var tup = GDRx.tuple("1", "2", "3")
+	#print(">> ", tup)
 	
-	GDRx.enumerate(tup, func(i1, i2): print(">>> ", GDRx.tuple(i1, i2)))
+	GDRx.enumerate({1:"A", 2:"B", 3:"C"}, func(i, pair): print(i, "> ", pair))
+	#GDRx.enumerate(tup, func(i1, i2): print(">>> ", GDRx.tuple(i1, i2)))
+	#var it = DictionaryIterator.Get({1:"A", 2:"B", 3:"C"})
+	#print(">> ", it.front())
+	#GDRx.foreach({1:"A", 2:"B", 3:"C"}, func(pair): print("> ", pair))
 	#var it = ArrayIterator.Get(["A", "B", "C"])
 	#it.enumerate(func(i, item): print("> ", i, "; ", item))
 	#GDRx.foreach({"1": "A", "2": "B", "3": "C"}, func(__ = null, ___ = null): print("!"))
