@@ -31,7 +31,7 @@ func __test_weakkeydict():
 	dict.erase(n2)
 	dict.set_pair(n1, 0)
 	#print(">>> ", dict.length)
-	var foo = Disposable.Empty()
+	var foo = Disposable.Get()
 	dict.set_pair(foo, "I'm gonna die!")
 	#print("Values> ", dict.values())
 	#print("Keys> ", dict.keys())
@@ -42,15 +42,15 @@ func __test_weakkeydict():
 func __test_schedulers():
 	var scheduler = TrampolineScheduler.Get()
 	for i in range(10):
-		scheduler.schedule(func(__, ___): OS.delay_msec(10) ; print("!!!"), null)
+		scheduler.schedule(func(__, ___): OS.delay_msec(10) ; print("!!!"))
 	
 	var cts = CurrentThreadScheduler.singleton()
 	assert(cts == CurrentThreadScheduler.singleton())
-	cts.schedule(func(__, ___): print("Scheduled on main thread!"), null)
+	cts.schedule(func(__, ___): print("Scheduled on main thread!"))
 	
 	var ims = ImmediateScheduler.singleton()
 	assert(ims == ImmediateScheduler.singleton())
-	ims.schedule(func(__, ___): print("Scheduled immediatly!"), null)
+	ims.schedule(func(__, ___): print("Scheduled immediatly!"))
 	
 	#var tup = GDRx.tuple("1", "2", "3")
 	#print(">> ", tup)
@@ -81,9 +81,9 @@ func __test_disposables():
 	mad.dispose()
 	
 	var cd = CompositeDisposable.Get([
-		Disposable.Empty(),
-		Disposable.Empty(),
-		Disposable.Empty()
+		Disposable.Get(),
+		Disposable.Get(),
+		Disposable.Get()
 	])
 	var d = Disposable.Get(func(): print("3"))
 	cd.add(d)

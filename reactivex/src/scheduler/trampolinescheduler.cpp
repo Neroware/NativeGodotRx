@@ -7,9 +7,9 @@ Ref<TrampolineScheduler> TrampolineScheduler::Get() {
 void TrampolineScheduler::_bind_methods() {
     ClassDB::bind_static_method("TrampolineScheduler", D_METHOD("Get"), &TrampolineScheduler::Get);
     ClassDB::bind_method(D_METHOD("get_trampoline"), &TrampolineScheduler::get_trampoline);
-    ClassDB::bind_method(D_METHOD("schedule", "action", "state"), &TrampolineScheduler::schedule);
-    ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &TrampolineScheduler::schedule_relative);
-    ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &TrampolineScheduler::schedule_absolute);
+    ClassDB::bind_method(D_METHOD("schedule", "action", "state"), &TrampolineScheduler::schedule, DEFVAL(Variant()));
+    ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &TrampolineScheduler::schedule_relative, DEFVAL(Variant()));
+    ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &TrampolineScheduler::schedule_absolute, DEFVAL(Variant()));
     ClassDB::bind_method(D_METHOD("schedule_required"), &TrampolineScheduler::schedule_required);
     ClassDB::bind_method(D_METHOD("ensure_trampoline", "action"), &TrampolineScheduler::ensure_trampoline);
 }

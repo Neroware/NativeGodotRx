@@ -32,8 +32,7 @@ public:
     Disposable(const Callable& action_) : is_disposed(false), action(action_), lock(RLock::Get()) {}
     ~Disposable(){}
 
-    static Ref<Disposable> Get(const Callable& action);
-    static Ref<Disposable> Empty();
+    static Ref<Disposable> Get(const Callable& action = Callable());
 
     void dispose() override;
     void dispose_with(Object* obj) override;

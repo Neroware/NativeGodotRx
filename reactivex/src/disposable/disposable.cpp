@@ -7,13 +7,8 @@ Ref<Disposable> Disposable::Get(const Callable& action) {
     return memnew(Disposable(action));
 }
 
-Ref<Disposable> Disposable::Empty() {
-    return memnew(Disposable);
-}
-
 void Disposable::_bind_methods() {
-    ClassDB::bind_static_method("Disposable", D_METHOD("Get", "action"), &Disposable::Get);
-    ClassDB::bind_static_method("Disposable", D_METHOD("Empty"), &Disposable::Empty);
+    ClassDB::bind_static_method("Disposable", D_METHOD("Get", "action"), &Disposable::Get, DEFVAL(Callable()));
     ClassDB::bind_method(D_METHOD("dispose"), &Disposable::dispose);
     ClassDB::bind_method(D_METHOD("dispose_with", "obj"), &Disposable::dispose_with);
 

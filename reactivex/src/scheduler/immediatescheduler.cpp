@@ -6,9 +6,9 @@
 void ImmediateScheduler::_bind_methods() {
     ClassDB::bind_static_method("ImmediateScheduler", D_METHOD("Get"), &ImmediateScheduler::Get);
     ClassDB::bind_static_method("ImmediateScheduler", D_METHOD("singleton"), &ImmediateScheduler::singleton);
-    ClassDB::bind_method(D_METHOD("schedule", "action", "state"), &ImmediateScheduler::schedule);
-    ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &ImmediateScheduler::schedule_absolute);
-    ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &ImmediateScheduler::schedule_relative);
+    ClassDB::bind_method(D_METHOD("schedule", "action", "state"), &ImmediateScheduler::schedule, DEFVAL(Variant()));
+    ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &ImmediateScheduler::schedule_absolute, DEFVAL(Variant()));
+    ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &ImmediateScheduler::schedule_relative, DEFVAL(Variant()));
 }
 
 Ref<ImmediateScheduler> ImmediateScheduler::Get() {

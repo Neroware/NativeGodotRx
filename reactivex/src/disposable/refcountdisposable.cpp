@@ -115,7 +115,7 @@ void RefCountDisposable::release() {
 Ref<DisposableBase> RefCountDisposable::get_disposable() {
     std::lock_guard<RLock> guard(**lock);
     if (this->is_disposed) {
-        return Disposable::Empty();
+        return Disposable::Get();
     }
 
     this->count++;

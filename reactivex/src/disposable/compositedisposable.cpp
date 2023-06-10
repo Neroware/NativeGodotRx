@@ -5,7 +5,7 @@ Ref<CompositeDisposable> CompositeDisposable::Get(const Array& items) {
 }
 
 void CompositeDisposable::_bind_methods() {
-    ClassDB::bind_static_method("CompositeDisposable", D_METHOD("Get", "items"), &CompositeDisposable::Get);
+    ClassDB::bind_static_method("CompositeDisposable", D_METHOD("Get", "items"), &CompositeDisposable::Get, DEFVAL(Array()));
     ClassDB::bind_method(D_METHOD("add", "item"), &CompositeDisposable::add);
     ClassDB::bind_method(D_METHOD("remove", "item"), &CompositeDisposable::remove);
     ClassDB::bind_method(D_METHOD("dispose"), &CompositeDisposable::dispose);

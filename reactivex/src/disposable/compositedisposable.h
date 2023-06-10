@@ -31,7 +31,7 @@ public:
     CompositeDisposable(const Array& items) : disposable(items), is_disposed(false), lock(RLock::Get()) {}
     ~CompositeDisposable(){}
 
-    static Ref<CompositeDisposable> Get(const Array& items);
+    static Ref<CompositeDisposable> Get(const Array& items = Array());
 
     void dispose() override;
     void dispose_with(Object* obj) override;

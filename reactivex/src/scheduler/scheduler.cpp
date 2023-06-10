@@ -17,7 +17,7 @@ void Scheduler::_bind_methods() {
     ClassDB::bind_static_method("Scheduler", D_METHOD("to_datetime", "value"), &Scheduler::to_datetime);
     ClassDB::bind_static_method("Scheduler", D_METHOD("to_timedelta", "value"), &Scheduler::to_timedelta);
     ClassDB::bind_method(D_METHOD("now"), &Scheduler::now);
-    ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &Scheduler::invoke_action);
+    ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &Scheduler::invoke_action, DEFVAL(Variant()));
 }
 
 double Scheduler::to_seconds(const Variant& value) {
@@ -59,5 +59,5 @@ Ref<DisposableBase> Scheduler::invoke_action(const Callable& action, const Varia
     if (auto ret = CAST_OR_NULL(res, DisposableBase)) {
         return ret;
     }
-    return Disposable::Empty();
+    return Disposable::Get();
  }
