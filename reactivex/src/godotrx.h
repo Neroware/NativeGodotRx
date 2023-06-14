@@ -9,6 +9,7 @@
 #include <godot_cpp/core/class_db.hpp>
 
 #include <shared_mutex>
+#include <map>
 #include <thread>
 
 #include "internal/basic.h"
@@ -42,7 +43,7 @@ public:
     Ref<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
     Ref<ImmediateScheduler> ImmediateScheduler_;
     Ref<TimeoutScheduler> TimeoutScheduler_;
-    Ref<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler_;
+    std::map<uint8_t, Ref<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_;
 
 private:
 
@@ -74,7 +75,9 @@ public:
             this->CurrentThreadScheduler_local_ = _CurrentThreadScheduler_Local::Get();
             this->ImmediateScheduler_ = ImmediateScheduler::Get();
             this->TimeoutScheduler_ = TimeoutScheduler::Get();
-            this->SceneTreeTimeoutScheduler_ = SceneTreeTimeoutScheduler::Get();
+            for (auto i = 0; i < 8; i++) {
+                this->SceneTreeTimeoutScheduler_[i] = SceneTreeTimeoutScheduler::Get(i & 0b100, i & 0b10, i & 0b1);
+            }
         }
     }
 

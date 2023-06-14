@@ -14,15 +14,21 @@
 class SceneTreeTimeoutScheduler : public Scheduler {
     GDCLASS(SceneTreeTimeoutScheduler, Scheduler)
 
+private:
+    bool _process_always;
+    bool _process_in_physics;
+    bool _ignore_time_scale;
+
 protected:
     static void _bind_methods();
 
 public:
-    SceneTreeTimeoutScheduler(){}
+    SceneTreeTimeoutScheduler(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false) 
+        : _process_always(process_always), _process_in_physics(process_in_physics), _ignore_time_scale(ignore_time_scale) {}
     ~SceneTreeTimeoutScheduler(){}
-    static Ref<SceneTreeTimeoutScheduler> Get();
+    static Ref<SceneTreeTimeoutScheduler> Get(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false);
 
-    static Ref<SceneTreeTimeoutScheduler> singleton();
+    static Ref<SceneTreeTimeoutScheduler> singleton(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false);
 
     Ref<DisposableBase> schedule(const Callable& action, const Variant& state = Variant()) override;
     Ref<DisposableBase> schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state = Variant()) override;

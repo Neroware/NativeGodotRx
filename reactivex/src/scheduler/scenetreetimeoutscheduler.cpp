@@ -15,19 +15,23 @@
 
 
 void SceneTreeTimeoutScheduler::_bind_methods() {
-    ClassDB::bind_static_method("SceneTreeTimeoutScheduler", D_METHOD("Get"), &SceneTreeTimeoutScheduler::Get);
-    ClassDB::bind_static_method("SceneTreeTimeoutScheduler", D_METHOD("singleton"), &SceneTreeTimeoutScheduler::singleton);
+    ClassDB::bind_static_method("SceneTreeTimeoutScheduler", D_METHOD("Get", "process_always", "process_in_physics", "ignore_time_scale"), &SceneTreeTimeoutScheduler::Get, DEFVAL(true), DEFVAL(false), DEFVAL(false));
+    ClassDB::bind_static_method("SceneTreeTimeoutScheduler", D_METHOD("singleton", "process_always", "process_in_physics", "ignore_time_scale"), &SceneTreeTimeoutScheduler::singleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
     ClassDB::bind_method(D_METHOD("schedule", "action", "state"), &SceneTreeTimeoutScheduler::schedule, DEFVAL(Variant()));
     ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &SceneTreeTimeoutScheduler::schedule_relative, DEFVAL(Variant()));
     ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &SceneTreeTimeoutScheduler::schedule_absolute, DEFVAL(Variant()));
 }
 
-Ref<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler::Get() {
-    return memnew(SceneTreeTimeoutScheduler);
+Ref<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler::Get(bool process_always, bool process_in_physics, bool ignore_time_scale) {
+    return memnew(SceneTreeTimeoutScheduler(process_always, process_in_physics, ignore_time_scale));
 }
 
-Ref<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler::singleton() {
-    return GDRX->SceneTreeTimeoutScheduler_;
+Ref<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler::singleton(bool process_always, bool process_in_physics, bool ignore_time_scale) {
+    uint8_t flags = 0b0;
+    flags |= 0b100 * process_always;
+    flags |= 0b10 * process_in_physics;
+    flags |= 0b1 * ignore_time_scale;
+    return GDRX->SceneTreeTimeoutScheduler_[flags];
 }
 
 Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule(const Callable& action, const Variant& state) {
