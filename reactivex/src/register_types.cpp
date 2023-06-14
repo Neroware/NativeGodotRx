@@ -33,6 +33,7 @@
 #include "internal/thread.h"
 #include "internal/tuple.h"
 #include "internal/iterator.h"
+#include "internal/lambda.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -50,6 +51,7 @@
 #include "scheduler/trampolinescheduler.h"
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
+#include "scheduler/timeoutscheduler.h"
 
 #include "godotrx.h"
 
@@ -80,6 +82,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<WeakKeyDictionary>();
 	ClassDB::register_abstract_class<RxThread>();
 	ClassDB::register_abstract_class<RxMainThread>();
+	ClassDB::register_abstract_class<RxLambda>();
 	ClassDB::register_abstract_class<Tuple>();
 	ClassDB::register_abstract_class<Iterator>();
 	ClassDB::register_abstract_class<ItEnd>();
@@ -105,6 +108,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<_CurrentThreadScheduler_Local>();
 	ClassDB::register_abstract_class<CurrentThreadSchedulerSingleton>();
 	ClassDB::register_abstract_class<ImmediateScheduler>();
+	ClassDB::register_abstract_class<TimeoutScheduler>();
 
 	ClassDB::register_abstract_class<__GDRxSingleton__>();
 

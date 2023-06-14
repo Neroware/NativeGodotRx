@@ -10,6 +10,7 @@ void Tuple::_bind_methods() {
     ClassDB::bind_method(D_METHOD("setat", "index", "what"), &Tuple::setat);
     ClassDB::bind_method(D_METHOD("to_list"), &Tuple::to_list);
     ADD_PROPERTY(PropertyInfo(Variant::INT, "length"), "", "size");
+    ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "V"), "", "to_list");
 }
 
 Ref<Tuple> Tuple::Get(const Array& data) {

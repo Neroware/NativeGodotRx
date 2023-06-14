@@ -19,6 +19,7 @@
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
+#include "scheduler/timeoutscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX REF_CAST(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME), __GDRxSingleton__)
@@ -39,6 +40,7 @@ public:
     Ref<WeakKeyDictionary> CurrentThreadScheduler_global_;
     Ref<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
     Ref<ImmediateScheduler> ImmediateScheduler_;
+    Ref<TimeoutScheduler> TimeoutScheduler_;
 
 private:
 
@@ -69,6 +71,7 @@ public:
             this->CurrentThreadScheduler_global_ = WeakKeyDictionary::Get();
             this->CurrentThreadScheduler_local_ = _CurrentThreadScheduler_Local::Get();
             this->ImmediateScheduler_ = ImmediateScheduler::Get();
+            this->TimeoutScheduler_ = TimeoutScheduler::Get();
         }
     }
 

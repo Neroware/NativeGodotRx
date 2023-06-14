@@ -3,7 +3,9 @@ extends Node
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
-	self.__test_schedulers()
+	pass
+#	RxLambda.Test()
+#	self.__test_schedulers()
 #	self.__test_disposables()
 #	self.__test_weakkeydict()
 #	self.__test_threads()
