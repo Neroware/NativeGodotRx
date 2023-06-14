@@ -1,7 +1,5 @@
 #include "lambda.h"
 
-#include <godot_cpp/variant/utility_functions.hpp>
-
 void RxLambda::_bind_methods() {
     {
 		MethodInfo mi;
@@ -14,11 +12,6 @@ void RxLambda::_bind_methods() {
 
 Variant RxLambda::_call(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     return this->_caller(args, arg_count, error);
-}
-
-template<typename RetT, typename... Args>
-Callable RxLambda::Lambda(const std::function<RetT(Args...)>& fun) {
-    return Callable(memnew(RxLambda(fun)), "_call");
 }
 
 /* void RxLambda::Test() {

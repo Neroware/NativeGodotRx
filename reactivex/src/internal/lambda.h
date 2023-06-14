@@ -68,13 +68,17 @@ using namespace godot;
 #define FUNCTOR(N) functor([fun](const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) -> Variant { std::apply(fun, FunctionCaller::to_tuple<N>(args)); return Variant(); })
 #define RET_FUNCTOR(N) functor([fun](const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) -> Variant { return std::apply(fun, FunctionCaller::to_tuple<N>(args)); })
 
+
+class RxLambda : public RefCounted {
+    GDCLASS(RxLambda, RefCounted);
+
+private:
 /**
  * I actually tried to make a hacky way creating a collection of functions using an std::map mapping to 
  * the corresponding caller but I was not able to pull it off... In theory this could work because
  * then we only have compile time sizes but I do not know for sure and I wasted way to much time on this...
  */
 struct FunctionCaller {
-
     std::function<Variant(const Variant**, GDExtensionInt, GDExtensionCallError&)> functor;
 
     template <std::size_t... Indices>
@@ -137,10 +141,6 @@ struct FunctionCaller {
     }
 };
 
-
-class RxLambda : public RefCounted {
-    GDCLASS(RxLambda, RefCounted);
-
 private:
     FunctionCaller _caller;
 
@@ -157,14 +157,16 @@ public:
     Variant _call(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
     
     template<typename RetT, typename... Args>
-    static Callable Lambda(const std::function<RetT(Args...)>& fun);
+    inline static Callable Lambda(const std::function<RetT(Args...)>& fun) {
+        return Callable(memnew(RxLambda(fun)), "_call");
+    }
 
     // static void Test();
 
 };
 
 template<typename RetT, typename... Args>
-static inline Callable Lambda(const std::function<RetT(Args...)>& fun) {
+inline static Callable Lambda(const std::function<RetT(Args...)>& fun) {
     return RxLambda::Lambda(fun);
 }
 
