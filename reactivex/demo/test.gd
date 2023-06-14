@@ -54,7 +54,7 @@ func __test_schedulers():
 	assert(ims == ImmediateScheduler.singleton())
 	ims.schedule(func(__, ___): print("Scheduled immediatly!"))
 	
-	var tos = TimeoutScheduler.singleton()
+	var tos = SceneTreeTimeoutScheduler.singleton()
 	#tos.schedule(func(__, ___): print("Scheduled timeout!"))
 	#var t = tos.now().timeshift(RelativeTime.Get(5))
 	var dt = RelativeTime.Get(5)
