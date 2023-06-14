@@ -91,44 +91,44 @@ struct FunctionCaller {
         return Variant(); 
     }) {}
 
-    /* Retunring void */
-    FunctionCaller(std::function<void()> fun) : FUNCTOR(0) {}
-    FunctionCaller(std::function<void(VARIANT1)> fun) : FUNCTOR(1) {}
-    FunctionCaller(std::function<void(VARIANT2)> fun) : FUNCTOR(2) {}
-    FunctionCaller(std::function<void(VARIANT3)> fun) : FUNCTOR(3) {}
-    FunctionCaller(std::function<void(VARIANT4)> fun) : FUNCTOR(4) {}
-    FunctionCaller(std::function<void(VARIANT5)> fun) : FUNCTOR(5) {}
-    FunctionCaller(std::function<void(VARIANT6)> fun) : FUNCTOR(6) {}
-    FunctionCaller(std::function<void(VARIANT7)> fun) : FUNCTOR(7) {}
-    FunctionCaller(std::function<void(VARIANT8)> fun) : FUNCTOR(8) {}
-    FunctionCaller(std::function<void(VARIANT9)> fun) : FUNCTOR(9) {}
-    FunctionCaller(std::function<void(VARIANT10)> fun) : FUNCTOR(10) {}
-    FunctionCaller(std::function<void(VARIANT11)> fun) : FUNCTOR(11) {}
-    FunctionCaller(std::function<void(VARIANT12)> fun) : FUNCTOR(12) {}
-    FunctionCaller(std::function<void(VARIANT13)> fun) : FUNCTOR(13) {}
-    FunctionCaller(std::function<void(VARIANT14)> fun) : FUNCTOR(14) {}
-    FunctionCaller(std::function<void(VARIANT15)> fun) : FUNCTOR(15) {}
+    /* Returning void */
+    FunctionCaller(const VOID_FUN0& fun) : FUNCTOR(0) {}
+    FunctionCaller(const VOID_FUN1& fun) : FUNCTOR(1) {}
+    FunctionCaller(const VOID_FUN2& fun) : FUNCTOR(2) {}
+    FunctionCaller(const VOID_FUN3& fun) : FUNCTOR(3) {}
+    FunctionCaller(const VOID_FUN4& fun) : FUNCTOR(4) {}
+    FunctionCaller(const VOID_FUN5& fun) : FUNCTOR(5) {}
+    FunctionCaller(const VOID_FUN6& fun) : FUNCTOR(6) {}
+    FunctionCaller(const VOID_FUN7& fun) : FUNCTOR(7) {}
+    FunctionCaller(const VOID_FUN8& fun) : FUNCTOR(8) {}
+    FunctionCaller(const VOID_FUN9& fun) : FUNCTOR(9) {}
+    FunctionCaller(const VOID_FUN10& fun) : FUNCTOR(10) {}
+    FunctionCaller(const VOID_FUN11& fun) : FUNCTOR(11) {}
+    FunctionCaller(const VOID_FUN12& fun) : FUNCTOR(12) {}
+    FunctionCaller(const VOID_FUN13& fun) : FUNCTOR(13) {}
+    FunctionCaller(const VOID_FUN14& fun) : FUNCTOR(14) {}
+    FunctionCaller(const VOID_FUN15& fun) : FUNCTOR(15) {}
 
     /* Returning Variant */
-    FunctionCaller(std::function<Variant()> fun) : RET_FUNCTOR(0) {}
-    FunctionCaller(std::function<Variant(VARIANT1)> fun) : RET_FUNCTOR(1) {}
-    FunctionCaller(std::function<Variant(VARIANT2)> fun) : RET_FUNCTOR(2) {}
-    FunctionCaller(std::function<Variant(VARIANT3)> fun) : RET_FUNCTOR(3) {}
-    FunctionCaller(std::function<Variant(VARIANT4)> fun) : RET_FUNCTOR(4) {}
-    FunctionCaller(std::function<Variant(VARIANT5)> fun) : RET_FUNCTOR(5) {}
-    FunctionCaller(std::function<Variant(VARIANT6)> fun) : RET_FUNCTOR(6) {}
-    FunctionCaller(std::function<Variant(VARIANT7)> fun) : RET_FUNCTOR(7) {}
-    FunctionCaller(std::function<Variant(VARIANT8)> fun) : RET_FUNCTOR(8) {}
-    FunctionCaller(std::function<Variant(VARIANT9)> fun) : RET_FUNCTOR(9) {}
-    FunctionCaller(std::function<Variant(VARIANT10)> fun) : RET_FUNCTOR(10) {}
-    FunctionCaller(std::function<Variant(VARIANT11)> fun) : RET_FUNCTOR(11) {}
-    FunctionCaller(std::function<Variant(VARIANT12)> fun) : RET_FUNCTOR(12) {}
-    FunctionCaller(std::function<Variant(VARIANT13)> fun) : RET_FUNCTOR(13) {}
-    FunctionCaller(std::function<Variant(VARIANT14)> fun) : RET_FUNCTOR(14) {}
-    FunctionCaller(std::function<Variant(VARIANT15)> fun) : RET_FUNCTOR(15) {}
+    FunctionCaller(const VARIANT_FUN0& fun) : RET_FUNCTOR(0) {}
+    FunctionCaller(const VARIANT_FUN1& fun) : RET_FUNCTOR(1) {}
+    FunctionCaller(const VARIANT_FUN2& fun) : RET_FUNCTOR(2) {}
+    FunctionCaller(const VARIANT_FUN3& fun) : RET_FUNCTOR(3) {}
+    FunctionCaller(const VARIANT_FUN4& fun) : RET_FUNCTOR(4) {}
+    FunctionCaller(const VARIANT_FUN5& fun) : RET_FUNCTOR(5) {}
+    FunctionCaller(const VARIANT_FUN6& fun) : RET_FUNCTOR(6) {}
+    FunctionCaller(const VARIANT_FUN7& fun) : RET_FUNCTOR(7) {}
+    FunctionCaller(const VARIANT_FUN8& fun) : RET_FUNCTOR(8) {}
+    FunctionCaller(const VARIANT_FUN9& fun) : RET_FUNCTOR(9) {}
+    FunctionCaller(const VARIANT_FUN10& fun) : RET_FUNCTOR(10) {}
+    FunctionCaller(const VARIANT_FUN11& fun) : RET_FUNCTOR(11) {}
+    FunctionCaller(const VARIANT_FUN12& fun) : RET_FUNCTOR(12) {}
+    FunctionCaller(const VARIANT_FUN13& fun) : RET_FUNCTOR(13) {}
+    FunctionCaller(const VARIANT_FUN14& fun) : RET_FUNCTOR(14) {}
+    FunctionCaller(const VARIANT_FUN15& fun) : RET_FUNCTOR(15) {}
 
     template<typename RetT, typename... Args>
-    FunctionCaller(std::function<RetT(Args...)> fun) {
+    FunctionCaller(const std::function<RetT(Args...)>& fun) {
         assert(false && "RxLambda only supports lambdas with Variant argument counts below 16 and return types 'void' or 'Variant'!");
     }
 
@@ -147,7 +147,7 @@ private:
 public:
     RxLambda(){}
     template<typename RetT, typename... Args>
-    RxLambda(std::function<RetT(Args...)> fun) : _caller(fun) {}
+    RxLambda(const std::function<RetT(Args...)>& fun) : _caller(fun) {}
     ~RxLambda(){}
 
 protected:
@@ -157,14 +157,14 @@ public:
     Variant _call(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
     
     template<typename RetT, typename... Args>
-    static Callable Lambda(std::function<RetT(Args...)> fun);
+    static Callable Lambda(const std::function<RetT(Args...)>& fun);
 
     // static void Test();
 
 };
 
 template<typename RetT, typename... Args>
-static inline Callable Lambda(std::function<RetT(Args...)> fun) {
+static inline Callable Lambda(const std::function<RetT(Args...)>& fun) {
     return RxLambda::Lambda(fun);
 }
 

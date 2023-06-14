@@ -17,7 +17,7 @@ Variant RxLambda::_call(const Variant **args, GDExtensionInt arg_count, GDExtens
 }
 
 template<typename RetT, typename... Args>
-Callable RxLambda::Lambda(std::function<RetT(Args...)> fun) {
+Callable RxLambda::Lambda(const std::function<RetT(Args...)>& fun) {
     return Callable(memnew(RxLambda(fun)), "_call");
 }
 
