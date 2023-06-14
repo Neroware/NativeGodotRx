@@ -44,7 +44,7 @@ Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule(const Callable& action, 
     }));
 
     SceneTree* sceneTree = static_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
-    auto timer = sceneTree->create_timer(0.0);
+    auto timer = sceneTree->create_timer(0.0, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
     timer->connect("timeout", interval);
     
     auto dispose = Lambda(VOID_FUN0([=]() {
@@ -70,7 +70,7 @@ Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule_relative(Ref<RelativeTim
     }));
 
     SceneTree* sceneTree = static_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
-    auto timer = sceneTree->create_timer(seconds);
+    auto timer = sceneTree->create_timer(seconds, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
     timer->connect("timeout", interval);
     
     auto dispose = Lambda(VOID_FUN0([=]() {
