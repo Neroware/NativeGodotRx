@@ -26,7 +26,7 @@ protected:
     }
 
 public:
-    virtual Ref<DisposableBase> schedule_periodic(Ref<RelativeTime> periodic, const Callable& action, const Variant& state = Variant()) {
+    virtual Ref<DisposableBase> schedule_periodic(Ref<RelativeTime> period, const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 

@@ -9,10 +9,10 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include "scheduler/scheduler.h"
+#include "scheduler/periodicscheduler.h"
 
-class TimeoutScheduler : public Scheduler {
-    GDCLASS(TimeoutScheduler, Scheduler)
+class TimeoutScheduler : public PeriodicScheduler {
+    GDCLASS(TimeoutScheduler, PeriodicScheduler)
 
 protected:
     static void _bind_methods();

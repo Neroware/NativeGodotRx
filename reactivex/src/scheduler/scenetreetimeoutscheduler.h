@@ -9,10 +9,10 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include "scheduler/scheduler.h"
+#include "scheduler/periodicscheduler.h"
 
-class SceneTreeTimeoutScheduler : public Scheduler {
-    GDCLASS(SceneTreeTimeoutScheduler, Scheduler)
+class SceneTreeTimeoutScheduler : public PeriodicScheduler {
+    GDCLASS(SceneTreeTimeoutScheduler, PeriodicScheduler)
 
 private:
     bool _process_always;

@@ -47,6 +47,7 @@
 
 #include "scheduler/scheduleditem.h"
 #include "scheduler/scheduler.h"
+#include "scheduler/periodicscheduler.h"
 #include "scheduler/trampoline.h"
 #include "scheduler/trampolinescheduler.h"
 #include "scheduler/currentthreadscheduler.h"
@@ -103,6 +104,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	// scheduler
 	ClassDB::register_abstract_class<ScheduledItem>();
 	ClassDB::register_abstract_class<Scheduler>();
+	ClassDB::register_abstract_class<PeriodicScheduler>();
 	ClassDB::register_abstract_class<Trampoline>();
 	ClassDB::register_abstract_class<TrampolineScheduler>();
 	ClassDB::register_abstract_class<CurrentThreadScheduler>();

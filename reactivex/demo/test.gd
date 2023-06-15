@@ -42,26 +42,37 @@ func __test_weakkeydict():
 
 
 func __test_schedulers():
-	var scheduler = TrampolineScheduler.Get()
-	for i in range(10):
-		scheduler.schedule(func(__, ___): OS.delay_msec(10) ; print("!!!"))
-	
-	var cts = CurrentThreadScheduler.singleton()
-	assert(cts == CurrentThreadScheduler.singleton())
-	cts.schedule(func(__, ___): print("Scheduled on main thread!"))
-	
-	var ims = ImmediateScheduler.singleton()
-	assert(ims == ImmediateScheduler.singleton())
-	ims.schedule(func(__, ___): print("Scheduled immediatly!"))
+#	var scheduler = TrampolineScheduler.Get()
+#	for i in range(10):
+#		scheduler.schedule(func(__, ___): OS.delay_msec(10) ; print("!!!"))
+#	
+#	var cts = CurrentThreadScheduler.singleton()
+#	assert(cts == CurrentThreadScheduler.singleton())
+#	cts.schedule(func(__, ___): print("Scheduled on main thread!"))
+#	
+#	var ims = ImmediateScheduler.singleton()
+#	assert(ims == ImmediateScheduler.singleton())
+#	ims.schedule(func(__, ___): print("Scheduled immediatly!"))
+#	
+#	var tos = SceneTreeTimeoutScheduler.singleton()
+#	#tos.schedule(func(__, ___): print("Scheduled timeout!"))
+#	#var t = tos.now().timeshift(RelativeTime.Get(5))
+#	var dt = RelativeTime.Get(5)
+#	tos.schedule(func(__, ___): print("Scheduled immediate timeout!"))
+#	var disp = tos.schedule_relative(dt, func(__, ___): print(":("))
+#	tos.schedule_relative(RelativeTime.Get(3), func(__, ___): print(":)") ; disp.dispose())
+#	tos.schedule_absolute(tos.now().timeshift(RelativeTime.Get(6.5)), func(__, ___): print("Scheduled absolute timeout!"))
 	
 	var tos = SceneTreeTimeoutScheduler.singleton()
-	#tos.schedule(func(__, ___): print("Scheduled timeout!"))
-	#var t = tos.now().timeshift(RelativeTime.Get(5))
-	var dt = RelativeTime.Get(5)
-	tos.schedule(func(__, ___): print("Scheduled immediate timeout!"))
-	var disp = tos.schedule_relative(dt, func(__, ___): print(":("))
-	tos.schedule_relative(RelativeTime.Get(3), func(__, ___): print(":)") ; disp.dispose())
-	tos.schedule_absolute(tos.now().timeshift(RelativeTime.Get(6.5)), func(__, ___): print("Scheduled absolute timeout!"))
+	var counter = [0]
+	var disp = [null]
+	disp[0] = tos.schedule_periodic(RelativeTime.Get(0.25), func(__ = null, ___ = null): 
+		print("Periodic schedule...")
+		counter[0] += 1
+		if (counter[0] == 40): disp[0].dispose()
+	)
+	
+
 
 
 
