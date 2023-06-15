@@ -5,6 +5,7 @@
 #include <godot_cpp/core/class_db.hpp>
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/variant/callable.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -17,6 +18,7 @@
 #include "scheduler/scheduleditem.h"
 
 #include <condition_variable>
+#include <deque>
 #include <queue>
 
 class EventLoopScheduler : public PeriodicScheduler {
@@ -45,6 +47,7 @@ public:
     Ref<DisposableBase> schedule(const Callable& action, const Variant& state = Variant()) override;
     Ref<DisposableBase> schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state = Variant()) override;
     Ref<DisposableBase> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant()) override;
+    Ref<DisposableBase> schedule_periodic(Ref<RelativeTime> period, const Callable& action, const Variant& state = Variant()) override;
 
 private:
     bool _has_thread();
@@ -53,7 +56,6 @@ private:
 public:
     void run();
     void dispose();
-    Ref<Disposable> as_disposable();
 
 };
 

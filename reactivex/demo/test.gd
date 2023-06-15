@@ -63,6 +63,8 @@ func __test_schedulers():
 	tos.schedule_relative(RelativeTime.Get(3), func(__, ___): print(":)") ; disp.dispose())
 	tos.schedule_absolute(tos.now().timeshift(RelativeTime.Get(6.5)), func(__, ___): print("Scheduled absolute timeout!"))
 	
+	var els = EventLoopScheduler.Get()
+	
 #	var tos = SceneTreeTimeoutScheduler.singleton()
 #	var counter = [0]
 #	var disp = [null]
