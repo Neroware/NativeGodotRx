@@ -1,6 +1,6 @@
 #include "scheduleditem.h"
 
-Ref<ScheduledItem> ScheduledItem::Get(Ref<Scheduler> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime) {
+Ref<ScheduledItem> ScheduledItem::Get(Ref<SchedulerBase> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime) {
     return memnew(ScheduledItem(scheduler, state, action, duetime));
 }
 
@@ -45,7 +45,7 @@ bool ScheduledItem::operator>(const ScheduledItem& other) const {
     return *(this->duetime) > *(other.duetime);
 }
 
-Ref<Scheduler> ScheduledItem::__get__scheduler__() {
+Ref<SchedulerBase> ScheduledItem::__get__scheduler__() {
     return this->scheduler;
 }
 Variant ScheduledItem::__get__state__() {

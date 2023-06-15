@@ -27,7 +27,7 @@ public:
     static Ref<Scheduler> Get();
 
     Ref<AbsoluteTime> now() override;
-    Ref<DisposableBase> invoke_action(const Callable& action, const Variant& state = Variant());
+    Ref<DisposableBase> invoke_action(const Callable& action, const Variant& state = Variant()) override;
 
     static double to_seconds(const Variant& t);
     static Ref<RelativeTime> to_timedelta(const Variant& t);

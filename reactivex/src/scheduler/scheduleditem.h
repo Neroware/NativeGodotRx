@@ -8,7 +8,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
-#include "scheduler/scheduler.h"
+#include "abstract/scheduler.h"
 #include "disposable/singleassignmentdisposable.h"
 
 
@@ -21,23 +21,23 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<Scheduler> scheduler;
+    Ref<SchedulerBase> scheduler;
     Variant state;
     Callable action;
     Ref<AbsoluteTime> duetime;
     Ref<SingleAssignmentDisposable> disposable;
 
     ScheduledItem() : disposable(SingleAssignmentDisposable::Get()) {}
-    ScheduledItem(Ref<Scheduler> scheduler_, const Variant& state_, const Callable& action_, Ref<AbsoluteTime> duetime_) : scheduler(scheduler_), state(state_), action(action_), duetime(duetime_), disposable(SingleAssignmentDisposable::Get()) {}
+    ScheduledItem(Ref<SchedulerBase> scheduler_, const Variant& state_, const Callable& action_, Ref<AbsoluteTime> duetime_) : scheduler(scheduler_), state(state_), action(action_), duetime(duetime_), disposable(SingleAssignmentDisposable::Get()) {}
     ~ScheduledItem(){}
 
-    static Ref<ScheduledItem> Get(Ref<Scheduler> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime);
+    static Ref<ScheduledItem> Get(Ref<SchedulerBase> scheduler, const Variant& state, const Callable& action, Ref<AbsoluteTime> duetime);
 
     void invoke();
     void cancel();
     bool is_cancelled();
 
-    Ref<Scheduler> __get__scheduler__();
+    Ref<SchedulerBase> __get__scheduler__();
     Variant __get__state__();
     Callable __get__action__();
     Ref<AbsoluteTime> __get__duetime__();

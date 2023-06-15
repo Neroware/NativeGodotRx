@@ -26,6 +26,7 @@ protected:
         BIND_VIRTUAL_METHOD(SchedulerBase, schedule);
         BIND_VIRTUAL_METHOD(SchedulerBase, schedule_absolute);
         BIND_VIRTUAL_METHOD(SchedulerBase, schedule_relative);
+        BIND_VIRTUAL_METHOD(SchedulerBase, invoke_action);
     }
 
 public:
@@ -42,6 +43,10 @@ public:
     }
 
     virtual Ref<DisposableBase> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant()) {
+        throw NotImplementedException();
+    }
+
+    virtual Ref<DisposableBase> invoke_action(const Callable& action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 

@@ -52,8 +52,8 @@ public:
     }
 };
 
-inline static Ref<StartableBase> default_thread_factory(const Callable& target, int priority = Thread::PRIORITY_NORMAL) {
-    return StartableThread::Get(target, priority);
+inline static Ref<StartableBase> default_thread_factory(const Callable& target) {
+    return StartableThread::Get(target, Thread::PRIORITY_NORMAL);
 }
 
 #endif // RX_CONCURRENCY_H
