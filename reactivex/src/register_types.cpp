@@ -57,6 +57,7 @@
 #include "scheduler/timeoutscheduler.h"
 #include "scheduler/scenetreetimeoutscheduler.h"
 #include "scheduler/eventloopscheduler.h"
+#include "scheduler/newthreadscheduler.h"
 
 #include "godotrx.h"
 
@@ -119,6 +120,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<TimeoutScheduler>();
 	ClassDB::register_abstract_class<SceneTreeTimeoutScheduler>();
 	ClassDB::register_abstract_class<EventLoopScheduler>();
+	ClassDB::register_abstract_class<NewThreadScheduler>();
 
 	ClassDB::register_abstract_class<__GDRxSingleton__>();
 

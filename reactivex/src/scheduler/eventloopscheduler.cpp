@@ -78,6 +78,9 @@ void EventLoopScheduler::_ensure_thread() {
             this->_thread = Ref<StartableBase>(thread);
             thread->start();
         }
+        else {
+            throw BadArgumentException("Thread factory of EventLoopScheduler must return a StartableBase!");
+        }
     }
 }
 
