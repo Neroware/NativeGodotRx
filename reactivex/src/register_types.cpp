@@ -25,6 +25,7 @@
 #include "abstract/subject.h"
 #include "abstract/iterable.h"
 #include "abstract/iterator.h"
+#include "abstract/startable.h"
 
 #include "internal/rlock.h"
 #include "internal/lock.h"
@@ -34,6 +35,7 @@
 #include "internal/tuple.h"
 #include "internal/iterator.h"
 #include "internal/lambda.h"
+#include "internal/concurrency.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -76,6 +78,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<SubjectAsObservable>();
 	ClassDB::register_abstract_class<IterableBase>();
 	ClassDB::register_abstract_class<IteratorBase>();
+	ClassDB::register_abstract_class<StartableBase>();
 	// internal
 	ClassDB::register_abstract_class<RLock>();
 	ClassDB::register_abstract_class<Lock>();
@@ -90,6 +93,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<ItEnd>();
 	ClassDB::register_abstract_class<ArrayIterator>();
 	ClassDB::register_abstract_class<DictionaryIterator>();
+	ClassDB::register_abstract_class<StartableThread>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();

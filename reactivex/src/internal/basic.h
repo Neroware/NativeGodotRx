@@ -41,7 +41,7 @@ T default_sub_comparer(T x, T y) {
 
 template <typename T>
 T default_key_serializer(T x) {
-    return std::string(reinterpret_cast<uint64_t>(x));
+    return std::string(reinterpret_cast<uint64_t>(&x));
 }
 
 template <typename T>
