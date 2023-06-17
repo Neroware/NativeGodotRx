@@ -36,15 +36,20 @@ Ref<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler::singleton(bool process
 
 Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule(const Callable& action, const Variant& state) {
     auto sad = SingleAssignmentDisposable::Get();
-
     auto self = Ref<SceneTreeTimeoutScheduler>(this);
-    auto interval = Lambda(VOID_FUN0([=]() {
-        auto _sad = sad; auto _self = self;
-        _sad->set_disposable(_self->invoke_action(action, state));
-    }));
-
     SceneTree* sceneTree = static_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
     auto timer = sceneTree->create_timer(0.0, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
+
+    auto interval = Lambda(VOID_FUN0([=]() {
+        auto _sad = sad; auto _self = self; auto _timer = timer;
+        _sad->set_disposable(_self->invoke_action(action, state));
+        auto connections = _timer->get_signal_connection_list("timeout");
+        for (auto i = 0ul; i < connections.size(); i++) {
+            Dictionary conn = connections[i];
+            Callable cb = conn["callable"];
+            _timer->disconnect("timeout", cb);
+        }
+    }));
     timer->connect("timeout", interval);
     
     auto dispose = Lambda(VOID_FUN0([=]() {
@@ -62,15 +67,20 @@ Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule_relative(Ref<RelativeTim
     }
 
     auto sad = SingleAssignmentDisposable::Get();
-
     auto self = Ref<SceneTreeTimeoutScheduler>(this);
-    auto interval = Lambda(VOID_FUN0([=]() {
-        auto _sad = sad; auto _self = self;
-        _sad->set_disposable(_self->invoke_action(action, state));
-    }));
-
     SceneTree* sceneTree = static_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
     auto timer = sceneTree->create_timer(seconds, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
+
+    auto interval = Lambda(VOID_FUN0([=]() {
+        auto _sad = sad; auto _self = self; auto _timer = timer;
+        _sad->set_disposable(_self->invoke_action(action, state));
+        auto connections = _timer->get_signal_connection_list("timeout");
+        for (auto i = 0ul; i < connections.size(); i++) {
+            Dictionary conn = connections[i];
+            Callable cb = conn["callable"];
+            _timer->disconnect("timeout", cb);
+        }
+    }));
     timer->connect("timeout", interval);
     
     auto dispose = Lambda(VOID_FUN0([=]() {
