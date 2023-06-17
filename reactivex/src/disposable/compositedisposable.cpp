@@ -1,11 +1,11 @@
 #include "compositedisposable.h"
 
-Ref<CompositeDisposable> CompositeDisposable::Get(const Array& items) {
+Ref<CompositeDisposable> CompositeDisposable::Get(const TypedArray<DisposableBase>& items) {
     return memnew(CompositeDisposable(items));
 }
 
 void CompositeDisposable::_bind_methods() {
-    ClassDB::bind_static_method("CompositeDisposable", D_METHOD("Get", "items"), &CompositeDisposable::Get, DEFVAL(Array()));
+    ClassDB::bind_static_method("CompositeDisposable", D_METHOD("Get", "items"), &CompositeDisposable::Get, DEFVAL(TypedArray<DisposableBase>()));
     ClassDB::bind_method(D_METHOD("add", "item"), &CompositeDisposable::add);
     ClassDB::bind_method(D_METHOD("remove", "item"), &CompositeDisposable::remove);
     ClassDB::bind_method(D_METHOD("dispose"), &CompositeDisposable::dispose);
@@ -67,12 +67,12 @@ void CompositeDisposable::dispose() {
         return;
     }
 
-    Array current_disposable;
+    TypedArray<DisposableBase> current_disposable;
     {
         std::lock_guard<RLock> guard(**lock);
         this->is_disposed = true;
         current_disposable = this->disposable;
-        this->disposable = Array();
+        this->disposable = TypedArray<DisposableBase>();
     }
 
     for (auto i = 0ul; i < current_disposable.size(); i++) {
@@ -82,11 +82,11 @@ void CompositeDisposable::dispose() {
 }
 
 void CompositeDisposable::clear() {
-    Array current_disposable;
+    TypedArray<DisposableBase> current_disposable;
     {
         std::lock_guard<RLock> guard(**lock);
         current_disposable = this->disposable;
-        this->disposable = Array();
+        this->disposable = TypedArray<DisposableBase>();
     }
 
     for (auto i = 0ul; i < current_disposable.size(); i++) {
@@ -99,7 +99,7 @@ bool CompositeDisposable::contains(Ref<DisposableBase> item) const {
     return this->disposable.find(item) >= 0;
 }
 
-Array CompositeDisposable::to_list() const {
+TypedArray<DisposableBase> CompositeDisposable::to_list() const {
     return this->disposable.duplicate();
 }
 

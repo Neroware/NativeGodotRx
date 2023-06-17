@@ -158,7 +158,9 @@ public:
     
     template<typename RetT, typename... Args>
     inline static Callable Lambda(const std::function<RetT(Args...)>& fun) {
-        return Callable(memnew(RxLambda(fun)), "_call");
+        Ref<RxLambda> lambda = memnew(RxLambda(fun));
+        Callable cb = Callable(*lambda, "_call");
+        return cb.bindv(Array::make(lambda));
     }
 
     // static void Test();

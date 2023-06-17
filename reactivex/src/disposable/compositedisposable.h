@@ -19,7 +19,7 @@ class CompositeDisposable : public DisposableBase {
     GDCLASS(CompositeDisposable, DisposableBase);
 
 public:
-    Array disposable;
+    TypedArray<DisposableBase> disposable;
     bool is_disposed;
     Ref<RLock> lock;
 
@@ -27,11 +27,11 @@ protected:
 	static void _bind_methods();
 
 public:
-    CompositeDisposable() : disposable(Array()), is_disposed(false), lock(RLock::Get()) {}
-    CompositeDisposable(const Array& items) : disposable(items), is_disposed(false), lock(RLock::Get()) {}
+    CompositeDisposable() : disposable(TypedArray<DisposableBase>()), is_disposed(false), lock(RLock::Get()) {}
+    CompositeDisposable(const TypedArray<DisposableBase>& items) : disposable(items), is_disposed(false), lock(RLock::Get()) {}
     ~CompositeDisposable(){}
 
-    static Ref<CompositeDisposable> Get(const Array& items = Array());
+    static Ref<CompositeDisposable> Get(const TypedArray<DisposableBase>& items = TypedArray<DisposableBase>());
 
     void dispose() override;
     void dispose_with(Object* obj) override;
@@ -40,7 +40,7 @@ public:
     bool remove(Ref<DisposableBase> item);
     void clear();
     bool contains(Ref<DisposableBase> item) const;
-    Array to_list() const;
+    TypedArray<DisposableBase> to_list() const;
     int size() const;
 
     // Setters and Getters

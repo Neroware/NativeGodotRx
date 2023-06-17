@@ -11,7 +11,7 @@ void RxLambda::_bind_methods() {
 }
 
 Variant RxLambda::_call(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
-    return this->_caller(args, arg_count, error);
+    return this->_caller(args, arg_count - 1, error);
 }
 
 /* void RxLambda::Test() {
