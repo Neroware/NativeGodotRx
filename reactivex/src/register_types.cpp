@@ -36,6 +36,7 @@
 #include "internal/iterator.h"
 #include "internal/lambda.h"
 #include "internal/concurrency.h"
+#include "internal/threadingevent.h"
 
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
@@ -95,6 +96,7 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<ArrayIterator>();
 	ClassDB::register_abstract_class<DictionaryIterator>();
 	ClassDB::register_abstract_class<StartableThread>();
+	ClassDB::register_abstract_class<ThreadingEvent>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();

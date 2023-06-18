@@ -69,21 +69,28 @@ func __test_schedulers():
 #	tos.schedule_absolute(tos.now().timeshift(RelativeTime.Get(6.5)), func(__, ___): print("Scheduled absolute timeout!")).dispose_with(self)
 #	
 #	
-	var tos = TimeoutScheduler.singleton()
-	var counter = [0]
-	var disp = [null]
-	disp[0] = tos.schedule_periodic(RelativeTime.Get(0.25), func(__ = null, ___ = null): 
-		print("Periodic schedule...")
-		counter[0] += 1
-		if (counter[0] == 40): disp[0].dispose()
-	)
-	disp[0].dispose_with(self)
+#	var tos = TimeoutScheduler.singleton()
+#	var counter = [0]
+#	var disp = [null]
+#	disp[0] = tos.schedule_periodic(RelativeTime.Get(0.25), func(__ = null, ___ = null): 
+#		print("Periodic schedule...")
+#		counter[0] += 1
+#		if (counter[0] == 40): disp[0].dispose()
+##	)
+#	disp[0].dispose_with(self)
 	
-#	var nts = NewThreadScheduler.Get()
+	var nts = NewThreadScheduler.Get()
 #	nts.schedule(func(__, ___): 
 #		print("Scheduled on separate thread...")
 #		print("[RxThread]: ", !(RxThread.get_current_thread() is RxMainThread) && RxThread.get_current_thread() is RxThread)
 #	).dispose_with(self)
+#	
+#	nts.schedule_relative(RelativeTime.Get(3.0), func(__, ___): 
+#		print("Scheduled with delay on separate thread...")
+#	).dispose_with(self)
+	nts.schedule_periodic(RelativeTime.Get(1.0), func(__, ___ = null):
+		print("Scheduled periodic on separate thread: ", OS.get_thread_caller_id())
+	).dispose_with(self)
 
 
 
