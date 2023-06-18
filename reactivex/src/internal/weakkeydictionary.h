@@ -15,7 +15,9 @@
 #include <memory>
 
 #include "internal/basic.h"
-#include "disposable/autodisposable.h"
+#include "internal/lambda.h"
+#include "disposable/autodisposer.h"
+#include "disposable/disposable.h"
 #include "exception/exception.h"
 
 using namespace godot;
@@ -33,9 +35,9 @@ private:
         return UtilityFunctions::hash(key);
     }
 
-    inline Ref<AutoDisposable> _create_disposer(Object* key, int64_t hkey) const {
+    inline Ref<DisposableBase> _create_disposer(Object* key, int64_t hkey) const {
         Variant ref = UtilityFunctions::weakref(this);
-        auto ad = memnew(AutoDisposable([ref, hkey](){
+        auto on_dispose = Lambda(VOID_FUN0([ref, hkey](){
             Ref<WeakRef> _ref = REF_CAST(ref, WeakRef);
             if (auto _dict = CAST_OR_NULL(_ref->get_ref(), WeakKeyDictionary)) {
                 std::unique_lock<std::shared_mutex> writeLock(*(_dict->_lock));
@@ -43,8 +45,9 @@ private:
                 _dict->_remove_pair(hkey);
             }
         }));
-        ad->dispose_with(key);
-        return ad;
+        auto disp = Disposable::Get(on_dispose);
+        AutoDisposer::add_to(key, disp);
+        return disp;
     }
 
     inline void _set_pair(int64_t hkey, Ref<WeakRef> wkey, const Variant& value, Ref<WeakRef> disp) {

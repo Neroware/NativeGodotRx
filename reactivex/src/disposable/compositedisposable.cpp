@@ -1,5 +1,7 @@
 #include "compositedisposable.h"
 
+#include "disposable/autodisposer.h"
+
 Ref<CompositeDisposable> CompositeDisposable::Get(const TypedArray<DisposableBase>& items) {
     return memnew(CompositeDisposable(items));
 }
@@ -108,8 +110,7 @@ int CompositeDisposable::size() const {
 }
 
 void CompositeDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters

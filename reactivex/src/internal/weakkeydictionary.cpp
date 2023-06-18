@@ -72,7 +72,9 @@ bool WeakKeyDictionary::erase(const Variant& key) {
         try {
             KeyEntry entry = this->_data.at(hkey);
             if (Object* key = CAST_OR_NULL(std::get<0>(entry)->get_ref(), Object)) {
-                REF_CAST(std::get<2>(entry)->get_ref(), AutoDisposable)->cancel(key);
+                auto disp = REF_CAST(std::get<2>(entry)->get_ref(), Disposable);
+                disp->cancel();
+                AutoDisposer::remove_from(key, disp);
                 this->_remove_pair(hkey);
             }
             return true;
@@ -92,7 +94,9 @@ void WeakKeyDictionary::clear() {
             auto hkey = hkeys[i];
             KeyEntry entry = this->_data.at(hkey);
             if (Object* key = CAST_OR_NULL(std::get<0>(entry)->get_ref(), Object)) {
-                REF_CAST(std::get<2>(entry)->get_ref(), AutoDisposable)->cancel(key);
+                auto disp = REF_CAST(std::get<2>(entry)->get_ref(), Disposable);
+                disp->cancel();
+                AutoDisposer::remove_from(key, disp);
                 this->_remove_pair(hkey);
             }
         }

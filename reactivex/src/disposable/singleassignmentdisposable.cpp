@@ -1,5 +1,7 @@
 #include "singleassignmentdisposable.h"
 
+#include "disposable/autodisposer.h"
+
 Ref<SingleAssignmentDisposable> SingleAssignmentDisposable::Get() {
     return memnew(SingleAssignmentDisposable);
 }
@@ -62,8 +64,7 @@ void SingleAssignmentDisposable::dispose() {
 }
 
 void SingleAssignmentDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters

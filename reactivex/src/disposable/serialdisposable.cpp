@@ -1,5 +1,7 @@
 #include "serialdisposable.h"
 
+#include "disposable/autodisposer.h"
+
 Ref<SerialDisposable> SerialDisposable::Get() {
     return memnew(SerialDisposable);
 }
@@ -65,8 +67,7 @@ void SerialDisposable::dispose() {
 }
 
 void SerialDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters

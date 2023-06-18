@@ -45,7 +45,6 @@
 #include "disposable/singleassignmentdisposable.h"
 #include "disposable/scheduleddisposable.h"
 #include "disposable/serialdisposable.h"
-#include "disposable/autodisposable.h"
 
 #include "scheduler/scheduleditem.h"
 #include "scheduler/scheduler.h"
@@ -106,7 +105,6 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<SingleAssignmentDisposable>();
 	ClassDB::register_abstract_class<ScheduledDisposable>();
 	ClassDB::register_abstract_class<SerialDisposable>();
-	ClassDB::register_abstract_class<AutoDisposable>();
 	// scheduler
 	ClassDB::register_abstract_class<ScheduledItem>();
 	ClassDB::register_abstract_class<Scheduler>();

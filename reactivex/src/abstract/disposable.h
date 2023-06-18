@@ -32,6 +32,11 @@ public:
     virtual void dispose_with(Object* obj) {
         throw NotImplementedException();
     }
+    inline void _notification(int p_what) {
+        if (p_what == NOTIFICATION_PREDELETE) {
+            this->dispose();
+        }
+    }
 };
 
 #endif // RX_ABSTRACT_DISPOSABLE_H

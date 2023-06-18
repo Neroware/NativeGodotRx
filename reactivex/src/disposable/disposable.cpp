@@ -2,6 +2,7 @@
 #include "internal/basic.h"
 
 #include <godot_cpp/variant/callable.hpp>
+#include "disposable/autodisposer.h"
 
 Ref<Disposable> Disposable::Get(const Callable& action) {
     return memnew(Disposable(action));
@@ -11,6 +12,7 @@ void Disposable::_bind_methods() {
     ClassDB::bind_static_method("Disposable", D_METHOD("Get", "action"), &Disposable::Get, DEFVAL(Callable()));
     ClassDB::bind_method(D_METHOD("dispose"), &Disposable::dispose);
     ClassDB::bind_method(D_METHOD("dispose_with", "obj"), &Disposable::dispose_with);
+    ClassDB::bind_method(D_METHOD("cancel"), &Disposable::cancel);
 
     ClassDB::bind_method(D_METHOD("__get__is_disposed__"), &Disposable::__get__is_disposed__);
     ClassDB::bind_method(D_METHOD("__set__is_disposed__", "v"), &Disposable::__set__is_disposed__);
@@ -40,8 +42,12 @@ void Disposable::dispose() {
 }
 
 void Disposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
+}
+
+void Disposable::cancel() {
+    std::lock_guard<RLock> guard(**lock);
+    this->is_disposed = true;
 }
 
 // Setters and Getters

@@ -21,9 +21,13 @@ var c = 100
 var dict : WeakKeyDictionary
 func __test_weakkeydict():
 	n1 = Node.new()
+	n1.name = "N1"
 	n2 = Node.new()
+	n2.name = "N2"
 	n3 = Node.new()
+	n3.name = "N3"
 	n4 = Node.new()
+	n4.name = "N4"
 	dict = WeakKeyDictionary.Get()
 	dict.set_pair(n1, 1)
 	dict.set_pair(n2, 2)
@@ -33,10 +37,10 @@ func __test_weakkeydict():
 	dict.erase(n2)
 	dict.set_pair(n1, 0)
 	#print(">>> ", dict.length)
-	var foo = Disposable.Get()
+	var foo = Disposable.Get(func(): print("I died!"))
 	dict.set_pair(foo, "I'm gonna die!")
-	#print("Values> ", dict.values())
-	#print("Keys> ", dict.keys())
+	print("Values> ", dict.values())
+	print("Keys> ", dict.keys())
 
 
 
@@ -60,12 +64,12 @@ func __test_schedulers():
 	var dt = RelativeTime.Get(5)
 	tos.schedule(func(__, ___): print("Scheduled immediate timeout!"))
 	var disp = tos.schedule_relative(dt, func(__, ___): print(":("))
-	tos.schedule_relative(RelativeTime.Get(3), func(__, ___): print(":)") ; disp.dispose())
-	tos.schedule_absolute(tos.now().timeshift(RelativeTime.Get(6.5)), func(__, ___): print("Scheduled absolute timeout!"))
+	tos.schedule_relative(RelativeTime.Get(3), func(__, ___): print(":)") ; disp.dispose()).dispose_with(self)
+	tos.schedule_absolute(tos.now().timeshift(RelativeTime.Get(6.5)), func(__, ___): print("Scheduled absolute timeout!")).dispose_with(self)
 	
-	var nts = NewThreadScheduler.Get()
-	nts.schedule(func(__, ___): print("Scheduled on separate thread..."))
-	
+#	var nts = NewThreadScheduler.Get()
+#	nts.schedule(func(__, ___): print("Scheduled on separate thread..."))
+#	
 #	var tos = SceneTreeTimeoutScheduler.singleton()
 #	var counter = [0]
 #	var disp = [null]
@@ -116,7 +120,7 @@ func __test_disposables():
 
 func __test_threads():
 	
-	var threads : Array[RxThread]
+	var threads : Array[RxThread] = []
 	for i in range(1000):
 		var t = RxThread.Get()
 		threads.push_back(t)
@@ -131,7 +135,7 @@ func __test_threads():
 func __test_currthreadscheduler():
 	var cts = CurrentThreadScheduler.singleton()
 	print(">> ", cts.get_instance_id())
-	var threads : Array[RxThread]
+	var threads : Array[RxThread] = []
 	for i in range(100):
 		var t = RxThread.Get()
 		threads.push_back(t)
@@ -147,7 +151,7 @@ func __test_currthreadscheduler():
 #	var t0 = AbsoluteTime.Get(1.123)
 #	var t1 = AbsoluteTime.Get(0.023)
 #	var dt0 = t1.timedelta(t0)
-##	
+#	
 #	c -= 1
 #	if (c == 0): 
 #		print("DELETE NODE")
@@ -156,3 +160,7 @@ func __test_currthreadscheduler():
 #		dict.clear()
 #	print(">>> ", dict.keys())
 #	print(">> ", dict.length)
+#	if (c == -101):
+#		n2.queue_free()
+#		n3.queue_free()
+#		n4.queue_free()

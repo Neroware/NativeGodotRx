@@ -37,6 +37,9 @@ public:
     void dispose() override;
     void dispose_with(Object* obj) override;
 
+    // Dispose without doing the action
+    void cancel();
+
     // Setters and Getters
     bool __get__is_disposed__();
     void __set__is_disposed__(bool is_disposed);

@@ -1,5 +1,7 @@
 #include "scheduleddisposable.h"
 
+#include "disposable/autodisposer.h"
+
 Ref<ScheduledDisposable> ScheduledDisposable::Get(Ref<SchedulerBase> scheduler, Ref<DisposableBase> disposable) {
     return memnew(ScheduledDisposable(scheduler, disposable));
 }
@@ -30,8 +32,7 @@ void ScheduledDisposable::dispose() {
 }
 
 void ScheduledDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters

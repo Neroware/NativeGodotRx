@@ -1,5 +1,7 @@
 #include "multiassignmentdisposable.h"
 
+#include "disposable/autodisposer.h"
+
 Ref<MultiAssignmentDisposable> MultiAssignmentDisposable::Get() {
     return memnew(MultiAssignmentDisposable);
 }
@@ -57,8 +59,7 @@ void MultiAssignmentDisposable::dispose() {
 }
 
 void MultiAssignmentDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters

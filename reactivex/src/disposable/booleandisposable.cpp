@@ -1,5 +1,7 @@
 #include "booleandisposable.h"
 
+#include "disposable/autodisposer.h"
+
 Ref<BooleanDisposable> BooleanDisposable::Get() {
     return memnew(BooleanDisposable);
 }
@@ -22,8 +24,7 @@ void BooleanDisposable::dispose() {
 }
 
 void BooleanDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters

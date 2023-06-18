@@ -1,6 +1,7 @@
 #include "refcountdisposable.h"
 
-#include "disposable.h"
+#include "disposable/disposable.h"
+#include "disposable/autodisposer.h"
 
 void InnerDisposable::_bind_methods() {
     ClassDB::bind_static_method("InnerDisposable", D_METHOD("Get", "parent"), &InnerDisposable::Get);
@@ -36,8 +37,7 @@ void InnerDisposable::dispose() {
 }
 
 void InnerDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 void RefCountDisposable::_bind_methods() {
@@ -123,8 +123,7 @@ Ref<DisposableBase> RefCountDisposable::get_disposable() {
 }
 
 void RefCountDisposable::dispose_with(Object* obj) {
-    // TODO Implement AutoDisposer!!!
-    throw NotImplementedException();
+    AutoDisposer::add_to(obj, this);
 }
 
 // Setters and Getters
