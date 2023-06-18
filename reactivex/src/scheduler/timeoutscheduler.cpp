@@ -61,10 +61,7 @@ Ref<DisposableBase> TimeoutScheduler::schedule_relative(Ref<RelativeTime> duetim
     auto self = Ref<TimeoutScheduler>(this);
     auto interval = [=]() {
         auto _sad = sad; auto _self = self;
-        std::this_thread::sleep_for(
-            std::chrono::duration_cast<std::chrono::seconds>(
-                std::chrono::duration<double>(seconds))
-        );
+        std::this_thread::sleep_for(std::chrono::duration<double>(seconds));
         if (!(*cancel)) _sad->set_disposable(_self->invoke_action(action, state));
     };
 

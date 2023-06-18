@@ -1,5 +1,5 @@
-#ifndef RX_AUTODISPOSER_H
-#define RX_AUTODISPOSER_H
+#ifndef RX_DISPOSABLE_AUTODISPOSER_H
+#define RX_DISPOSABLE_AUTODISPOSER_H
 
 #include <godot_cpp/core/binder_common.hpp>
 
@@ -33,4 +33,4 @@ struct AutoDisposer {
 
 };
 
-#endif // RX_AUTODISPOSER_H
+#endif // RX_DISPOSABLE_AUTODISPOSER_H

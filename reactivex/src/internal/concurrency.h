@@ -28,6 +28,7 @@ protected:
     inline static void _bind_methods() {
         ClassDB::bind_static_method("StartableThread", D_METHOD("Get", "target", "priority"), &StartableThread::Get, DEFVAL(Thread::PRIORITY_NORMAL));
         ClassDB::bind_method(D_METHOD("start"), &StartableThread::start);
+        ClassDB::bind_method(D_METHOD("await"), &StartableThread::await);
         ClassDB::bind_method(D_METHOD("__get__thread__"), &StartableThread::__get__thread__);
         ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "thread"), "", "__get__thread__");
     }
@@ -45,6 +46,10 @@ public:
 
     inline void start() override {
         this->_thread->start(this->_target, Thread::Priority(this->_priority));
+    }
+
+    inline Variant await() {
+        return this->_thread->wait_to_finish();
     }
 
     inline Ref<RxThread> __get__thread__() {

@@ -5,6 +5,8 @@
 #include <godot_cpp/core/class_db.hpp>
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/scene_tree_timer.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -18,6 +20,14 @@ private:
     bool _process_always;
     bool _process_in_physics;
     bool _ignore_time_scale;
+
+    inline void _cancel_timer(Ref<SceneTreeTimer> timer) const {
+        auto connections = timer->get_signal_connection_list("timeout");
+        for (auto i = 0ul; i < connections.size(); i++) {
+            Dictionary conn = connections[i];
+            timer->disconnect("timeout", conn["callable"]);
+        }
+    }
 
 protected:
     static void _bind_methods();

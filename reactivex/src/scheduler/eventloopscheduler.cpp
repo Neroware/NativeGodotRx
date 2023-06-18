@@ -4,6 +4,7 @@
 
 #include "exception/exception.h"
 #include "internal/time.h"
+#include "internal/lambda.h"
 #include "scheduler/scheduleditem.h"
 #include "disposable/disposable.h"
 
@@ -56,7 +57,13 @@ Ref<DisposableBase> EventLoopScheduler::schedule_absolute(Ref<AbsoluteTime> duet
         this->_ensure_thread();   
     }
 
-    return Disposable::Get(Callable(*si, "cancel"));
+    auto thread = this->_thread;
+    auto on_dispose = Lambda(VOID_FUN0([=](){
+        auto _si = si; auto _thread = thread;
+        _si->cancel();
+        _thread->await();
+    }));
+    return Disposable::Get(on_dispose);
 }
 
 Ref<DisposableBase> EventLoopScheduler::schedule_periodic(Ref<RelativeTime> period, const Callable& action, const Variant& state) {
@@ -73,7 +80,9 @@ bool EventLoopScheduler::_has_thread() {
 
 void EventLoopScheduler::_ensure_thread() {
     if (this->_thread.is_null()) {
-        auto thread_ = this->_thread_factory.callv(Array::make(Callable(this, "run")));
+        auto self = Ref<EventLoopScheduler>(this);
+        auto run_ = Lambda(VOID_FUN0([self](){ auto _self = self; _self->run(); }));
+        auto thread_ = this->_thread_factory.callv(Array::make(run_));
         if (auto thread = CAST_OR_NULL(thread_, StartableBase)) {
             this->_thread = Ref<StartableBase>(thread);
             thread->start();

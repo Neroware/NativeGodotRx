@@ -1,8 +1,5 @@
 #include "scenetreetimeoutscheduler.h"
 
-#include <godot_cpp/classes/scene_tree.hpp>
-#include <godot_cpp/classes/scene_tree_timer.hpp>
-
 #include "godotrx.h"
 
 #include "disposable/disposable.h"
@@ -43,18 +40,13 @@ Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule(const Callable& action, 
     auto interval = Lambda(VOID_FUN0([=]() {
         auto _sad = sad; auto _self = self; auto _timer = timer;
         _sad->set_disposable(_self->invoke_action(action, state));
-        auto connections = _timer->get_signal_connection_list("timeout");
-        for (auto i = 0ul; i < connections.size(); i++) {
-            Dictionary conn = connections[i];
-            Callable cb = conn["callable"];
-            _timer->disconnect("timeout", cb);
-        }
+        this->_cancel_timer(_timer);
     }));
     timer->connect("timeout", interval);
     
     auto dispose = Lambda(VOID_FUN0([=]() {
         auto _timer = timer;
-        _timer->disconnect("timeout", interval);
+        this->_cancel_timer(_timer);
     }));
 
     return CompositeDisposable::Get(Array::make(sad, Disposable::Get(dispose)));
@@ -74,18 +66,13 @@ Ref<DisposableBase> SceneTreeTimeoutScheduler::schedule_relative(Ref<RelativeTim
     auto interval = Lambda(VOID_FUN0([=]() {
         auto _sad = sad; auto _self = self; auto _timer = timer;
         _sad->set_disposable(_self->invoke_action(action, state));
-        auto connections = _timer->get_signal_connection_list("timeout");
-        for (auto i = 0ul; i < connections.size(); i++) {
-            Dictionary conn = connections[i];
-            Callable cb = conn["callable"];
-            _timer->disconnect("timeout", cb);
-        }
+        this->_cancel_timer(_timer);
     }));
     timer->connect("timeout", interval);
     
     auto dispose = Lambda(VOID_FUN0([=]() {
         auto _timer = timer;
-        _timer->disconnect("timeout", interval);
+        this->_cancel_timer(_timer);
     }));
 
     return CompositeDisposable::Get(Array::make(sad, Disposable::Get(dispose)));

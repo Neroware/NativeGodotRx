@@ -22,10 +22,14 @@ public:
 protected:
 	static void _bind_methods() {
         BIND_VIRTUAL_METHOD(StartableBase, start);
+        BIND_VIRTUAL_METHOD(StartableBase, await);
     }
 
 public:
     virtual void start() {
+        throw NotImplementedException();
+    }
+    virtual Variant await() {
         throw NotImplementedException();
     }
 };
