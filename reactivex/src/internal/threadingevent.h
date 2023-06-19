@@ -30,7 +30,7 @@ public:
     ~ThreadingEvent(){}
     static Ref<ThreadingEvent> Get();
 
-    bool is_set();
+    bool is_set() const ;
     void set_flag();
     void clear();
     bool wait(double timeout = -1.0); 

@@ -14,7 +14,7 @@ Ref<ThreadingEvent> ThreadingEvent::Get() {
     return memnew(ThreadingEvent);
 }
 
-bool ThreadingEvent::is_set() {
+bool ThreadingEvent::is_set() const {
     return this->_flag;
 }
 

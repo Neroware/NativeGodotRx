@@ -132,6 +132,12 @@ static inline Ref<Iterator> create_iterator(const Variant& iterable) {
     if (auto it = CAST_OR_NULL(iterable, IterableBase)) {
         return it->iter();
     }
+    else if (auto it = CAST_OR_NULL(iterable, Object)) {
+        if (it->has_method("iter")) {
+            Callable iter = Callable(it, "iter");
+            return iter.callv(Array());
+        }
+    }
     return ArrayIterator::Get(Array::make(iterable));
 }
 

@@ -17,18 +17,19 @@ class RxError : public RefCounted {
 
 private:
     std::exception err;
-    RxError(std::exception err);
+    RxError(const std::exception& err) : err(err) {}
 
 protected:
 	static void _bind_methods();
 
 public:
-    RxError();
-    ~RxError();
+    RxError(){}
+    ~RxError(){}
+
 
     StringName what();
     StringName type();
-    static RxError wrap(std::exception err);
+    static Ref<RxError> wrap(const std::exception& err);
     void raise();
 };
 

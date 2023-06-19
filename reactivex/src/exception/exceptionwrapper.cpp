@@ -9,14 +9,8 @@ void RxError::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("type"), &RxError::type);
 }
 
-RxError::RxError(){}
-
-RxError::~RxError(){}
-
-RxError::RxError(std::exception err) : err(err) {}
-
-RxError RxError::wrap(std::exception err) {
-    return RxError(err);
+Ref<RxError> RxError::wrap(const std::exception& err) {
+    return memnew(RxError(err));
 }
 
 StringName RxError::type() {
