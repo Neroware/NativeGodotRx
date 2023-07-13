@@ -6,6 +6,8 @@
 #include <exception>
 #include <iostream>
 
+#include "lambda.h"
+
 #define CAST_OR_NULL(x, cls) x.get_type() == Variant::Type::OBJECT && Object::cast_to<Object>(x)->is_class(#cls) ? Object::cast_to<cls>(x) : nullptr
 #define OBJ_CAST(x, cls) Object::cast_to<cls>(x)
 #define REF_CAST(x, cls) Ref<cls>(Object::cast_to<cls>(x))
@@ -61,5 +63,9 @@ bool default_condition(T... args) {
 }
 
 } // END Namespace basic
+
+#define DEFAULT_ON_NEXT Lambda(VOID_FUN1([](const Variant& i){ basic::noop<>(i); }))
+#define DEFAULT_ON_ERROR Lambda(VOID_FUN1([](Ref<RxError> e) { basic::noop<>(e); }))
+#define DEFAULT_ON_COMPLETED Lambda(VOID_FUN0([]() { basic::noop<>(); }))
 
 #endif // RX_BASIC_H

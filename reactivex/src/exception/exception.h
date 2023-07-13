@@ -4,6 +4,19 @@
 #include <exception>
 #include <string>
 
+class Exception : public std::exception
+{
+private:
+    std::string _what;
+
+public:
+    Exception(const std::string& what_ = "") : _what(what_) {}
+
+    virtual char const* what() {
+        return _what.c_str();
+    }
+};
+
 class NotImplementedException : public std::exception
 {
 public:
@@ -36,8 +49,9 @@ private:
 public:
     BadArgumentException(const std::string& what_) : _what(what_) {}
 
-    virtual char const* what() { 
-        return "A function argument has a bad value!"; 
+    virtual char const* what() {
+        std::string res = "A function argument has a bad value: " + _what;
+        return res.c_str();
     }
 };
 

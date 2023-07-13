@@ -11,8 +11,6 @@
 #include <functional>
 #include <cassert>
 
-#include "internal/basic.h"
-
 using namespace godot;
 
 #define VARIANT1 const Variant&
@@ -91,7 +89,6 @@ struct FunctionCaller {
     }
 
     FunctionCaller() : functor([](const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) -> Variant {
-        basic::noop<>();
         return Variant(); 
     }) {}
 

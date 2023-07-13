@@ -38,6 +38,8 @@
 #include "internal/concurrency.h"
 #include "internal/threadingevent.h"
 
+#include "notification.h"
+
 #include "disposable/disposable.h"
 #include "disposable/booleandisposable.h"
 #include "disposable/compositedisposable.h"
@@ -98,6 +100,11 @@ void initialize_rx_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<DictionaryIterator>();
 	ClassDB::register_abstract_class<StartableThread>();
 	ClassDB::register_abstract_class<ThreadingEvent>();
+	// notification
+	ClassDB::register_abstract_class<RxNotification>();
+	ClassDB::register_abstract_class<OnNext>();
+	ClassDB::register_abstract_class<OnError>();
+	ClassDB::register_abstract_class<OnCompleted>();
 	// disposable
 	ClassDB::register_abstract_class<Disposable>();
 	ClassDB::register_abstract_class<BooleanDisposable>();
