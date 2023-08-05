@@ -16,6 +16,7 @@
 #include "internal/weakkeydictionary.h"
 
 #include "scheduler/currentthreadscheduler.h"
+#include "scheduler/immediatescheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
@@ -37,6 +38,7 @@ public:
     /* Scheduler singletons */
     weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
     std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
+    const std::shared_ptr<ImmediateScheduler> ImmediateScheduler_ = ImmediateScheduler::get();
 
 private:
 
@@ -48,13 +50,9 @@ protected:
     }
 
 public:
-    __GDRxSingleton__(){
-        
-    }
+    __GDRxSingleton__(){}
 
-    ~__GDRxSingleton__(){
-
-    }
+    ~__GDRxSingleton__(){}
 
     inline Ref<RxIterator> iter(const Variant& iterable) {
         return rx::iterator::iter(iterable);

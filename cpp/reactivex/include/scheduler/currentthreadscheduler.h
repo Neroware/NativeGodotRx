@@ -15,13 +15,13 @@ class CurrentThreadScheduler : public TrampolineScheduler, public std::enable_sh
 
 private:
     weakkey_dictionary<variant_key_t, std::shared_ptr<Trampoline>> _tramps;
-    inline std::shared_ptr<CurrentThreadScheduler> getptr() { return std::enable_shared_from_this<CurrentThreadScheduler>::shared_from_this(); }
 
 protected:
     CurrentThreadScheduler(){}
 public:
     ~CurrentThreadScheduler(){}
     inline static std::shared_ptr<CurrentThreadScheduler> get() { return std::shared_ptr<CurrentThreadScheduler>(new CurrentThreadScheduler()); }
+    inline std::shared_ptr<CurrentThreadScheduler> getptr() { return std::enable_shared_from_this<CurrentThreadScheduler>::shared_from_this(); }
 
     static std::shared_ptr<CurrentThreadScheduler> singleton();
     std::shared_ptr<Trampoline> get_trampoline() override;
@@ -48,14 +48,12 @@ public:
 
 class CurrentThreadSchedulerSingleton : public CurrentThreadScheduler, public std::enable_shared_from_this<CurrentThreadSchedulerSingleton> {
 
-private:
-    inline std::shared_ptr<CurrentThreadSchedulerSingleton> getptr() { return std::enable_shared_from_this<CurrentThreadSchedulerSingleton>::shared_from_this(); }
-
 protected:
     CurrentThreadSchedulerSingleton(){}
 public:
     ~CurrentThreadSchedulerSingleton(){}
     inline static std::shared_ptr<CurrentThreadSchedulerSingleton> get() { return std::shared_ptr<CurrentThreadSchedulerSingleton>(new CurrentThreadSchedulerSingleton()); }
+    inline std::shared_ptr<CurrentThreadSchedulerSingleton> getptr() { return std::enable_shared_from_this<CurrentThreadSchedulerSingleton>::shared_from_this(); }
 
     std::shared_ptr<Trampoline> get_trampoline() override;
 

@@ -23,10 +23,10 @@ protected:
             this->disposable.set_disposable(disposable_);
     }
 public:
+    ~ScheduledDisposable(){ this->dispose(); }
     inline static std::shared_ptr<ScheduledDisposable> get(const std::shared_ptr<SchedulerBase>& scheduler_, const std::shared_ptr<DisposableBase>& disposable_) {
         return std::shared_ptr<ScheduledDisposable>(new ScheduledDisposable(scheduler_, disposable_));
     }
-    ~ScheduledDisposable(){ this->dispose(); }
     inline std::shared_ptr<ScheduledDisposable> getptr() { return shared_from_this(); }
 
     void dispose() override;

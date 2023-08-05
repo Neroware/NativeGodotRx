@@ -15,7 +15,6 @@ private:
     handler_t _handler;
     std::shared_ptr<SchedulerBase> _recursive_original;
     std::shared_ptr<CatchScheduler> _recursive_wrapper;
-    inline std::shared_ptr<CatchScheduler> getptr() { return std::enable_shared_from_this<CatchScheduler>::shared_from_this(); }
 
 protected:
     CatchScheduler(const std::shared_ptr<SchedulerBase>& scheduler, const handler_t& handler) 
@@ -25,6 +24,7 @@ public:
     inline static std::shared_ptr<CatchScheduler> get(const std::shared_ptr<SchedulerBase>& scheduler, const handler_t& handler) {
         return std::shared_ptr<CatchScheduler>(new CatchScheduler(scheduler, handler));
     }
+    inline std::shared_ptr<CatchScheduler> getptr() { return std::enable_shared_from_this<CatchScheduler>::shared_from_this(); }
 
     time_point_t now() override;
     std::shared_ptr<DisposableBase> schedule(const action_t& action, const Variant& state = Variant()) override;
