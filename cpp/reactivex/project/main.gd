@@ -20,7 +20,11 @@ func _ready():
 		disp.dispose()
 	tos.schedule_relative(RelativeTime.from_seconds(3.0), action).dispose_with(self)
 	
-	
+	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
+	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
+	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
+	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
+	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton().equals(RxScheduler.ImmediateSchedulerSingleton()))
 	
 	return
 	var example: Example = $Example

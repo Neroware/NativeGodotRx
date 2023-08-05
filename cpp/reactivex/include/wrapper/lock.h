@@ -4,6 +4,7 @@
 #include <godot_cpp/core/binder_common.hpp>
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -35,6 +36,8 @@ protected:
         ClassDB::bind_method(D_METHOD("lock"), &RxLock::lock);
         ClassDB::bind_method(D_METHOD("unlock"), &RxLock::unlock);
         ClassDB::bind_method(D_METHOD("try_lock"), &RxLock::try_lock);
+
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxLock::equals);
     }
 
 public:
@@ -46,6 +49,9 @@ public:
     void lock();
     void unlock();
     bool try_lock();
+
+    inline String _to_string() { return "[RxLock:" + UtilityFunctions::str(reinterpret_cast<uint64_t>(this->_ptr.get())) + "]"; }
+    inline bool equals(Ref<RxLock> other) { return this->_ptr.get() == other->_ptr.get(); }
 
 };
 

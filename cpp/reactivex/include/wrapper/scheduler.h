@@ -4,6 +4,7 @@
 #include <godot_cpp/core/binder_common.hpp>
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -52,6 +53,8 @@ protected:
         ClassDB::bind_method(D_METHOD("now"), &RxScheduler::now);
         ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &RxScheduler::invoke_action, DEFVAL(Variant()));
 
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxScheduler::equals);
+
         ClassDB::bind_static_method("RxScheduler", D_METHOD("ImmediateSchedulerSingleton"), &RxScheduler::ImmediateSchedulerSingleton);
         ClassDB::bind_static_method("RxScheduler", D_METHOD("TimeoutSchedulerSingleton"), &RxScheduler::TimeoutSchedulerSingleton);
         ClassDB::bind_static_method("RxScheduler", D_METHOD("SceneTimeoutSchedulerSingleton", "process_always", "process_in_physics", "ignore_time_scale"), &RxScheduler::SceneTimeoutSchedulerSingleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
@@ -72,6 +75,9 @@ public:
     Ref<RxDisposable> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<AbsoluteTime> now();
     Ref<RxDisposable> invoke_action(const Callable& action, const Variant& state);
+
+    inline String _to_string() { return "[RxScheduler:" + UtilityFunctions::str(reinterpret_cast<uint64_t>(this->_ptr.get())) + "]"; }
+    inline bool equals(Ref<RxScheduler> other) { return this->_ptr.get() == other->_ptr.get(); }
 
     static Ref<RxScheduler> ImmediateSchedulerSingleton() { return RxScheduler::wrap(ImmediateScheduler::singleton()); }
     static Ref<RxScheduler> TimeoutSchedulerSingleton() { return RxScheduler::wrap(TimeoutScheduler::singleton()); }
