@@ -8,7 +8,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
-#include <exception/exception.h>
+#include "exception/exception.h"
 
 using namespace godot;
 
