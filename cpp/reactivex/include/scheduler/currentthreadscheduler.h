@@ -11,7 +11,7 @@ using namespace godot;
 
 namespace rx::scheduler {
 
-class CurrentThreadScheduler : public TrampolineScheduler, public std::enable_shared_from_this<CurrentThreadScheduler> {
+class CurrentThreadScheduler : public TrampolineScheduler {
 
 private:
     weakkey_dictionary<variant_key_t, std::shared_ptr<Trampoline>> _tramps;
@@ -21,7 +21,7 @@ protected:
 public:
     ~CurrentThreadScheduler(){}
     inline static std::shared_ptr<CurrentThreadScheduler> get() { return std::shared_ptr<CurrentThreadScheduler>(new CurrentThreadScheduler()); }
-    inline std::shared_ptr<CurrentThreadScheduler> getptr() { return std::enable_shared_from_this<CurrentThreadScheduler>::shared_from_this(); }
+    inline std::shared_ptr<CurrentThreadScheduler> getptr() { return std::static_pointer_cast<CurrentThreadScheduler>(TrampolineScheduler::getptr()); }
 
     static std::shared_ptr<CurrentThreadScheduler> singleton();
     std::shared_ptr<Trampoline> get_trampoline() override;
@@ -46,14 +46,14 @@ public:
 }; // END _CurrentThreadScheduler_Local
 
 
-class CurrentThreadSchedulerSingleton : public CurrentThreadScheduler, public std::enable_shared_from_this<CurrentThreadSchedulerSingleton> {
+class CurrentThreadSchedulerSingleton : public CurrentThreadScheduler {
 
 protected:
     CurrentThreadSchedulerSingleton(){}
 public:
     ~CurrentThreadSchedulerSingleton(){}
     inline static std::shared_ptr<CurrentThreadSchedulerSingleton> get() { return std::shared_ptr<CurrentThreadSchedulerSingleton>(new CurrentThreadSchedulerSingleton()); }
-    inline std::shared_ptr<CurrentThreadSchedulerSingleton> getptr() { return std::enable_shared_from_this<CurrentThreadSchedulerSingleton>::shared_from_this(); }
+    inline std::shared_ptr<CurrentThreadSchedulerSingleton> getptr() { return std::static_pointer_cast<CurrentThreadSchedulerSingleton>(CurrentThreadScheduler::getptr()); }
 
     std::shared_ptr<Trampoline> get_trampoline() override;
 

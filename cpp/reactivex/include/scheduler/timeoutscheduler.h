@@ -13,14 +13,14 @@
 
 namespace rx::scheduler {
 
-class TimeoutScheduler : public PeriodicScheduler, public std::enable_shared_from_this<TimeoutScheduler> {
+class TimeoutScheduler : public PeriodicScheduler {
 
 protected:
     TimeoutScheduler(){}
 public:
     ~TimeoutScheduler(){}
     inline static std::shared_ptr<TimeoutScheduler> get() { return std::shared_ptr<TimeoutScheduler>(new TimeoutScheduler()); }
-    inline std::shared_ptr<TimeoutScheduler> getptr() { return std::enable_shared_from_this<TimeoutScheduler>::shared_from_this(); }
+    inline std::shared_ptr<TimeoutScheduler> getptr() { return std::static_pointer_cast<TimeoutScheduler>(PeriodicScheduler::getptr()); }
 
     static std::shared_ptr<TimeoutScheduler> singleton();
 

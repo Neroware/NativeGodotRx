@@ -8,7 +8,7 @@ using namespace godot;
 
 namespace rx::scheduler {
 
-class CatchScheduler : public PeriodicScheduler, public std::enable_shared_from_this<CatchScheduler> {
+class CatchScheduler : public PeriodicScheduler {
 
 private:
     std::shared_ptr<SchedulerBase> _scheduler;
@@ -24,7 +24,7 @@ public:
     inline static std::shared_ptr<CatchScheduler> get(const std::shared_ptr<SchedulerBase>& scheduler, const handler_t& handler) {
         return std::shared_ptr<CatchScheduler>(new CatchScheduler(scheduler, handler));
     }
-    inline std::shared_ptr<CatchScheduler> getptr() { return std::enable_shared_from_this<CatchScheduler>::shared_from_this(); }
+    inline std::shared_ptr<CatchScheduler> getptr() { return std::static_pointer_cast<CatchScheduler>(PeriodicScheduler::getptr()); }
 
     time_point_t now() override;
     std::shared_ptr<DisposableBase> schedule(const action_t& action, const Variant& state = Variant()) override;

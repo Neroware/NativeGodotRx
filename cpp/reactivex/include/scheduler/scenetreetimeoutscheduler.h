@@ -22,7 +22,7 @@ using namespace rx::disposable;
 
 namespace rx::scheduler {
 
-class SceneTreeTimeoutScheduler : public PeriodicScheduler, public std::enable_shared_from_this<SceneTreeTimeoutScheduler> {
+class SceneTreeTimeoutScheduler : public PeriodicScheduler {
 
 private:
     bool _process_always;
@@ -34,11 +34,10 @@ protected:
         : _process_always(process_always), _process_in_physics(process_in_physics), _ignore_time_scale(ignore_time_scale) {}
 public:
     ~SceneTreeTimeoutScheduler(){}
-    inline std::shared_ptr<SceneTreeTimeoutScheduler> getptr(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false) {
-        return std::enable_shared_from_this<SceneTreeTimeoutScheduler>::shared_from_this();
-    }
-    inline static std::shared_ptr<SceneTreeTimeoutScheduler> get(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false) {
-        return std::shared_ptr<SceneTreeTimeoutScheduler>(new SceneTreeTimeoutScheduler(process_always, process_in_physics, ignore_time_scale));
+    inline std::shared_ptr<SceneTreeTimeoutScheduler> getptr() { return std::static_pointer_cast<SceneTreeTimeoutScheduler>(PeriodicScheduler::getptr()); }
+    inline static std::shared_ptr<SceneTreeTimeoutScheduler> get(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false) 
+    { 
+        return std::shared_ptr<SceneTreeTimeoutScheduler>(new SceneTreeTimeoutScheduler(process_always, process_in_physics, ignore_time_scale)); 
     }
 
     static std::shared_ptr<SceneTreeTimeoutScheduler> singleton(bool process_always = true, bool process_in_physics = false, bool ignore_time_scale = false);

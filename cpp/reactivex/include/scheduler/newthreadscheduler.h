@@ -7,16 +7,16 @@
 
 namespace rx::scheduler {
 
-class NewThreadScheduler : public PeriodicScheduler, public std::enable_shared_from_this<NewThreadScheduler> {
+class NewThreadScheduler : public PeriodicScheduler {
 
 private:
     thread_factory_t _thread_factory;
-    inline std::shared_ptr<NewThreadScheduler> getptr() { return std::enable_shared_from_this<NewThreadScheduler>::shared_from_this(); }
 
 protected:
     NewThreadScheduler(const thread_factory_t& thread_factory = default_thread_factory) : _thread_factory(thread_factory) {}
 public:
     ~NewThreadScheduler() {}
+    inline std::shared_ptr<NewThreadScheduler> getptr() { return std::static_pointer_cast<NewThreadScheduler>(PeriodicScheduler::getptr()); }
     inline static std::shared_ptr<NewThreadScheduler> get(const thread_factory_t& thread_factory = default_thread_factory) {
         return std::shared_ptr<NewThreadScheduler>(new NewThreadScheduler(thread_factory));
     }

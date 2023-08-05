@@ -7,6 +7,21 @@ func _ready():
 	
 	GDRx.enumerate([1, 2, 3, 4, 5], func(i : int, item): print(i, "> ", item))
 	
+	var ims : RxScheduler = RxScheduler.ImmediateSchedulerSingleton()
+	ims.schedule(func(__ = null, ___ = null): print("Aloha!")).dispose_with(self)
+	
+	var sts : RxScheduler = RxScheduler.SceneTimeoutSchedulerSingleton()
+	var disp = sts.schedule_relative(RelativeTime.from_seconds(4.0), func(__ = null, ___ = null): print("ST timed timeout!"))
+	disp.dispose_with(self)
+	
+	var tos : RxScheduler = RxScheduler.TimeoutSchedulerSingleton()
+	var action = func(__ = null, ___ = null):
+		print("Timed timeout!")
+		disp.dispose()
+	tos.schedule_relative(RelativeTime.from_seconds(3.0), action).dispose_with(self)
+	
+	
+	
 	return
 	var example: Example = $Example
 

@@ -11,9 +11,10 @@ namespace rx::scheduler {
 
 class Scheduler : public SchedulerBase, public std::enable_shared_from_this<Scheduler> {
 private:
-    inline std::shared_ptr<Scheduler> getptr() { return std::enable_shared_from_this<Scheduler>::shared_from_this(); }
 
 public:
+    inline std::shared_ptr<Scheduler> getptr() { return shared_from_this(); }
+
     time_point_t now() override;
     std::shared_ptr<DisposableBase> invoke_action(const action_t& action, const Variant& state = Variant()) override;
 

@@ -15,9 +15,17 @@
 #include "wrapper/disposable.h"
 #include "cast.h"
 
+#include "scheduler/catchscheduler.h"
+#include "scheduler/currentthreadscheduler.h"
+#include "scheduler/immediatescheduler.h"
+#include "scheduler/newthreadscheduler.h"
+#include "scheduler/scenetreetimeoutscheduler.h"
+#include "scheduler/timeoutscheduler.h"
+
 using namespace godot;
 using namespace rx::abstract;
 using namespace rx::exception;
+using namespace rx::scheduler;
 
 namespace rx {
 namespace wrappers {
@@ -43,6 +51,10 @@ protected:
         ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &RxScheduler::schedule_relative, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("now"), &RxScheduler::now);
         ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &RxScheduler::invoke_action, DEFVAL(Variant()));
+
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("ImmediateSchedulerSingleton"), &RxScheduler::ImmediateSchedulerSingleton);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("TimeoutSchedulerSingleton"), &RxScheduler::TimeoutSchedulerSingleton);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("SceneTimeoutSchedulerSingleton", "process_always", "process_in_physics", "ignore_time_scale"), &RxScheduler::SceneTimeoutSchedulerSingleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
     }
 
 public:
@@ -60,6 +72,10 @@ public:
     Ref<RxDisposable> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<AbsoluteTime> now();
     Ref<RxDisposable> invoke_action(const Callable& action, const Variant& state);
+
+    static Ref<RxScheduler> ImmediateSchedulerSingleton() { return RxScheduler::wrap(ImmediateScheduler::singleton()); }
+    static Ref<RxScheduler> TimeoutSchedulerSingleton() { return RxScheduler::wrap(TimeoutScheduler::singleton()); }
+    static Ref<RxScheduler> SceneTimeoutSchedulerSingleton(bool f0 = true, bool f1 = false, bool f2 = false) { return RxScheduler::wrap(SceneTreeTimeoutScheduler::singleton(f0, f1, f2)); }
 
 }; // END class RxScheduler
 

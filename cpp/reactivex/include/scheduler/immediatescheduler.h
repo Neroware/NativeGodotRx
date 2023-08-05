@@ -11,6 +11,7 @@ protected:
     ImmediateScheduler(){}
 public:
     ~ImmediateScheduler(){}
+    inline std::shared_ptr<ImmediateScheduler> getptr() { return std::static_pointer_cast<ImmediateScheduler>(Scheduler::getptr()); }
     inline static std::shared_ptr<ImmediateScheduler> get() { return std::shared_ptr<ImmediateScheduler>(new ImmediateScheduler()); }
 
     static std::shared_ptr<ImmediateScheduler> singleton();

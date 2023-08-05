@@ -9,7 +9,7 @@ using namespace godot;
 
 namespace rx::scheduler {
 
-class TrampolineScheduler : public Scheduler, public std::enable_shared_from_this<TrampolineScheduler> {
+class TrampolineScheduler : public Scheduler {
 
 private:
     std::shared_ptr<Trampoline> _tramp;
@@ -17,7 +17,7 @@ protected:
     TrampolineScheduler(){}
 public:
     inline static std::shared_ptr<TrampolineScheduler> get() { return std::shared_ptr<TrampolineScheduler>(new TrampolineScheduler()); }
-    inline std::shared_ptr<TrampolineScheduler> getptr() { return std::enable_shared_from_this<TrampolineScheduler>::shared_from_this(); }
+    inline std::shared_ptr<TrampolineScheduler> getptr() { return std::static_pointer_cast<TrampolineScheduler>(Scheduler::getptr()); }
     virtual std::shared_ptr<Trampoline> get_trampoline();
     std::shared_ptr<DisposableBase> schedule(const action_t& action, const Variant& state = Variant()) override;
     std::shared_ptr<DisposableBase> schedule_absolute(const time_point_t& duetime, const action_t& action, const Variant& state = Variant()) override;

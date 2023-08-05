@@ -15,7 +15,7 @@
 
 namespace rx::scheduler {
 
-class EventLoopScheduler : public PeriodicScheduler, public DisposableBase, public std::enable_shared_from_this<EventLoopScheduler> {
+class EventLoopScheduler : public PeriodicScheduler, public DisposableBase {
 
 private:
     bool _is_disposed = false;
@@ -36,7 +36,7 @@ public:
     inline static std::shared_ptr<EventLoopScheduler> get(const thread_factory_t& thread_factory = default_thread_factory, bool exit_if_empty = false) {
         return std::shared_ptr<EventLoopScheduler>(new EventLoopScheduler(thread_factory, exit_if_empty));
     }
-    inline std::shared_ptr<EventLoopScheduler> getptr() { return std::enable_shared_from_this<EventLoopScheduler>::shared_from_this(); }
+    inline std::shared_ptr<EventLoopScheduler> getptr() { return std::static_pointer_cast<EventLoopScheduler>(PeriodicScheduler::getptr()); }
 
     std::shared_ptr<DisposableBase> schedule(const action_t& action, const Variant& state = Variant()) override;
     std::shared_ptr<DisposableBase> schedule_absolute(const time_point_t& duetime, const action_t& action, const Variant& state = Variant()) override;
