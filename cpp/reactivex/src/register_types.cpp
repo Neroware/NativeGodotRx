@@ -21,12 +21,12 @@
 #include "internal/thread.h"
 // wrappers
 #include "wrapper/lock.h"
-//#include "wrapper/disposable.h"
+#include "wrapper/disposable.h"
 #include "wrapper/iterator.h"
 #include "wrapper/iterable.h"
 //#include "wrapper/scheduler.h"
 // disposable
-//#include "disposable/autodisposer.h"
+#include "disposable/autodisposer.h"
 
 using namespace godot;
 
@@ -49,12 +49,12 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::RxMainThread>();
 	// wrapper
 	ClassDB::register_abstract_class<rx::wrappers::RxLock>();
-	//ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIterator>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIterable>();
 	//ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	// disposable
-	//ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
+	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
 
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 
