@@ -13,11 +13,15 @@
 
 #include "internal/iterator.h"
 #include "internal/thread.h"
+#include "internal/weakkeydictionary.h"
+
+#include "scheduler/currentthreadscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
 
 using namespace godot;
+using namespace rx::scheduler;
 
 namespace rx {
 
@@ -29,6 +33,10 @@ public:
     std::pair<std::shared_mutex, std::unordered_map<std::thread::id, Ref<RxThread>>> thread_registry;
     /* Main thread dummy */
     const Ref<RxThread> MAIN_THREAD = memnew(RxMainThread);
+
+    /* Scheduler singletons */
+    weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
+    std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
 
 private:
 
