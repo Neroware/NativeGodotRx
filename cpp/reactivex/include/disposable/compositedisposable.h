@@ -12,6 +12,7 @@ namespace rx::disposable {
 
 typedef std::shared_ptr<DisposableBase> disposable_t;
 typedef std::list<disposable_t> disposable_list_t;
+typedef std::initializer_list<disposable_t> disposable_init_t;
 
 class CompositeDisposable : public DisposableBase {
 
@@ -21,6 +22,8 @@ public:
     RLock lock;
 
 public:
+    CompositeDisposable(const disposable_init_t& items = {}) 
+        : disposable(items) {}
     CompositeDisposable(const disposable_list_t& items = {}) 
         : disposable(items) {}
     ~CompositeDisposable(){ this->dispose(); }

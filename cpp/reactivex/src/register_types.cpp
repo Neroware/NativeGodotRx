@@ -27,6 +27,8 @@
 #include "wrapper/scheduler.h"
 // disposable
 #include "disposable/autodisposer.h"
+// scheduler
+#include "scheduler/scenetreetimeoutscheduler.h"
 
 using namespace godot;
 
@@ -55,6 +57,8 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
+	// scheduler
+	ClassDB::register_abstract_class<rx::scheduler::RxSceneTreeTimeout>();
 
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 

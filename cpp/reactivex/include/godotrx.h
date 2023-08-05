@@ -10,6 +10,7 @@
 
 #include <mutex>
 #include <shared_mutex>
+#include <map>
 
 #include "internal/iterator.h"
 #include "internal/thread.h"
@@ -17,6 +18,8 @@
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
+#include "scheduler/timeoutscheduler.h"
+#include "scheduler/scenetreetimeoutscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
@@ -39,6 +42,8 @@ public:
     weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
     std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
     const std::shared_ptr<ImmediateScheduler> ImmediateScheduler_ = ImmediateScheduler::get();
+    const std::shared_ptr<TimeoutScheduler> TimeoutScheduler_ = TimeoutScheduler::get();
+    std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_;
 
 private:
 
@@ -50,7 +55,21 @@ protected:
     }
 
 public:
-    __GDRxSingleton__(){}
+    __GDRxSingleton__(){
+        // Insert Main Thread
+        {
+            std::unique_lock<std::shared_mutex> writeLock(this->thread_registry.first);
+            auto main_thread_id = std::this_thread::get_id();
+            this->thread_registry.second[main_thread_id] = MAIN_THREAD;
+        }
+
+        // Scheduler Singletons
+        {
+            for (auto i = 0; i < 8; i++) {
+                this->SceneTreeTimeoutScheduler_[i] = SceneTreeTimeoutScheduler::get(i & 0b100, i & 0b10, i & 0b1);
+            }
+        }
+    }
 
     ~__GDRxSingleton__(){}
 
