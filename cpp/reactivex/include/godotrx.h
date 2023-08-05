@@ -12,6 +12,7 @@
 #include <shared_mutex>
 
 #include "internal/iterator.h"
+#include "internal/thread.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
@@ -24,6 +25,10 @@ class __GDRxSingleton__ : public RefCounted {
     GDCLASS(__GDRxSingleton__, RefCounted);
 
 public:
+    /* Thread registry singleton */
+    std::pair<std::shared_mutex, std::unordered_map<std::thread::id, Ref<RxThread>>> thread_registry;
+    /* Main thread dummy */
+    const Ref<RxThread> MAIN_THREAD = memnew(RxMainThread);
 
 private:
 

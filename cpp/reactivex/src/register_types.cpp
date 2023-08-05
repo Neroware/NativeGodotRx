@@ -18,7 +18,7 @@
 #include "godotrx.h"
 // internal
 #include "internal/time.h"
-// #include "internal/thread.h"
+#include "internal/thread.h"
 // wrappers
 #include "wrapper/lock.h"
 //#include "wrapper/disposable.h"
@@ -45,8 +45,8 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::AbsoluteTime>();
 	ClassDB::register_abstract_class<rx::RelativeTime>();
 	ClassDB::register_class<rx::ItEnd>();
-	//ClassDB::register_class<rx::RxThread>();
-	//ClassDB::register_class<rx::RxMainThread>();
+	ClassDB::register_class<rx::RxThread>();
+	ClassDB::register_class<rx::RxMainThread>();
 	// wrapper
 	ClassDB::register_abstract_class<rx::wrappers::RxLock>();
 	//ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();

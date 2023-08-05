@@ -11,6 +11,11 @@
 
 #include "exception/exceptionwrapper.h"
 
+#define DEFAULT_ON_NEXT rx::basic::noop<const Variant&>
+#define DEFAULT_ON_ERROR rx::basic::noop<const std::exception&>
+#define DEFAULT_ON_COMPLETED rx::basic::noop<>
+#define DEFAULT_DISPOSE rx::basic::noop<>
+
 using namespace godot;
 
 namespace rx {

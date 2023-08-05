@@ -33,10 +33,6 @@ struct array_iterator : public IteratorBase {
     Array array;
     uint64_t index;
 
-    static inline std::shared_ptr<array_iterator> get(const Array& array_, uint64_t index_ = 0) {
-        return std::make_shared<array_iterator>(array_, index_);
-    }
-
     explicit array_iterator(const Array& array_, uint64_t index_ = 0) 
         : array(array_), index(index_) {}
     
@@ -55,10 +51,6 @@ struct dictionary_iterator : public IteratorBase {
     Dictionary dict;
     Array keys;
     uint64_t index;
-
-    static inline std::shared_ptr<dictionary_iterator> get(const Dictionary& dict_, uint64_t index_ = 0) {
-        return std::make_shared<dictionary_iterator>(dict_, index_);
-    }
 
     explicit dictionary_iterator(const Dictionary& dict_, uint64_t index_ = 0) 
         : dict(dict_), keys(dict.keys()), index(index_) {}
@@ -81,10 +73,10 @@ static Ref<RxIterator> iter(const Variant& it) {
         return iterable->iter();
     }
     if (it.get_type() == Variant::ARRAY) {
-        return RxIterator::wrap(array_iterator::get(it));
+        return RxIterator::wrap(std::make_shared<array_iterator>(it));
     }
     if (it.get_type() == Variant::DICTIONARY) {
-        return RxIterator::wrap(dictionary_iterator::get(it));
+        return RxIterator::wrap(std::make_shared<dictionary_iterator>(it));
     }
     return iter(Array::make(it));
 }
