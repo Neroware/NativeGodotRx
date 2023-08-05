@@ -10,9 +10,23 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 #include "example.h"
 #include "tests.h"
+
+#include "godotrx.h"
+// internal
+#include "internal/time.h"
+// #include "internal/thread.h"
+// wrappers
+#include "wrapper/lock.h"
+//#include "wrapper/disposable.h"
+#include "wrapper/iterator.h"
+#include "wrapper/iterable.h"
+//#include "wrapper/scheduler.h"
+// disposable
+//#include "disposable/autodisposer.h"
 
 using namespace godot;
 
@@ -26,6 +40,25 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<Example>();
 	ClassDB::register_class<ExampleVirtual>(true);
 	ClassDB::register_abstract_class<ExampleAbstract>();
+
+	// internal
+	ClassDB::register_abstract_class<rx::AbsoluteTime>();
+	ClassDB::register_abstract_class<rx::RelativeTime>();
+	ClassDB::register_class<rx::ItEnd>();
+	//ClassDB::register_class<rx::RxThread>();
+	//ClassDB::register_class<rx::RxMainThread>();
+	// wrapper
+	ClassDB::register_abstract_class<rx::wrappers::RxLock>();
+	//ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxIterator>();
+	ClassDB::register_abstract_class<rx::wrappers::RxIterable>();
+	//ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
+	// disposable
+	//ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
+
+	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
+
+	Engine::get_singleton()->register_singleton(GDRX_SINGLETON_NAME, memnew(rx::__GDRxSingleton__));
 }
 
 void uninitialize_reactivex_module(ModuleInitializationLevel p_level) {

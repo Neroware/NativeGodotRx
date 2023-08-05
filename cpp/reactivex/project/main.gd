@@ -4,6 +4,10 @@ var custom_signal_emitted = null
 
 
 func _ready():
+	
+	GDRx.enumerate([1, 2, 3, 4, 5], func(i : int, item): print(i, "> ", item))
+	
+	return
 	var example: Example = $Example
 
 	# Signal.
