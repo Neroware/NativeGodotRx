@@ -3,8 +3,10 @@
 
 #include <exception>
 #include <string>
+#include <functional>
 
-namespace rx::exception {
+namespace rx {
+namespace exception {
 
 class Exception : public std::exception
 {
@@ -57,6 +59,10 @@ public:
     }
 };
 
-}; // END namepsace rx::exception
+} // END namespace exception
+
+typedef std::function<bool(const std::exception& e)> handler_t;
+
+} // END namepsace rx
 
 #endif // RX_EXCEPTION_EXCEPTION_H
