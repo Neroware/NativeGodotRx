@@ -24,7 +24,7 @@
 #include "wrapper/disposable.h"
 #include "wrapper/iterator.h"
 #include "wrapper/iterable.h"
-//#include "wrapper/scheduler.h"
+#include "wrapper/scheduler.h"
 // disposable
 #include "disposable/autodisposer.h"
 
@@ -52,7 +52,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIterator>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIterable>();
-	//ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
 
