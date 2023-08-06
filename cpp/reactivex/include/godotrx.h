@@ -40,7 +40,7 @@ public:
 
     /* Scheduler singletons */
     weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
-    std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_;
+    const std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_ = _CurrentThreadScheduler_Local::get();
     const std::shared_ptr<ImmediateScheduler> ImmediateScheduler_ = ImmediateScheduler::get();
     const std::shared_ptr<TimeoutScheduler> TimeoutScheduler_ = TimeoutScheduler::get();
     std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_;

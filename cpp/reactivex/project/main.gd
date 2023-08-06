@@ -5,28 +5,19 @@ var custom_signal_emitted = null
 
 func _ready():
 	
-	GDRx.enumerate([1, 2, 3, 4, 5], func(i : int, item): print(i, "> ", item))
-	
-	var ims : RxScheduler = RxScheduler.ImmediateSchedulerSingleton()
-	ims.schedule(func(__ = null, ___ = null): print("Aloha!")).dispose_with(self)
-	
-	var sts : RxScheduler = RxScheduler.SceneTimeoutSchedulerSingleton()
-	var disp = sts.schedule_relative(RelativeTime.from_seconds(4.0), func(__ = null, ___ = null): print("ST timed timeout!"))
-	disp.dispose_with(self)
-	
-	var tos : RxScheduler = RxScheduler.TimeoutSchedulerSingleton()
+	var scheduler = RxScheduler.CurrentThreadScheduler()
+	const N_REPEATS = 10000
 	var action = func(__ = null, ___ = null):
-		print("Timed timeout!")
-		disp.dispose()
-	tos.schedule_relative(RelativeTime.from_seconds(3.0), action).dispose_with(self)
+		pass
 	
-	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
-	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
-	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
-	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton())
-	print(">>>> ", RxScheduler.ImmediateSchedulerSingleton().equals(RxScheduler.ImmediateSchedulerSingleton()))
+	var t0 = Time.get_ticks_msec()
+	for i in range(N_REPEATS):
+		scheduler.schedule(action)
+	var t1 = Time.get_ticks_msec()
+	print("DT: ", (t1 - t0) / 1000.0, "s")
 	
 	return
+	
 	var example: Example = $Example
 
 	# Signal.

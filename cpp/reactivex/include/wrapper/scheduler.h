@@ -58,6 +58,8 @@ protected:
         ClassDB::bind_static_method("RxScheduler", D_METHOD("ImmediateSchedulerSingleton"), &RxScheduler::ImmediateSchedulerSingleton);
         ClassDB::bind_static_method("RxScheduler", D_METHOD("TimeoutSchedulerSingleton"), &RxScheduler::TimeoutSchedulerSingleton);
         ClassDB::bind_static_method("RxScheduler", D_METHOD("SceneTimeoutSchedulerSingleton", "process_always", "process_in_physics", "ignore_time_scale"), &RxScheduler::SceneTimeoutSchedulerSingleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("CurrentThreadSchedulerSingleton"), &RxScheduler::CurrentThreadSchedulerSingleton);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("CurrentThreadScheduler"), &RxScheduler::CurrentThreadScheduler);
     }
 
 public:
@@ -82,6 +84,8 @@ public:
     static Ref<RxScheduler> ImmediateSchedulerSingleton() { return RxScheduler::wrap(ImmediateScheduler::singleton()); }
     static Ref<RxScheduler> TimeoutSchedulerSingleton() { return RxScheduler::wrap(TimeoutScheduler::singleton()); }
     static Ref<RxScheduler> SceneTimeoutSchedulerSingleton(bool f0 = true, bool f1 = false, bool f2 = false) { return RxScheduler::wrap(SceneTreeTimeoutScheduler::singleton(f0, f1, f2)); }
+    static Ref<RxScheduler> CurrentThreadSchedulerSingleton() { return RxScheduler::wrap(CurrentThreadScheduler::singleton()); }
+    static Ref<RxScheduler> CurrentThreadScheduler() { return RxScheduler::wrap(CurrentThreadScheduler::get()); }
 
 }; // END class RxScheduler
 

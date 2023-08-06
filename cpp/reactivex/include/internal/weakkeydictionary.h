@@ -70,6 +70,10 @@ public:
         dictionary_.erase(key);
     }
 
+    inline size_t size() const {
+        return dictionary_.size();
+    }
+
 private:
     inline void _garbage_collect() {
         std::unordered_map<std::weak_ptr<Key>, Value, weakkey_dictionary::hash, weakkey_dictionary::pred> newDictionary;
