@@ -5,7 +5,7 @@ var custom_signal_emitted = null
 
 func _ready():
 	
-	var scheduler = RxScheduler.CurrentThreadScheduler()
+	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
 	const N_REPEATS = 10000
 	var action = func(__ = null, ___ = null):
 		pass

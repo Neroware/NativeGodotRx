@@ -17,7 +17,7 @@ std::shared_ptr<CurrentThreadScheduler> CurrentThreadScheduler::singleton() {
     }
     catch(std::out_of_range) {
         auto res = CurrentThreadSchedulerSingleton::get();
-        class_map[thread] = res;
+        class_map.insert(thread, res);
         return res;
     }
 }
@@ -30,7 +30,7 @@ std::shared_ptr<Trampoline> CurrentThreadScheduler::get_trampoline() {
     }
     catch (std::out_of_range) {
         auto tramp = std::make_shared<Trampoline>();
-        this->_tramps[thread] = tramp;
+        this->_tramps.insert(thread, tramp);
         return tramp;
     }
 }
@@ -43,7 +43,7 @@ std::shared_ptr<Trampoline> _CurrentThreadScheduler_Local::get_trampoline() {
     }
     catch (std::out_of_range) {
         auto tramp = std::make_shared<Trampoline>();
-        this->_tramp[thread] = tramp;
+        this->_tramp.insert(thread, tramp);
         return tramp;
     }
 }

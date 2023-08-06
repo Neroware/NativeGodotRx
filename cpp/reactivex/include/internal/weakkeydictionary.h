@@ -99,7 +99,7 @@ private:
         bool operator()(const std::weak_ptr<Key>& lhs, const std::weak_ptr<Key>& rhs) const {
             auto _lhs = lhs.lock();
             auto _rhs = rhs.lock();
-            return _lhs && _rhs ? *_lhs == *_rhs : false;
+            return !(_lhs && _rhs) || *_lhs == *_rhs;
         }
     };
 

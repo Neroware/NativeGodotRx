@@ -12,9 +12,9 @@ namespace rx::scheduler {
 class TrampolineScheduler : public Scheduler {
 
 private:
-    std::shared_ptr<Trampoline> _tramp;
+    const std::shared_ptr<Trampoline> _tramp = std::make_shared<Trampoline>();
 protected:
-    TrampolineScheduler(){}
+    TrampolineScheduler() {}
 public:
     inline static std::shared_ptr<TrampolineScheduler> get() { return std::shared_ptr<TrampolineScheduler>(new TrampolineScheduler()); }
     inline std::shared_ptr<TrampolineScheduler> getptr() { return std::static_pointer_cast<TrampolineScheduler>(Scheduler::getptr()); }
