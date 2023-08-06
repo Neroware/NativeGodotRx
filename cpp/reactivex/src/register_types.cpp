@@ -16,6 +16,8 @@
 #include "tests.h"
 
 #include "godotrx.h"
+// exception
+#include "exception/exceptionwrapper.h"
 // internal
 #include "internal/time.h"
 #include "internal/thread.h"
@@ -25,6 +27,7 @@
 #include "wrapper/iterator.h"
 #include "wrapper/iterable.h"
 #include "wrapper/scheduler.h"
+#include "wrapper/observer.h"
 // disposable
 #include "disposable/autodisposer.h"
 // scheduler
@@ -43,6 +46,8 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<ExampleVirtual>(true);
 	ClassDB::register_abstract_class<ExampleAbstract>();
 
+	// exception
+	ClassDB::register_abstract_class<rx::exception::RxError>();
 	// internal
 	ClassDB::register_abstract_class<rx::AbsoluteTime>();
 	ClassDB::register_abstract_class<rx::RelativeTime>();
@@ -55,6 +60,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxIterator>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIterable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
 	// scheduler
