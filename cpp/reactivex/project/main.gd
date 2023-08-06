@@ -15,16 +15,17 @@ func _ready():
 #	var t1 = Time.get_ticks_msec()
 #	print("DT: ", (t1 - t0) / 1000.0, "s")
 	
-	print(">>> Main Thread: ", OS.get_thread_caller_id())
-	
+#	print(">>> Main Thread: ", OS.get_thread_caller_id())
+#	
 	var nts = RxScheduler.NewThreadScheduler()
+	var nested_action = func(__ = null, ___ = null):
+		pass
+		#print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
 	var action = func(__ = null, ___ = null):
-		print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
+		RxScheduler.CurrentThreadSchedulerSingleton().schedule(nested_action)
 	for i in range(1000):
 		nts.schedule(action).dispose_with(self)
 	#self.disp_member.dispose()
-	
-	return
 	
 	var example: Example = $Example
 
