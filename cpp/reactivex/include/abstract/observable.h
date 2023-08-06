@@ -22,7 +22,7 @@ public:
 
 } // END namespace abstract
 
-typedef std::function<std::shared_ptr<rx::abstract::DisposableBase>(const std::shared_ptr<rx::abstract::ObserverBase>&, const Variant&)> subscription_t;
+typedef std::function<std::shared_ptr<rx::abstract::DisposableBase>(const std::shared_ptr<rx::abstract::ObserverBase>&, const std::shared_ptr<rx::abstract::SchedulerBase>&)> subscription_t;
 
 } // END namespace rx
 
