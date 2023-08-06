@@ -27,15 +27,12 @@ private:
 public:
     StartableThread(const run_t& target, int priority = Thread::PRIORITY_NORMAL)
         : _thread(memnew(RxThread)), _target(target), _priority(priority) {}
-    ~StartableThread() {}
+    ~StartableThread() { this->_thread->wait_to_finish(); }
 
     inline void start() override {
         this->_thread->start(this->_target, Thread::Priority(this->_priority));
     }
-
-    inline Variant await() override {
-        return this->_thread->wait_to_finish();
-    }
+    
 };
 
 static std::shared_ptr<StartableBase> default_thread_factory(const run_t& target) {

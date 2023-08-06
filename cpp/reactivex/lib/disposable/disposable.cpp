@@ -17,9 +17,4 @@ void Disposable::dispose() {
     }
 }
 
-void Disposable::cancel() {
-    std::lock_guard<RLock> guard(lock);
-    this->is_disposed = true;
-}
-
 } // END namespace rx::disposable

@@ -17,10 +17,6 @@ class StartableBase {
 
 public:
     virtual void start() = 0;
-    
-    virtual Variant await() {
-        throw NotImplementedException();
-    }
 };
 
 } // END namespace abstract

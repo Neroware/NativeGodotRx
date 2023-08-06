@@ -56,7 +56,6 @@ std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_periodic(const time
 
     dispose_t dispose = [=]() {
         disposed->set_flag();
-        thread->await();
     };
 
     return std::make_shared<Disposable>(dispose);

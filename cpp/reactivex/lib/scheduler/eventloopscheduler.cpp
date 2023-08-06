@@ -33,7 +33,6 @@ std::shared_ptr<DisposableBase> EventLoopScheduler::schedule_absolute(const time
     auto thread = this->_thread;
     dispose_t on_dispose = [si, thread](){
         si.cancel();
-        thread->await();
     };
     return std::make_shared<Disposable>(on_dispose);
 }
@@ -122,7 +121,7 @@ void EventLoopScheduler::run() {
             }
 
             else if (this->_exit_if_empty) {
-                this->_thread = std::shared_ptr<StartableBase>();
+                this->_thread = nullptr;
                 return;
             }
 

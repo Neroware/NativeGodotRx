@@ -25,6 +25,8 @@ public:
 
     scheduled_item_t(const std::shared_ptr<SchedulerBase>& scheduler_, const Variant& state_, const action_t& action_, const time_point_t& duetime_) 
         : scheduler(scheduler_), state(state_), action(action_), duetime(duetime_), disposable(std::make_shared<SingleAssignmentDisposable>()) {}
+    scheduled_item_t(const scheduled_item_t& other) 
+        : scheduler(other.scheduler), state(other.state), action(other.action), duetime(other.duetime), disposable(other.disposable) {}
     ~scheduled_item_t(){}
 
     void invoke() const;

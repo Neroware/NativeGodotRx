@@ -21,9 +21,6 @@ public:
     ~Disposable(){ this->dispose(); }
 
     void dispose() override;
-
-    // Dispose without doing the action
-    void cancel();
 };
 
 } // END namespace disposable

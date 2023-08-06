@@ -2,19 +2,27 @@ extends "res://test_base.gd"
 
 var custom_signal_emitted = null
 
-
 func _ready():
 	
-	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
-	const N_REPEATS = 10000
-	var action = func(__ = null, ___ = null):
-		pass
+#	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
+#	const N_REPEATS = 10000
+#	var action = func(__ = null, ___ = null):
+#		pass
+#	
+#	var t0 = Time.get_ticks_msec()
+#	for i in range(N_REPEATS):
+#		scheduler.schedule(action)
+#	var t1 = Time.get_ticks_msec()
+#	print("DT: ", (t1 - t0) / 1000.0, "s")
 	
-	var t0 = Time.get_ticks_msec()
-	for i in range(N_REPEATS):
-		scheduler.schedule(action)
-	var t1 = Time.get_ticks_msec()
-	print("DT: ", (t1 - t0) / 1000.0, "s")
+	print(">>> Main Thread: ", OS.get_thread_caller_id())
+	
+	var nts = RxScheduler.NewThreadScheduler()
+	var action = func(__ = null, ___ = null):
+		print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
+	for i in range(1000):
+		nts.schedule(action).dispose_with(self)
+	#self.disp_member.dispose()
 	
 	return
 	
