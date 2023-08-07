@@ -19,11 +19,10 @@ func _ready():
 #	
 	var nts = RxScheduler.NewThreadScheduler()
 	var nested_action = func(__ = null, ___ = null):
-		pass
-		#print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
+		print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
 	var action = func(__ = null, ___ = null):
 		RxScheduler.CurrentThreadSchedulerSingleton().schedule(nested_action)
-	for i in range(1000):
+	for i in range(1):
 		nts.schedule(action).dispose_with(self)
 	#self.disp_member.dispose()
 	

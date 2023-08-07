@@ -1,15 +1,7 @@
 #ifndef RX_WRAPPER_ITERATOR_H
 #define RX_WRAPPER_ITERATOR_H
 
-#include <godot_cpp/core/binder_common.hpp>
-
-#include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
-#include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/variant/string.hpp>
-#include <godot_cpp/core/class_db.hpp>
-
-#include <memory>
+#include "wrapper/wrapper.h"
 
 #include "abstract/iterator.h"
 #include "exception/exception.h"
@@ -22,14 +14,7 @@ namespace rx::wrappers {
 
 class RxIterator : public RefCounted {
     GDCLASS(RxIterator, RefCounted)
-
-private:
-    std::shared_ptr<IteratorBase> _ptr;
-
-public:
-    RxIterator() { throw NotImplementedException(); }
-    RxIterator(const std::shared_ptr<IteratorBase>& it) : _ptr(it) {}
-    ~RxIterator(){}
+    RX_ABSTRACT_WRAPPER(RxIterator, IteratorBase)
 
 protected:
     static inline void _bind_methods() {
@@ -38,26 +23,16 @@ protected:
         ClassDB::bind_method(D_METHOD("end"), &RxIterator::end);
         ClassDB::bind_method(D_METHOD("foreach", "cb"), &RxIterator::foreach);
         ClassDB::bind_method(D_METHOD("enumerate", "cb"), &RxIterator::enumerate);
-
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxIterator::equals);
     }
 
 public:
-    static inline Ref<RxIterator> wrap(const std::shared_ptr<IteratorBase>& it) {
-        return memnew(RxIterator(it));
-    }
-    inline std::shared_ptr<IteratorBase> unwrap() const { return this->_ptr; }
-
     Variant next();
     bool has_next();
     Variant end();
 
     void foreach(const Callable& what);
     void enumerate(const Callable& what);
-
-    inline String _to_string() { return "[RxIterator:" + UtilityFunctions::str(reinterpret_cast<uint64_t>(this->_ptr.get())) + "]"; }
-    inline bool equals(Ref<RxIterator> other) { return this->_ptr.get() == other->_ptr.get(); }
-
 };
 
 };

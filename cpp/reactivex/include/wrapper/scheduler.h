@@ -1,15 +1,7 @@
 #ifndef RX_WRAPPER_SCHEDULER_H
 #define RX_WRAPPER_SCHEDULER_H
 
-#include <godot_cpp/core/binder_common.hpp>
-
-#include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
-#include <godot_cpp/variant/variant.hpp>
-#include <godot_cpp/variant/string.hpp>
-#include <godot_cpp/core/class_db.hpp>
-
-#include <memory>
+#include "wrapper/wrapper.h"
 
 #include "abstract/scheduler.h"
 #include "exception/exception.h"
@@ -33,14 +25,7 @@ namespace wrappers {
 
 class RxScheduler : public RefCounted {
     GDCLASS(RxScheduler, RefCounted)
-
-private:
-    std::shared_ptr<SchedulerBase> _ptr;
-
-public:
-    RxScheduler() { throw NotImplementedException(); }
-    RxScheduler(const std::shared_ptr<SchedulerBase>& scheduler) : _ptr(scheduler) {}
-    ~RxScheduler(){}
+    RX_ABSTRACT_WRAPPER(RxScheduler, SchedulerBase)
 
 protected:
     static inline void _bind_methods() {
@@ -62,13 +47,7 @@ protected:
         ClassDB::bind_static_method("RxScheduler", D_METHOD("CurrentThreadScheduler"), &RxScheduler::CurrentThreadScheduler);
         ClassDB::bind_static_method("RxScheduler", D_METHOD("NewThreadScheduler"), &RxScheduler::NewThreadScheduler);
     }
-
 public:
-    static inline Ref<RxScheduler> wrap(const std::shared_ptr<SchedulerBase>& scheduler) {
-        return memnew(RxScheduler(scheduler));
-    }
-    inline std::shared_ptr<SchedulerBase> unwrap() const { return this->_ptr; }
-
     static double to_seconds(const Variant& value);
     static Ref<AbsoluteTime> to_datetime(const Variant& value);
     static Ref<RelativeTime> to_timedelta(const Variant& value);
@@ -78,9 +57,6 @@ public:
     Ref<RxDisposable> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<AbsoluteTime> now();
     Ref<RxDisposable> invoke_action(const Callable& action, const Variant& state);
-
-    inline String _to_string() { return "[RxScheduler:" + UtilityFunctions::str(reinterpret_cast<uint64_t>(this->_ptr.get())) + "]"; }
-    inline bool equals(Ref<RxScheduler> other) { return this->_ptr.get() == other->_ptr.get(); }
 
     static Ref<RxScheduler> ImmediateSchedulerSingleton() { return RxScheduler::wrap(ImmediateScheduler::singleton()); }
     static Ref<RxScheduler> TimeoutSchedulerSingleton() { return RxScheduler::wrap(TimeoutScheduler::singleton()); }
