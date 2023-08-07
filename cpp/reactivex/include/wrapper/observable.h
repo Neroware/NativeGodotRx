@@ -8,8 +8,11 @@
 
 #include "abstract/observable.h"
 #include "abstract/observer.h"
+#include "observable/observable.h"
 #include "exception/exception.h"
 #include "exception/exceptionwrapper.h"
+
+#include "observable/definitions.h"
 
 #include "cast.h"
 #include "basic.h"
@@ -17,6 +20,7 @@
 using namespace godot;
 using namespace rx::abstract;
 using namespace rx::exception;
+using namespace rx::observable;
 
 namespace rx {
 namespace wrappers {
@@ -27,6 +31,7 @@ class RxObservable : public RefCounted {
 
 protected:
     static inline void _bind_methods() {
+        OBSERVABLE_CONSTRUCTORS_BINDS
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxObservable::equals);
         {
 		    MethodInfo mi;
@@ -42,9 +47,9 @@ public:
             _args[i] = arg_count > i ? *(args[i]) : Variant();
         }
         if (auto _obv = DYN_CAST_OR_NULL(_args[0], RxObserver)) {
-            auto obv = _obv->unwrap();
+            auto obv = _obv->getptr();
             if (auto _s = DYN_CAST_OR_NULL(_args[1], RxScheduler)) {
-                auto s = _s->unwrap();
+                auto s = _s->getptr();
                 return RxDisposable::wrap(_ptr->subscribe(obv, s));
             }
             return RxDisposable::wrap(_ptr->subscribe(obv));
@@ -59,8 +64,11 @@ public:
                 break;
             }
         }
-        return RxDisposable::wrap(this->_ptr->subscribe(on_next_, on_error_, on_completed_, scheduler->unwrap()));
+        return RxDisposable::wrap(this->_ptr->subscribe(on_next_, on_error_, on_completed_, RxScheduler::unwrap(scheduler)));
     }
+
+public:
+    OBSERVABLE_CONSTRUCTORS_WRAPPERS
 };
 
 } // END namespace wrapper
@@ -70,7 +78,7 @@ using namespace rx::wrappers;
 static subscription_t subscription_cb(const Callable& cb) {
     return subscription_t([cb](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) {
         Ref<RxDisposable> disp = cb.callv(Array::make(RxObserver::wrap(observer), RxScheduler::wrap(scheduler)));
-        return disp.is_null() ? nullptr : disp->unwrap();
+        return RxDisposable::unwrap(disp);
     });
 }
 

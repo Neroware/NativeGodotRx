@@ -1,6 +1,8 @@
 #ifndef RX_OBSERVABLE_OBSRVABLE_H
 #define RX_OBSERVABLE_OBSRVABLE_H
 
+#include "observable/definitions.h"
+
 #include "pipe.h"
 #include "basic.h"
 
@@ -15,7 +17,7 @@
 
 namespace rx::observable {
 
-class Observable : public ObservableBase, std::enable_shared_from_this<Observable> {
+class Observable : public ObservableBase, public std::enable_shared_from_this<Observable> {
 
 public:
     RLock lock;
@@ -51,7 +53,7 @@ public:
     }
 
 public:
-    // OBSERVABLE_CONSTRUCTORS
+    OBSERVABLE_CONSTRUCTORS
 
 };
 

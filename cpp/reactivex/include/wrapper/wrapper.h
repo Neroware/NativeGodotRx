@@ -18,10 +18,13 @@ public:                                                                         
     GodotType() { throw NotImplementedException(); }                                \
     GodotType(const std::shared_ptr<AbstractType>& ptr) : _ptr(ptr) {}              \
     ~GodotType(){}                                                                  \
-    static Ref<GodotType> wrap(const std::shared_ptr<AbstractType>& ptr) {          \
+    inline static Ref<GodotType> wrap(const std::shared_ptr<AbstractType>& ptr) {   \
         return memnew(GodotType(ptr));                                              \
     }                                                                               \
-    std::shared_ptr<AbstractType> unwrap() const { return this->_ptr; }             \
+    inline static std::shared_ptr<AbstractType> unwrap(Ref<GodotType> ref) {        \
+        return ref.is_null() ? nullptr : ref->_ptr;                                 \
+    }                                                                               \
+    std::shared_ptr<AbstractType> getptr() const { return this->_ptr; }             \
     inline String _to_string() const {                                              \
         return "[Rx" + String(#GodotType) + ":" + UtilityFunctions::str(            \
             reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \
@@ -37,10 +40,13 @@ public:                                                                         
     GodotType() { throw NotImplementedException(); }                                \
     GodotType(const std::shared_ptr<Type>& ptr) : _ptr(ptr), BaseType(ptr) {}       \
     ~GodotType(){}                                                                  \
-    static Ref<GodotType> wrap(const std::shared_ptr<AbstractType>& ptr) {          \
+    inline static Ref<GodotType> wrap(const std::shared_ptr<AbstractType>& ptr) {   \
         return memnew(GodotType(ptr));                                              \
     }                                                                               \
-    std::shared_ptr<Type> unwrap() const { return this->_ptr; }                     \
+    inline static std::shared_ptr<AbstractType> unwrap(Ref<GodotType> ref) {        \
+        return ref.is_null() ? nullptr : ref->_ptr;                                 \
+    }                                                                               \
+    std::shared_ptr<AbstractType> getptr() const { return this->_ptr; }             \
     inline String _to_string() const {                                              \
         return "[Rx" + String(#GodotType) + ":" + UtilityFunctions::str(            \
             reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \

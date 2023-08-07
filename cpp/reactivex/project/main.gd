@@ -26,6 +26,9 @@ func _ready():
 		nts.schedule(action).dispose_with(self)
 	#self.disp_member.dispose()
 	
+	var obs : RxObservable = RxObservable.empty()
+	obs.subscribe(func(i): print(":("), null, func(): print(":)"))
+	
 	var example: Example = $Example
 
 	# Signal.

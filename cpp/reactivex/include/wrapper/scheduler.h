@@ -73,7 +73,7 @@ static action_t action_cb(const Callable& cb) {
     return action_t([cb](const std::shared_ptr<rx::abstract::SchedulerBase>& scheduler, const Variant& state = Variant()){
         auto res = cb.callv(Array::make(rx::wrappers::RxScheduler::wrap(scheduler), state));
         if (auto casted = DYN_CAST_OR_NULL(res, rx::wrappers::RxDisposable)) {
-            return casted->unwrap();
+            return casted->getptr();
         }
         return std::shared_ptr<rx::abstract::DisposableBase>();
     });
