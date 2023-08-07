@@ -15,8 +15,8 @@ namespace abstract {
 class ObservableBase {
 
 public:
-    virtual std::shared_ptr<DisposableBase> subscribe(const on_next_t& on_next, const on_error_t& on_error, const on_completed_t& on_completed, const std::shared_ptr<SchedulerBase>& scheduler) = 0;
-    virtual std::shared_ptr<DisposableBase> subscribe(const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) = 0;
+    virtual std::shared_ptr<DisposableBase> subscribe(const on_next_t& on_next, const on_error_t& on_error, const on_completed_t& on_completed, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) = 0;
+    virtual std::shared_ptr<DisposableBase> subscribe(const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) = 0;
 
 };
 
