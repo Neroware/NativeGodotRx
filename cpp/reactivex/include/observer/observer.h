@@ -6,6 +6,8 @@
 
 #include "disposable/disposable.h"
 
+#include "internal/virtualsharedfromthis.h"
+
 #include "basic.h"
 #include "notification.h"
 
@@ -15,7 +17,7 @@ namespace rx::observer {
 
 typedef std::function<void(const notification_t&)> notifier_t;
 
-class Observer : public ObserverBase, public DisposableBase, public std::enable_shared_from_this<Observer> {
+class Observer : public ObserverBase, public DisposableBase, public std::virtual_enable_shared_from_this<Observer> {
 
 public:
     bool is_stopped = false;
@@ -44,7 +46,7 @@ public:
     void on_error(const std::exception& error) override;
     void on_completed() override;
 
-protected:
+private:
     virtual void _on_next_core(const Variant& item);
     virtual void _on_error_core(const std::exception& error);
     virtual void _on_completed_core();

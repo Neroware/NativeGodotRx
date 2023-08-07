@@ -12,12 +12,15 @@
 #include "abstract/observer.h"
 
 #include "internal/rlock.h"
+#include "internal/virtualsharedfromthis.h"
 
 #include "disposable/disposable.h"
 
+using namespace rx::disposable;
+
 namespace rx::observable {
 
-class Observable : public ObservableBase, public std::enable_shared_from_this<Observable> {
+class Observable : public ObservableBase, public std::virtual_enable_shared_from_this<Observable> {
 
 public:
     RLock lock;
@@ -25,17 +28,13 @@ private:
     subscription_t _subscribe;
 
 protected:
-    Observable(const subscription_t& subscribe) 
+    Observable(const subscription_t& subscribe = DEFAULT_SUBSCRIBE) 
         : _subscribe(subscribe) {}
 public:
     inline static std::shared_ptr<Observable> get(const subscription_t& subscribe_) { return std::shared_ptr<Observable>(new Observable(subscribe_)); }
     inline std::shared_ptr<Observable> getptr() { return shared_from_this(); }
     ~Observable() {}
 
-    std::shared_ptr<DisposableBase> _subscribe_core(
-        const std::shared_ptr<ObserverBase>& observer, 
-        const std::shared_ptr<SchedulerBase>& scheduler = nullptr
-    );
     std::shared_ptr<DisposableBase> subscribe(
         const on_next_t& on_next = DEFAULT_ON_NEXT,
         const on_error_t& on_error = DEFAULT_ON_ERROR,
@@ -51,6 +50,12 @@ public:
     inline auto pipe(Args... fns) {
         return rx::pipe::pipe(getptr(), fns...);
     }
+
+private:
+    virtual std::shared_ptr<DisposableBase> _subscribe_core(
+        const std::shared_ptr<ObserverBase>& observer, 
+        const std::shared_ptr<SchedulerBase>& scheduler = nullptr
+    );
 
 public:
     OBSERVABLE_CONSTRUCTORS

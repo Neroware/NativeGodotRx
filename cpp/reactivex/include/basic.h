@@ -15,6 +15,7 @@
 #define DEFAULT_ON_ERROR rx::basic::noop<const std::exception&>
 #define DEFAULT_ON_COMPLETED rx::basic::noop<>
 #define DEFAULT_DISPOSE rx::basic::noop<>
+#define DEFAULT_SUBSCRIBE [](const std::shared_ptr<ObserverBase>& __, const std::shared_ptr<SchedulerBase>& ___) { return std::make_shared<Disposable>(); }
 
 using namespace godot;
 

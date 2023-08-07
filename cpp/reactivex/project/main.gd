@@ -17,17 +17,27 @@ func _ready():
 	
 #	print(">>> Main Thread: ", OS.get_thread_caller_id())
 #	
-	var nts = RxScheduler.NewThreadScheduler()
-	var nested_action = func(__ = null, ___ = null):
-		print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
-	var action = func(__ = null, ___ = null):
-		RxScheduler.CurrentThreadSchedulerSingleton().schedule(nested_action)
-	for i in range(1):
-		nts.schedule(action).dispose_with(self)
-	#self.disp_member.dispose()
+#	var nts = RxScheduler.NewThreadScheduler()
+#	var nested_action = func(__ = null, ___ = null):
+#		print("Scheduled on new thread: ", OS.get_thread_caller_id(), ":", OS.get_thread_caller_id())
+#	var action = func(__ = null, ___ = null):
+#		RxScheduler.CurrentThreadSchedulerSingleton().schedule(nested_action)
+#	for i in range(1):
+#		nts.schedule(action).dispose_with(self)
+#	#self.disp_member.dispose()
+#	
+#	var obs : RxObservable = RxObservable.empty()
+#	obs.subscribe(func(i): print(":("), null, func(): print(":)"))
+#	
+	const N_REPEATS = 100000
+	var obs = RxObservable.empty()
+	var t0 = Time.get_ticks_msec()
+	for i in range(N_REPEATS):
+		obs.subscribe(null).dispose_with(self)
+	var t1 = Time.get_ticks_msec()
+	print("DT: ", (t1 - t0) / 1000.0, "s ; ", (t1 - t0) / float(N_REPEATS), "ms per sub")
 	
-	var obs : RxObservable = RxObservable.empty()
-	obs.subscribe(func(i): print(":("), null, func(): print(":)"))
+	return
 	
 	var example: Example = $Example
 
