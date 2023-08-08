@@ -19,15 +19,15 @@ std::exception RxError::unwrap(Ref<RxError> err) {
     return err->err;
 }
 
-StringName RxError::type() {
+StringName RxError::type() const {
     return "RxError";
 }
 
-StringName RxError::what() {
+StringName RxError::what() const {
     return err.what();
 }
 
-void RxError::raise() {
+void RxError::raise() const {
     rx::basic::default_error(this->err);
 }
 

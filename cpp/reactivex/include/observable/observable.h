@@ -5,11 +5,13 @@
 
 #include "pipe.h"
 #include "basic.h"
+#include "godotrx.h"
 
 #include "abstract/observable.h"
 #include "abstract/disposable.h"
 #include "abstract/scheduler.h"
 #include "abstract/observer.h"
+#include "abstract/iterable.h"
 
 #include "internal/rlock.h"
 #include "internal/virtualsharedfromthis.h"

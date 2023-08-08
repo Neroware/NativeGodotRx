@@ -28,11 +28,13 @@ public:
     RxError(){}
     ~RxError(){}
 
-    StringName what();
-    StringName type();
+    StringName what() const;
+    StringName type() const;
     static Ref<RxError> wrap(const std::exception& err);
     static std::exception unwrap(Ref<RxError> err);
-    void raise();
+    void raise() const;
+
+    inline String _to_string() const { return "[" + this->type() + ":" + this->what() + "]"; }
 };
 
 }; // END namespace rx::exception
