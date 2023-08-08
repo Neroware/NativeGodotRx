@@ -1,5 +1,5 @@
-#ifndef RX_WRAPPER_OBSERVABLE_H
-#define RX_WRAPPER_OBSERVABLE_H
+#ifndef RX_WRAPPER_SUBJECT_H
+#define RX_WRAPPER_SUBJECT_H
 
 #include "wrapper/wrapper.h"
 
@@ -8,6 +8,8 @@
 
 #include "abstract/observable.h"
 #include "abstract/observer.h"
+#include "abstract/subject.h"
+
 #include "observable/observable.h"
 #include "exception/exception.h"
 #include "exception/exceptionwrapper.h"
@@ -25,38 +27,35 @@ using namespace rx::observable;
 namespace rx {
 namespace wrappers {
 
-class RxObservable : public RefCounted {
-    GDCLASS(RxObservable, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxObservable, ObservableBase)
+class RxSubject : public RefCounted {
+    GDCLASS(RxSubject, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxSubject, SubjectBase)
 
 protected:
     static inline void _bind_methods() {
-        OBSERVABLE_CONSTRUCTORS_BINDS
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxObservable::equals);
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxSubject::equals);
         {
 		    MethodInfo mi;
 		    mi.arguments.push_back(PropertyInfo(Variant::NIL, "subscription_args"));
 		    mi.name = "subscribe";
-		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxObservable::subscribe, mi);
+		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxSubject::subscribe, mi);
 	    }
+        ClassDB::bind_method(D_METHOD("on_next", "item"), &RxSubject::on_next);
+        ClassDB::bind_method(D_METHOD("on_error", "error"), &RxSubject::on_error);
+        ClassDB::bind_method(D_METHOD("on_completed"), &RxSubject::on_completed);
     }
 public:
     Ref<RxDisposable> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-    OBSERVABLE_CONSTRUCTORS_WRAPPERS
+    void on_next(const Variant& item);
+    void on_error(Ref<RxError> error);
+    void on_completed();
+
 };
 
 } // END namespace wrapper
 
 using namespace rx::wrappers;
 
-static subscription_t subscription_cb(const Callable& cb) {
-    return subscription_t([cb](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) {
-        Ref<RxDisposable> disp = cb.callv(Array::make(RxObserver::wrap(observer), RxScheduler::wrap(scheduler)));
-        return RxDisposable::unwrap(disp);
-    });
-}
-
-
 } // END namespace rx
 
-#endif // RX_WRAPPER_OBSERVABLE_H
+#endif // RX_WRAPPER_SUBJECT_H

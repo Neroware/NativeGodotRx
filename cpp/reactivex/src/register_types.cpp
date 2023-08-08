@@ -29,6 +29,7 @@
 #include "wrapper/scheduler.h"
 #include "wrapper/observer.h"
 #include "wrapper/observable.h"
+#include "wrapper/subject.h"
 // disposable
 #include "disposable/autodisposer.h"
 // scheduler
@@ -63,6 +64,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSubject>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
 	// scheduler
