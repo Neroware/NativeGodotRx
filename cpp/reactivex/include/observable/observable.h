@@ -16,6 +16,8 @@
 
 #include "disposable/disposable.h"
 
+#define SUBSCRIBE(scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler = scheduler_default) -> std::shared_ptr<DisposableBase>
+
 using namespace rx::disposable;
 
 namespace rx::observable {

@@ -26,16 +26,18 @@ func _ready():
 #		nts.schedule(action).dispose_with(self)
 #	#self.disp_member.dispose()
 #	
-#	var obs : RxObservable = RxObservable.empty()
-#	obs.subscribe(func(i): print(":("), null, func(): print(":)"))
+#	var empty_obs : RxObservable = RxObservable.empty()
+#	empty_obs.subscribe(func(i): print(":("), func(e): print("ERR: ", e), func(): print(":)"))
 #	
-	const N_REPEATS = 100000
-	var obs = RxObservable.empty()
-	var t0 = Time.get_ticks_msec()
-	for i in range(N_REPEATS):
-		obs.subscribe(null).dispose_with(self)
-	var t1 = Time.get_ticks_msec()
-	print("DT: ", (t1 - t0) / 1000.0, "s ; ", (t1 - t0) / float(N_REPEATS), "ms per sub")
+#	const N_REPEATS = 100000
+#	var obs = RxObservable.empty()
+#	var t0 = Time.get_ticks_msec()
+#	for i in range(N_REPEATS):
+#		obs.subscribe().dispose_with(self)
+#	var t1 = Time.get_ticks_msec()
+#	print("DT: ", (t1 - t0) / 1000.0, "s ; ", (t1 - t0) / float(N_REPEATS), "ms per sub")
+	
+	RxObservable.just(42).subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")).dispose_with(self)
 	
 	return
 	

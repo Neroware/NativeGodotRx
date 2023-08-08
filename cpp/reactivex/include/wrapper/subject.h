@@ -36,7 +36,6 @@ protected:
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxSubject::equals);
         {
 		    MethodInfo mi;
-		    mi.arguments.push_back(PropertyInfo(Variant::NIL, "subscription_args"));
 		    mi.name = "subscribe";
 		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxSubject::subscribe, mi);
 	    }
