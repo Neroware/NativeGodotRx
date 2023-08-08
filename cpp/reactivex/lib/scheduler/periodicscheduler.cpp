@@ -21,7 +21,7 @@ std::shared_ptr<DisposableBase> PeriodicScheduler::schedule_periodic(const time_
         try {
             _state = action(state);
         }
-        catch(std::exception e) {
+        catch(const std::exception& e) {
             disp->dispose();
             throw e;
         }

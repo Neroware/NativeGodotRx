@@ -7,6 +7,7 @@
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 #include "exception/exception.h"
 
@@ -18,8 +19,8 @@ class RxError : public RefCounted {
     GDCLASS(RxError, RefCounted);
 
 private:
-    std::exception err;
-    RxError(const std::exception& err) : err(err) {}
+    const std::exception& err = std::exception();
+    RxError(const std::exception& err_) : err(err_) {}
 
 protected:
 	static void _bind_methods();

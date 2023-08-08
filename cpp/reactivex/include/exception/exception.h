@@ -16,7 +16,7 @@ private:
 public:
     Exception(const std::string& what_ = "") : _what(what_) {}
 
-    virtual char const* what() {
+    virtual const char* what() const noexcept override {
         return _what.c_str();
     }
 };
@@ -24,7 +24,7 @@ public:
 class NotImplementedException : public std::exception
 {
 public:
-    virtual char const* what() { 
+    virtual const char* what() const noexcept override {
         return "Function not implemented!"; 
     }
 };
@@ -32,7 +32,7 @@ public:
 class DisposedException : public std::exception
 {
 public:
-    virtual char const* what() { 
+    virtual const char* what() const noexcept override {
         return "Tried to access disposed element!"; 
     }
 };
@@ -40,7 +40,7 @@ public:
 class WouldBlockException : public std::exception
 {
 public:
-    virtual char const* what() { 
+    virtual const char* what() const noexcept override {
         return "Tried to schedule blocking work!"; 
     }
 };
@@ -53,7 +53,7 @@ private:
 public:
     BadArgumentException(const std::string& what_) : _what(what_) {}
 
-    virtual char const* what() {
+    virtual const char* what() const noexcept override {
         std::string res = "A function argument has a bad value: " + _what;
         return res.c_str();
     }

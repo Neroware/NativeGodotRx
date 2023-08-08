@@ -36,7 +36,7 @@ std::shared_ptr<DisposableBase> Observable::subscribe(const on_next_t& on_next, 
         try {
             subscriber = self->_subscribe_core(auto_detach_observer, scheduler);
         }
-        catch(std::exception e) {
+        catch(const std::exception& e) {
             if (!auto_detach_observer->fail(e)) {
                 throw e;
             }
