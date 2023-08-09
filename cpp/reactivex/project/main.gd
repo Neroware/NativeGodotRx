@@ -38,7 +38,7 @@ func _ready():
 #	print("DT: ", (t1 - t0) / 1000.0, "s ; ", (t1 - t0) / float(N_REPEATS), "ms per sub")
 	
 #	RxObservable.just(42).subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")).dispose_with(self)
-	RxObservable.catch([]).subscribe(func(i): print(":("), func(e): print("ERR: ", e)).dispose_with(self)
+	RxObservable.catch([]).subscribe(func(i): print(":("), func(e): print("ERR: ", e), func(): print(":(")).dispose_with(self)
 	
 	return
 	

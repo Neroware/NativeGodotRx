@@ -1,12 +1,33 @@
 #include "notification.h"
 
 #include "observer/observer.h"
+#include "scheduler/immediatescheduler.h"
+#include "observable/observable.h"
+
+using namespace rx::scheduler;
+using namespace rx::observable;
 
 namespace rx {
 
 std::shared_ptr<ObservableBase> notification_t::to_observable(const std::shared_ptr<SchedulerBase>& scheduler) {
-    // TODO
-    throw NotImplementedException();
+    
+    auto _scheduler = scheduler ? scheduler : ImmediateScheduler::singleton();
+    auto self = getptr();
+
+    subscription_t  subscribe = SUBSCRIBE(nullptr) {
+        action_t action = [=](const std::shared_ptr<rx::abstract::SchedulerBase>& scheduler, const godot::Variant& state) -> std::shared_ptr<DisposableBase> {
+            self->accept(observer);
+            if (self->kind == "N") {
+                observer->on_completed();
+            }
+            return nullptr;
+        };
+
+        auto __scheduler = scheduler ? scheduler : _scheduler;
+        return __scheduler->schedule(action);
+    };
+
+    return Observable::get(subscribe);
 }
 
 void notification_on_next_t::accept(const on_next_t& on_next, const on_error_t& on_error, const on_completed_t& on_completed) const {
@@ -45,13 +66,13 @@ String notification_on_completed_t::to_string() const {
 
 static std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t& handler) {
     on_next_t _on_next = [=](const Variant& value) {
-        handler(notification_on_next_t(value));
+        handler(notification_on_next_t::get(value));
     };
     on_error_t _on_error = [=](const std::exception_ptr& e) {
-        handler(notification_on_error_t(e));
+        handler(notification_on_error_t::get(e));
     };
     on_completed_t _on_completed = [=]() {
-        handler(notification_on_completed_t());
+        handler(notification_on_completed_t::get());
     };
     return rx::observer::Observer::get(_on_next, _on_error, _on_completed);
 }
