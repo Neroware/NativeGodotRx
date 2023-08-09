@@ -21,9 +21,9 @@ std::shared_ptr<DisposableBase> PeriodicScheduler::schedule_periodic(const time_
         try {
             _state = action(state);
         }
-        catch(const std::exception& e) {
+        catch(...) {
             disp->dispose();
-            throw e;
+            throw;
         }
 
         time_delta_t time = seconds - (scheduler->now() - now);

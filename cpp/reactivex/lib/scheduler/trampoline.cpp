@@ -22,7 +22,7 @@ void Trampoline::run(const scheduled_item_t& item) {
     try {
         this->_run();
     } 
-    catch(const std::exception&) {}
+    catch(...) {}
     {
         std::lock_guard<Lock> guard(_lock);
         this->_idle = true;

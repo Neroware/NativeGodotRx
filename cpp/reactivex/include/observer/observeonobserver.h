@@ -17,7 +17,7 @@ public:
     }
 
     void _on_next_core(const Variant& item) override;
-    void _on_error_core(const std::exception& error) override;
+    void _on_error_core(const std::exception_ptr& error) override;
     void _on_completed_core() override;
 
 };

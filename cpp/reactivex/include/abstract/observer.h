@@ -12,7 +12,7 @@ using namespace rx::exception;
 namespace rx {
 
 typedef std::function<void(const Variant&)> on_next_t;
-typedef std::function<void(const std::exception&)> on_error_t;
+typedef std::function<void(const std::exception_ptr&)> on_error_t;
 typedef std::function<void()> on_completed_t;
 
 namespace abstract {
@@ -23,7 +23,7 @@ public:
     virtual void on_next(const Variant& i) {
         throw NotImplementedException();
     }
-    virtual void on_error(const std::exception& e) {
+    virtual void on_error(const std::exception_ptr& e) {
         throw NotImplementedException();
     }
     virtual void on_completed() {

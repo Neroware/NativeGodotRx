@@ -8,44 +8,56 @@
 namespace rx {
 namespace exception {
 
-class Exception : public std::exception
+class rx_exception : public std::exception
 {
 private:
     std::string _what;
 
 public:
-    Exception(const std::string& what_ = "") : _what(what_) {}
+    rx_exception(const std::string& what_ = "") : _what(what_) {}
 
     virtual const char* what() const noexcept override {
         return _what.c_str();
     }
+    virtual const char* type() const noexcept {
+        return "RxError";
+    }
 };
 
-class NotImplementedException : public std::exception
+class NotImplementedException : public rx_exception
 {
 public:
     virtual const char* what() const noexcept override {
         return "Function not implemented!"; 
     }
+    virtual const char* type() const noexcept override {
+        return "NotImplementedError";
+    }
 };
 
-class DisposedException : public std::exception
+class DisposedException : public rx_exception
 {
 public:
     virtual const char* what() const noexcept override {
         return "Tried to access disposed element!"; 
     }
+    virtual const char* type() const noexcept override {
+        return "DisposedError";
+    }
 };
 
-class WouldBlockException : public std::exception
+class WouldBlockException : public rx_exception
 {
 public:
     virtual const char* what() const noexcept override {
         return "Tried to schedule blocking work!"; 
     }
+    virtual const char* type() const noexcept override {
+        return "WouldBlockError";
+    }
 };
 
-class BadArgumentException : public std::exception
+class BadArgumentException : public rx_exception
 {
 private:
     std::string _what;
@@ -57,11 +69,14 @@ public:
         std::string res = "A function argument has a bad value: " + _what;
         return res.c_str();
     }
+    virtual const char* type() const noexcept override {
+        return "BadArgumentError";
+    }
 };
 
 } // END namespace exception
 
-typedef std::function<bool(const std::exception& e)> handler_t;
+typedef std::function<bool(const std::exception_ptr& e)> handler_t;
 
 } // END namepsace rx
 

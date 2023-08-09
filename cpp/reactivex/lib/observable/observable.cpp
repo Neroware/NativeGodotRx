@@ -14,7 +14,7 @@ std::shared_ptr<DisposableBase> Observable::_subscribe_core(const std::shared_pt
 
 std::shared_ptr<DisposableBase> Observable::subscribe(const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) {
     on_next_t on_next_ = [observer](const Variant& item) { observer->on_next(item); };
-    on_error_t on_error_ = [observer](const std::exception& e) { observer->on_error(e); };
+    on_error_t on_error_ = [observer](const std::exception_ptr& e) { observer->on_error(e); };
     on_completed_t on_completed_ = [observer]() { observer->on_completed(); };
     return subscribe(on_next_, on_error_, on_completed_, scheduler);
 }
@@ -36,9 +36,9 @@ std::shared_ptr<DisposableBase> Observable::subscribe(const on_next_t& on_next, 
         try {
             subscriber = self->_subscribe_core(auto_detach_observer, scheduler);
         }
-        catch(const std::exception& e) {
-            if (!auto_detach_observer->fail(e)) {
-                throw e;
+        catch(...) {
+            if (!auto_detach_observer->fail(std::current_exception())) {
+                throw;
             }
             return nullptr;
         }

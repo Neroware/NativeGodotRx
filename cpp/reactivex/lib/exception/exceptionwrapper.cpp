@@ -1,4 +1,4 @@
-#include <exception/exceptionwrapper.h>
+#include "exception/exceptionwrapper.h"
 
 #include "basic.h"
 
@@ -11,24 +11,24 @@ void RxError::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("type"), &RxError::type);
 }
 
-Ref<RxError> RxError::wrap(const std::exception& err) {
+Ref<RxError> RxError::wrap(const std::exception_ptr& err) {
     return memnew(RxError(err));
 }
 
-std::exception RxError::unwrap(Ref<RxError> err) {
-    return err->err;
+std::exception_ptr RxError::unwrap(Ref<RxError> err) {
+    return err->_err;
 }
 
 StringName RxError::type() const {
-    return "RxError";
+    return this->_type;
 }
 
 StringName RxError::what() const {
-    return err.what();
+    return this->_what;
 }
 
 void RxError::raise() const {
-    rx::basic::default_error(this->err);
+    rx::basic::default_error(this->_err);
 }
 
 }; // END namespace rx::exception

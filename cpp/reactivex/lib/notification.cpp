@@ -26,7 +26,11 @@ void notification_on_error_t::accept(const std::shared_ptr<ObserverBase>& observ
     observer->on_error(this->exception);
 }
 String notification_on_error_t::to_string() const {
-    return "OnError(" + String(this->exception.what()) + ")";
+    String what_ = "??";
+    try { std::rethrow_exception(this->exception); } 
+    catch (const rx_exception& e) { what_ = e.type(); what_ += ":"; what_ += e.what(); }
+    catch (const std::exception& e) { what_ = e.what(); }
+    return "OnError(??:" + what_ + ")";
 }
 
 void notification_on_completed_t::accept(const on_next_t& on_next, const on_error_t& on_error, const on_completed_t& on_completed) const {
@@ -43,7 +47,7 @@ static std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t&
     on_next_t _on_next = [=](const Variant& value) {
         handler(notification_on_next_t(value));
     };
-    on_error_t _on_error = [=](const std::exception& e) {
+    on_error_t _on_error = [=](const std::exception_ptr& e) {
         handler(notification_on_error_t(e));
     };
     on_completed_t _on_completed = [=]() {

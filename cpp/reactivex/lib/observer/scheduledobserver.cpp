@@ -14,7 +14,7 @@ void ScheduledObserver::_on_next_core(const Variant& item) {
     this->queue.push_back(action);
 }
 
-void ScheduledObserver::_on_error_core(const std::exception& error) {
+void ScheduledObserver::_on_error_core(const std::exception_ptr& error) {
     auto self = getptr();
 
     action_t action = [=](const std::shared_ptr<SchedulerBase> scheduler, const Variant& state){
@@ -78,13 +78,13 @@ void ScheduledObserver::run(const std::shared_ptr<SchedulerBase>& scheduler, con
     try {
         work(nullptr, Variant());
     }
-    catch (std::exception e) {
+    catch (...) {
         {
             std::lock_guard<RLock> guard(lock);
             parent->queue.clear();
             parent->has_faulted = true;
         }
-        throw e;
+        throw;
     }
 
     auto self = getptr();

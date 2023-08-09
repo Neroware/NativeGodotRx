@@ -21,7 +21,7 @@ class Subject : public Observable, public Observer, public SubjectBase {
 public:
     bool is_disposed = false;
     std::list<std::shared_ptr<ObserverBase>> observers;
-    std::unique_ptr<std::exception> exception;
+    std::exception_ptr exception;
     RLock lock;
 
 protected:
@@ -35,7 +35,7 @@ public:
     void dispose() override;
 
     void on_next(const Variant& i) override;
-    void on_error(const std::exception& e) override;
+    void on_error(const std::exception_ptr& e) override;
     void on_completed() override;
 
     inline std::shared_ptr<DisposableBase> subscribe(
@@ -51,7 +51,7 @@ public:
 
 private:
     void _on_next_core(const Variant& item) override;
-    void _on_error_core(const std::exception& error) override;
+    void _on_error_core(const std::exception_ptr& error) override;
     void _on_completed_core() override;
 
     std::shared_ptr<DisposableBase> _subscribe_core(

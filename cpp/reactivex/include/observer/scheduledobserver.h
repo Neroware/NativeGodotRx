@@ -40,7 +40,7 @@ public:
 
 protected:
     virtual void _on_next_core(const Variant& item) override;
-    virtual void _on_error_core(const std::exception& error) override;
+    virtual void _on_error_core(const std::exception_ptr& error) override;
     virtual void _on_completed_core() override;
 
 public:

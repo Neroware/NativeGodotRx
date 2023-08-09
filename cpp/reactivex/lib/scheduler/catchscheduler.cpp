@@ -45,10 +45,10 @@ std::shared_ptr<DisposableBase> CatchScheduler::schedule_periodic(const time_del
         try {
             return action(state);
         }
-        catch(const std::exception& e) {
+        catch(...) {
             *failed = true;
-            if (!this_ptr->_handler(e)) {
-                throw e;
+            if (!this_ptr->_handler(std::current_exception())) {
+                throw;
             }
             disp->dispose();
             return nullptr;
@@ -73,9 +73,9 @@ action_t CatchScheduler::_wrap(const action_t& action) {
         try {
             return action(parent->_get_recursive_wrapper(self), state);
         }
-        catch(const std::exception& e) {
-            if (!parent->_handler(e)) {
-                throw e;
+        catch(...) {
+            if (!parent->_handler(std::current_exception())) {
+                throw;
             }
             return std::make_shared<Disposable>();
         }

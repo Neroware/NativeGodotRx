@@ -12,7 +12,7 @@
 #include "exception/exceptionwrapper.h"
 
 #define DEFAULT_ON_NEXT rx::basic::noop<const Variant&>
-#define DEFAULT_ON_ERROR rx::basic::noop<const std::exception&>
+#define DEFAULT_ON_ERROR rx::basic::noop<const std::exception_ptr&>
 #define DEFAULT_ON_COMPLETED rx::basic::noop<>
 #define DEFAULT_DISPOSE rx::basic::noop<>
 #define DEFAULT_SUBSCRIBE [](const std::shared_ptr<ObserverBase>& __, const std::shared_ptr<SchedulerBase>& ___) { return std::make_shared<Disposable>(); }
@@ -53,12 +53,12 @@ T default_key_serializer(T x) {
 
 template <typename T>
 void default_error(T err) {
-    throw err;
+    std::rethrow_exception(err);
 }
 
 template <typename T>
 void default_crash(T err) {
-    UtilityFunctions::print("Unhandled exception: ", err.what);
+    UtilityFunctions::print("Unhandled exception!");
     exit(1);
 }
 

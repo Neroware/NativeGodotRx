@@ -39,7 +39,7 @@ static on_next_t on_next_cb(const Callable& cb) {
     });
 }
 static on_error_t on_error_cb(const Callable& cb) {
-    return on_error_t([cb](const std::exception& e){
+    return on_error_t([cb](const std::exception_ptr& e){
         return cb.callv(Array::make(rx::exception::RxError::wrap(e)));
     });
 }

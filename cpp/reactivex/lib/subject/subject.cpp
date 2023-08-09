@@ -20,7 +20,7 @@ std::shared_ptr<DisposableBase> Subject::_subscribe_core(const std::shared_ptr<O
         }
 
         if (this->exception) {
-            observer->on_error(*(this->exception));
+            observer->on_error(this->exception);
         }
         else {
             observer->on_completed();
@@ -48,7 +48,7 @@ void Subject::_on_next_core(const Variant& item) {
     }
 }
 
-void Subject::on_error(const std::exception& e) {
+void Subject::on_error(const std::exception_ptr& e) {
     {
         std::lock_guard<RLock> guard(lock);
         this->check_disposed();
@@ -56,13 +56,13 @@ void Subject::on_error(const std::exception& e) {
     Observer::on_error(e);
 }
 
-void Subject::_on_error_core(const std::exception& error) {
+void Subject::_on_error_core(const std::exception_ptr& error) {
     std::list<std::shared_ptr<ObserverBase>> observers;
     {
         std::lock_guard<RLock> guard(lock);
         observers = this->observers;
         this->observers.clear();
-        this->exception = std::make_unique<std::exception>(error);
+        this->exception = error;
     }
 
     for (auto observer : observers) {

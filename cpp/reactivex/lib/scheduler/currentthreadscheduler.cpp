@@ -12,40 +12,34 @@ std::shared_ptr<CurrentThreadScheduler> CurrentThreadScheduler::singleton() {
     auto& class_map = GDRX->CurrentThreadScheduler_global_[cls];
     
     const auto& class_map_ = class_map;
-    try {
+    if (class_map_.contains(thread)) {
         return class_map_[thread];
     }
-    catch(std::out_of_range) {
-        auto res = CurrentThreadSchedulerSingleton::get();
-        class_map.insert(thread, res);
-        return res;
-    }
+    auto res = CurrentThreadSchedulerSingleton::get();
+    class_map.insert(thread, res);
+    return res;
 }
 
 std::shared_ptr<Trampoline> CurrentThreadScheduler::get_trampoline() {
     auto thread = std::make_shared<variant_key_t>(RxThread::get_current_thread());
     const auto& tramps = this->_tramps;
-    try {
+    if (tramps.contains(thread)) {
         return tramps[thread];
     }
-    catch (std::out_of_range) {
-        auto tramp = std::make_shared<Trampoline>();
-        this->_tramps.insert(thread, tramp);
-        return tramp;
-    }
+    auto tramp = std::make_shared<Trampoline>();
+    this->_tramps.insert(thread, tramp);
+    return tramp;
 }
 
 std::shared_ptr<Trampoline> _CurrentThreadScheduler_Local::get_trampoline() {
     auto thread = std::make_shared<variant_key_t>(RxThread::get_current_thread());
     const auto& tramps = this->_tramp;
-    try {
+    if (tramps.contains(thread)) {
         return tramps[thread];
     }
-    catch (std::out_of_range) {
-        auto tramp = std::make_shared<Trampoline>();
-        this->_tramp.insert(thread, tramp);
-        return tramp;
-    }
+    auto tramp = std::make_shared<Trampoline>();
+    this->_tramp.insert(thread, tramp);
+    return tramp;
 }
 
 std::shared_ptr<Trampoline> CurrentThreadSchedulerSingleton::get_trampoline() {

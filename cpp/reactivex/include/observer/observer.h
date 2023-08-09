@@ -43,19 +43,19 @@ public:
     ~Observer() { this->dispose(); }
 
     void on_next(const Variant& item) override;
-    void on_error(const std::exception& error) override;
+    void on_error(const std::exception_ptr& error) override;
     void on_completed() override;
 
 private:
     virtual void _on_next_core(const Variant& item);
-    virtual void _on_error_core(const std::exception& error);
+    virtual void _on_error_core(const std::exception_ptr& error);
     virtual void _on_completed_core();
 
 public:
     virtual void dispose() override;
 
-    bool fail(const std::exception& error);
-    void throw_error(const std::exception& error) const;
+    bool fail(const std::exception_ptr& error);
+    void throw_error(const std::exception_ptr& error) const;
     
     notifier_t to_notifier();
     std::shared_ptr<ObserverBase> as_observer();

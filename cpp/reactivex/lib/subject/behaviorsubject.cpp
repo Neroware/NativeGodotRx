@@ -6,8 +6,7 @@ namespace rx::subject {
 
 std::shared_ptr<DisposableBase> BehaviorSubject::_subscribe_core(const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler
 ) {
-    std::exception ex;
-    bool failed;
+    std::exception_ptr ex;
     {
         std::lock_guard<RLock> guard(lock);
         this->check_disposed();
@@ -17,11 +16,10 @@ std::shared_ptr<DisposableBase> BehaviorSubject::_subscribe_core(const std::shar
             return std::make_shared<InnerSubscription>(getptr(), observer);
         }
 
-        failed = this->exception ? true : false;
-        ex = failed ? *(this->exception) : ex;
+        ex = this->exception;
     }
 
-    if (failed) {
+    if (ex) {
         observer->on_error(ex);
     }
     else {

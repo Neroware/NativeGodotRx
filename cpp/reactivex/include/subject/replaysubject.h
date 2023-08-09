@@ -50,7 +50,7 @@ private:
         const std::shared_ptr<SchedulerBase>& scheduler = nullptr
     ) override;
     void _on_next_core(const Variant& value) override;
-    void _on_error_core(const std::exception& error) override;
+    void _on_error_core(const std::exception_ptr& error) override;
     void _on_completed_core() override;
     void _trim(const time_point_t& now);
 

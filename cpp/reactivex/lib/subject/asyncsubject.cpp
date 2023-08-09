@@ -6,8 +6,8 @@ namespace rx::subject {
 
 std::shared_ptr<DisposableBase> AsyncSubject::_subscribe_core(const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler
 ) {
-    std::exception ex;
-    bool failed, has_value;
+    std::exception_ptr ex;
+    bool has_value;
     Variant value;
     {
         std::lock_guard<RLock> guard(lock);
@@ -17,13 +17,12 @@ std::shared_ptr<DisposableBase> AsyncSubject::_subscribe_core(const std::shared_
             return std::make_shared<InnerSubscription>(getptr(), observer);
         }
 
-        failed = this->exception ? true : false;
-        ex = failed ? *(this->exception) : ex;
+        ex = this->exception;
         has_value = this->has_value;
         value = this->value;
     }
 
-    if (failed) {
+    if (ex) {
         observer->on_error(ex);
     }
     else if (has_value) {

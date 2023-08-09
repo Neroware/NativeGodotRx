@@ -44,11 +44,11 @@ struct notification_on_next_t : public notification_t {
 }; // END struct notification_on_next_t 
 
 struct notification_on_error_t : public notification_t {
-    std::exception exception;
+    std::exception_ptr exception;
 
-    notification_on_error_t(const std::exception& e) : exception(e) { this->kind = "E"; }
-    notification_on_error_t(const std::string& error) : exception(Exception(error)) { this->kind = "E"; }
-    notification_on_error_t() : exception(Exception()) { this->kind = "E"; }
+    notification_on_error_t(const std::exception_ptr& e) : exception(e) { this->kind = "E"; }
+    notification_on_error_t(const std::string& error) : exception(std::make_exception_ptr(rx_exception(error))) { this->kind = "E"; }
+    notification_on_error_t() : exception(std::make_exception_ptr(rx_exception())) { this->kind = "E"; }
     ~notification_on_error_t() {}
 
     void accept(const on_next_t& on_next, const on_error_t& on_error = DEFAULT_ON_ERROR, const on_completed_t& on_completed = DEFAULT_ON_COMPLETED) const override;

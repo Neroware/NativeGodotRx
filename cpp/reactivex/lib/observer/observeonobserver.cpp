@@ -7,7 +7,7 @@ void ObserveOnObserver::_on_next_core(const Variant& item) {
     ScheduledObserver::_on_next_core(item);
 }
 
-void ObserveOnObserver::_on_error_core(const std::exception& error) {
+void ObserveOnObserver::_on_error_core(const std::exception_ptr& error) {
     this->ensure_active();
     ScheduledObserver::_on_error_core(error);
 }

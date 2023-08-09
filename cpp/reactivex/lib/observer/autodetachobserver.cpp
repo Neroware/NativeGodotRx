@@ -8,7 +8,7 @@ void AutoDetachObserver::on_next(const Variant& value) {
     this->_on_next(value);
 }
 
-void AutoDetachObserver::on_error(const std::exception& error) {
+void AutoDetachObserver::on_error(const std::exception_ptr& error) {
     if (this->is_stopped)
         return;
     this->is_stopped = true;
@@ -33,7 +33,7 @@ void AutoDetachObserver::dispose() {
     this->_subscription.dispose();
 }
 
-bool AutoDetachObserver::fail(const std::exception& err) {
+bool AutoDetachObserver::fail(const std::exception_ptr& err) {
     if (this->is_stopped) 
         return false;
     

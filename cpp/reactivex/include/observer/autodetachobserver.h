@@ -37,12 +37,12 @@ public:
 
 public:
     void on_next(const Variant& item) override;
-    void on_error(const std::exception& error) override;
+    void on_error(const std::exception_ptr& error) override;
     void on_completed() override;
 
     void set_disposable(const std::shared_ptr<DisposableBase>& disp);
     void dispose() override;
-    bool fail(const std::exception& err);
+    bool fail(const std::exception_ptr& err);
 };
 
 } // END namespace rx::observer

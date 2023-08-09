@@ -22,7 +22,7 @@ std::shared_ptr<DisposableBase> ReplaySubject::_subscribe_core(const std::shared
         }
 
         if (this->exception) {
-            so->on_error(*(this->exception));
+            so->on_error(this->exception);
         }
         else if (this->is_disposed) {
             so->on_completed();
@@ -63,14 +63,14 @@ void ReplaySubject::_on_next_core(const Variant& value) {
     }
 }
 
-void ReplaySubject::_on_error_core(const std::exception& error) {
+void ReplaySubject::_on_error_core(const std::exception_ptr& error) {
     std::list<std::shared_ptr<ObserverBase>> observers;
     time_point_t now;
     {
         std::lock_guard<RLock> guard(lock);
         observers = this->observers;
         this->observers.clear();
-        this->exception = std::make_unique<std::exception>(error);
+        this->exception = error;
         now = this->scheduler->now();
         this->_trim(now);
     }
