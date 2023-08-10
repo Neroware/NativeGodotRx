@@ -15,7 +15,7 @@ std::shared_ptr<ObservableBase> notification_t::to_observable(const std::shared_
     auto self = getptr();
 
     subscription_t  subscribe = SUBSCRIBE(nullptr) {
-        action_t action = [=](const std::shared_ptr<rx::abstract::SchedulerBase>& scheduler, const godot::Variant& state) -> std::shared_ptr<DisposableBase> {
+        action_t action = [=](const std::shared_ptr<rx::abstract::SchedulerBase>& __, const godot::Variant& ___) -> std::shared_ptr<DisposableBase> {
             self->accept(observer);
             if (self->kind == "N") {
                 observer->on_completed();
@@ -23,7 +23,7 @@ std::shared_ptr<ObservableBase> notification_t::to_observable(const std::shared_
             return nullptr;
         };
 
-        auto __scheduler = scheduler ? scheduler : _scheduler;
+        auto __scheduler = scheduler_ ? scheduler_ : _scheduler;
         return __scheduler->schedule(action);
     };
 

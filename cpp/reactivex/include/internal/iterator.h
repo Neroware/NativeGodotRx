@@ -32,12 +32,13 @@ public:
 struct array_iterator : public IteratorBase {
     Array array;
     uint64_t index;
+    Ref<ItEnd> itEnd;
 
     explicit array_iterator(const Array& array_, uint64_t index_ = 0) 
-        : array(array_), index(index_) {}
+        : array(array_), index(index_), itEnd(memnew(ItEnd)) {}
     
     inline Variant end() override {
-        return Ref<ItEnd>(memnew(ItEnd()));
+        return this->itEnd;
     }
     inline Variant next() override {
         return index >= array.size() ? this->end() : array[index++];
@@ -47,16 +48,28 @@ struct array_iterator : public IteratorBase {
     }
 }; // END array_iterator
 
+struct array_iterable : public IterableBase {
+    Array array;
+
+    array_iterable(const Array& array_) 
+        : array(array_) {}
+
+    inline std::shared_ptr<IteratorBase> iter() override {
+        return std::make_shared<array_iterator>(array);
+    }
+}; // END array_iterable
+
 struct dictionary_iterator : public IteratorBase {
     Dictionary dict;
     Array keys;
     uint64_t index;
+    Ref<ItEnd> itEnd;
 
     explicit dictionary_iterator(const Dictionary& dict_, uint64_t index_ = 0) 
-        : dict(dict_), keys(dict.keys()), index(index_) {}
+        : dict(dict_), keys(dict.keys()), index(index_), itEnd(memnew(ItEnd)) {}
     
     inline Variant end() override {
-        return Ref<ItEnd>(memnew(ItEnd()));
+        return this->itEnd;
     }
     inline Variant next() override {
         return index >= keys.size() ? this->end() : Variant(Array::make(keys[index], dict[keys[index++]]));
@@ -66,7 +79,70 @@ struct dictionary_iterator : public IteratorBase {
     }
 }; // END dictionary_iterator
 
+struct dictionary_iterable : public IterableBase {
+    Dictionary dict;
+
+    dictionary_iterable(const Dictionary& dict_) 
+        : dict(dict_) {}
+
+    inline std::shared_ptr<IteratorBase> iter() override {
+        return std::make_shared<dictionary_iterator>(dict);
+    }
+}; // END dictionary_iterable
+
+/**
+ * Utility type to wrap around IterableBase to enable C++-style iterations
+ * for GDScript-style iterations.
+*/
+template<class WrapperT, class BaseT>
+struct rx_iterable {
+
+    std::shared_ptr<IterableBase> it;
+    rx_iterable(const std::shared_ptr<IterableBase>& it_)
+        : it(it_) {}
+    
+    struct rx_iterator {
+        std::shared_ptr<IteratorBase> it;
+        Variant current;
+        Variant end;
+
+        explicit rx_iterator(const std::shared_ptr<IteratorBase>& it_, bool is_end = false)
+            : it(it_), current(is_end ? it->end() : it->next()), end(it->end()) {}
+        
+
+        bool operator!=(const rx_iterator& other) const {
+            return current != other.end();
+        }
+
+        const std::shared_ptr<BaseT> operator*() const {
+            if (auto wrapper = DYN_CAST_OR_NULL(current, WrapperT)) {
+                return WrapperT::unwrap(wrapper);
+            }
+            throw BadArgumentException("Iterable contained element of wrong type!");
+        }
+
+        rx_iterator& operator++() {
+            current = it->next();
+            return *this;
+        }
+    };
+
+}; // END rx_iterable
+
 namespace iterator {
+
+static Ref<RxIterable> to_iterable(const Variant& it) {
+    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterable)) {
+        return iterable;
+    }
+    if (it.get_type() == Variant::ARRAY) {
+        return RxIterable::wrap(std::make_shared<array_iterable>(it));
+    }
+    if (it.get_type() == Variant::DICTIONARY) {
+        return RxIterable::wrap(std::make_shared<dictionary_iterable>(it));
+    }
+    return to_iterable(Array::make(it));
+}
 
 static Ref<RxIterator> iter(const Variant& it) {
     if (auto iterable = DYN_CAST_OR_NULL(it, RxIterable)) {

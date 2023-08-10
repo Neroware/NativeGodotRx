@@ -50,6 +50,7 @@ private:
 protected:
 	static inline void _bind_methods() {
         ClassDB::bind_method(D_METHOD("iter", "it"), &__GDRxSingleton__::iter);
+        ClassDB::bind_method(D_METHOD("to_iterable", "it"), &__GDRxSingleton__::to_iterable);
         ClassDB::bind_method(D_METHOD("foreach", "it", "action"), &__GDRxSingleton__::foreach);
         ClassDB::bind_method(D_METHOD("enumerate", "it", "action"), &__GDRxSingleton__::enumerate);
     }
@@ -75,6 +76,9 @@ public:
 
     inline Ref<RxIterator> iter(const Variant& iterable) {
         return rx::iterator::iter(iterable);
+    }
+    inline Ref<RxIterable> to_iterable(const Variant& iterable) {
+        return rx::iterator::to_iterable(iterable);
     }
     inline void foreach(const Variant& it, const Callable& what) {
         this->iter(it)->foreach(what);

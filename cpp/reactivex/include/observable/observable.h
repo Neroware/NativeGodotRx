@@ -18,7 +18,8 @@
 
 #include "disposable/disposable.h"
 
-#define SUBSCRIBE(scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler = scheduler_default) -> std::shared_ptr<DisposableBase>
+#define SUBSCRIBE(scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler_ = scheduler_default) -> std::shared_ptr<DisposableBase>
+#define ACTION [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state = Variant()) -> std::shared_ptr<DisposableBase>
 
 using namespace rx::disposable;
 
