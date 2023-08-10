@@ -1,10 +1,13 @@
+#ifndef RX_OBSERVABLE_EMPTY_H
+#define RX_OBSERVABLE_EMPTY_H
+
 #include "observable/observable.h"
 
 #include "scheduler/immediatescheduler.h"
 
 namespace rx::observable {
 
-std::shared_ptr<Observable> Observable::empty(const std::shared_ptr<SchedulerBase>& scheduler) {
+static std::shared_ptr<Observable> empty_(const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
 
     subscription_t subscribe = SUBSCRIBE(nullptr) {
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : rx::scheduler::ImmediateScheduler::singleton();
@@ -21,3 +24,5 @@ std::shared_ptr<Observable> Observable::empty(const std::shared_ptr<SchedulerBas
 }
 
 }
+
+#endif // RX_OBSERVABLE_EMPTY_H

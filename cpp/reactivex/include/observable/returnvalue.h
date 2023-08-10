@@ -1,3 +1,6 @@
+#ifndef RX_OBSERVABLE_RETURNVALUE_H
+#define RX_OBSERVABLE_RETURNVALUE_H
+
 #include "observable/observable.h"
 
 #include "scheduler/currentthreadscheduler.h"
@@ -6,7 +9,7 @@ using namespace rx::scheduler;
 
 namespace rx::observable {
 
-std::shared_ptr<Observable> Observable::return_value(const Variant& value, const std::shared_ptr<SchedulerBase>& scheduler) {
+static std::shared_ptr<Observable> return_value_(const Variant& value, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
     subscription_t subscribe = SUBSCRIBE(nullptr) {
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
@@ -23,3 +26,5 @@ std::shared_ptr<Observable> Observable::return_value(const Variant& value, const
 }
 
 } // END namespace rx::observable
+
+#endif // RX_OBSERVABLE_RETURNVALUE_H

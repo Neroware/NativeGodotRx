@@ -12,8 +12,6 @@ class IteratorBase {
 public:
     virtual Variant next() = 0;
     virtual bool has_next() = 0;
-    virtual Variant end() = 0;
-    
 };
 
 }; // END namespace abstract

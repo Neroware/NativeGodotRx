@@ -8,9 +8,6 @@ Variant RxIterator::next() {
 bool RxIterator::has_next() {
     return this->_ptr->has_next();
 }
-Variant RxIterator::end() {
-    return this->_ptr->end();
-}
 
 void RxIterator::foreach(const Callable& what) {
     while (this->has_next()) {

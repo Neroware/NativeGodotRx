@@ -20,7 +20,6 @@ protected:
     static inline void _bind_methods() {
         ClassDB::bind_method(D_METHOD("next"), &RxIterator::next);
         ClassDB::bind_method(D_METHOD("has_next"), &RxIterator::has_next);
-        ClassDB::bind_method(D_METHOD("end"), &RxIterator::end);
         ClassDB::bind_method(D_METHOD("foreach", "cb"), &RxIterator::foreach);
         ClassDB::bind_method(D_METHOD("enumerate", "cb"), &RxIterator::enumerate);
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxIterator::equals);
@@ -29,7 +28,6 @@ protected:
 public:
     Variant next();
     bool has_next();
-    Variant end();
 
     void foreach(const Callable& what);
     void enumerate(const Callable& what);

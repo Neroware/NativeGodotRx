@@ -37,11 +37,8 @@ struct array_iterator : public IteratorBase {
     explicit array_iterator(const Array& array_, uint64_t index_ = 0) 
         : array(array_), index(index_), itEnd(memnew(ItEnd)) {}
     
-    inline Variant end() override {
-        return this->itEnd;
-    }
     inline Variant next() override {
-        return index >= array.size() ? this->end() : array[index++];
+        return index >= array.size() ? Variant(this->itEnd) : array[index++];
     }
     inline bool has_next() override {
         return index < array.size();
@@ -68,11 +65,8 @@ struct dictionary_iterator : public IteratorBase {
     explicit dictionary_iterator(const Dictionary& dict_, uint64_t index_ = 0) 
         : dict(dict_), keys(dict.keys()), index(index_), itEnd(memnew(ItEnd)) {}
     
-    inline Variant end() override {
-        return this->itEnd;
-    }
     inline Variant next() override {
-        return index >= keys.size() ? this->end() : Variant(Array::make(keys[index], dict[keys[index++]]));
+        return index >= keys.size() ? Variant(this->itEnd) : Variant(Array::make(keys[index], dict[keys[index++]]));
     }
     inline bool has_next() override {
         return index < keys.size();
@@ -92,26 +86,30 @@ struct dictionary_iterable : public IterableBase {
 
 /**
  * Utility type to wrap around IterableBase to enable C++-style iterations
- * for GDScript-style iterations.
+ * for GDScript-style iterations. Only use this for wrapping between GodotAPI and Rx!
+ * 
+ * WARNING: Incremented iterator values work on the same IteratorBase instance!
 */
 template<class WrapperT, class BaseT>
 struct rx_iterable {
 
     std::shared_ptr<IterableBase> it;
+
     rx_iterable(const std::shared_ptr<IterableBase>& it_)
         : it(it_) {}
     
-    struct rx_iterator {
+    struct const_iterator {
         std::shared_ptr<IteratorBase> it;
+        bool is_end;
         Variant current;
-        Variant end;
 
-        explicit rx_iterator(const std::shared_ptr<IteratorBase>& it_, bool is_end = false)
-            : it(it_), current(is_end ? it->end() : it->next()), end(it->end()) {}
-        
+        explicit const_iterator(const std::shared_ptr<IterableBase>& it_, bool is_end_ = false)
+            :   it(is_end_ ? nullptr : it_->iter()), 
+                is_end(is_end_ || !it->has_next()), 
+                current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
 
-        bool operator!=(const rx_iterator& other) const {
-            return current != other.end();
+        bool operator!=(const const_iterator& other) const {
+            return is_end ^ other.is_end;
         }
 
         const std::shared_ptr<BaseT> operator*() const {
@@ -121,11 +119,31 @@ struct rx_iterable {
             throw BadArgumentException("Iterable contained element of wrong type!");
         }
 
-        rx_iterator& operator++() {
+        const_iterator& operator++() {
+            if (is_end) {
+                return *this;
+            }
+            is_end = it->has_next();
             current = it->next();
             return *this;
         }
+
+        const_iterator operator++(int) {
+            const_iterator retval = *this; 
+            ++(*this); 
+            return retval;
+        }
     };
+
+    const_iterator begin() const {
+        return const_iterator(this->it);
+    }
+
+    const_iterator end() const {
+        return const_iterator(this->it, true);
+    }
+
+
 
 }; // END rx_iterable
 

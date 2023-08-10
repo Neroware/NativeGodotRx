@@ -1,8 +1,6 @@
 #ifndef RX_OBSERVABLE_OBSRVABLE_H
 #define RX_OBSERVABLE_OBSRVABLE_H
 
-#include "observable/definitions.h"
-
 #include "pipe.h"
 #include "basic.h"
 #include "godotrx.h"
@@ -61,9 +59,6 @@ private:
         const std::shared_ptr<ObserverBase>& observer, 
         const std::shared_ptr<SchedulerBase>& scheduler = nullptr
     );
-
-public:
-    OBSERVABLE_CONSTRUCTORS
 
 };
 
