@@ -18,6 +18,7 @@
 
 #define SUBSCRIBE(scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler_ = scheduler_default) -> std::shared_ptr<DisposableBase>
 #define ACTION [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state = Variant()) -> std::shared_ptr<DisposableBase>
+#define RECURSIVE_ACTION [=, &action](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state = Variant()) -> std::shared_ptr<DisposableBase>
 
 using namespace rx::disposable;
 

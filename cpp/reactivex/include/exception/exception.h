@@ -66,8 +66,7 @@ public:
     BadArgumentException(const std::string& what_) : _what(what_) {}
 
     virtual const char* what() const noexcept override {
-        std::string res = "A function argument has a bad value: " + _what;
-        return res.c_str();
+        return _what.c_str();
     }
     virtual const char* type() const noexcept override {
         return "BadArgumentError";

@@ -113,7 +113,7 @@ struct rx_iterable {
         }
 
         const std::shared_ptr<BaseT> operator*() const {
-            if (auto wrapper = DYN_CAST_OR_NULL(current, WrapperT)) {
+            if (auto wrapper = DYN_CAST(current, WrapperT)) {
                 return WrapperT::unwrap(wrapper);
             }
             throw BadArgumentException("Iterable contained element of wrong type!");

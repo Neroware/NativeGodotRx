@@ -27,8 +27,8 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
         auto last_exception = std::make_shared<std::exception_ptr>();
         auto is_disposed = std::make_shared<bool>(false);
 
-        action_t action = ACTION {
-            on_error_t on_error = [=](const std::exception_ptr& exn) {
+        action_t action = RECURSIVE_ACTION {
+            on_error_t on_error = [=, &action](const std::exception_ptr& exn) {
                 *last_exception = exn;
                 cancelable->set_disposable(_scheduler->schedule(action));
             };
@@ -59,9 +59,9 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
             auto d = std::make_shared<SingleAssignmentDisposable>();
             subscription->set_disposable(d);
             d->set_disposable(current->subscribe(
-                [observer](const Variant& value) { observer->on_next(value); },
+                [&observer](const Variant& value) { observer->on_next(value); },
                 on_error,
-                [observer]() { observer->on_completed(); },
+                [&observer]() { observer->on_completed(); },
                 scheduler_
             ));
             return nullptr;

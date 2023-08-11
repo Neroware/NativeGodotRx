@@ -26,7 +26,7 @@ public:                                                                         
     }                                                                               \
     std::shared_ptr<AbstractType> getptr() const { return this->_ptr; }             \
     inline String _to_string() const {                                              \
-        return "[Rx" + String(#GodotType) + ":" + UtilityFunctions::str(            \
+        return "[" + String(#GodotType) + ":" + UtilityFunctions::str(              \
             reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \
     }                                                                               \
     inline bool equals(Ref<GodotType> other) const {                                \

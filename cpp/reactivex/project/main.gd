@@ -39,8 +39,18 @@ func _ready():
 #	var t1 = Time.get_ticks_msec()
 #	print("DT: ", (t1 - t0) / 1000.0, "s ; ", (t1 - t0) / float(N_REPEATS), "ms per sub")
 	
-	RxObservable.just(42).subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")).dispose_with(self)
-#	RxObservable.catch([]).subscribe(func(i): print(":("), func(e): print("ERR: ", e), func(): print(":(")).dispose_with(self)
+#	RxObservable.just(42).subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")).dispose_with(self)
+	RxObservable.catch([
+		RxObservable.throw("Planned exception!"),
+		RxObservable.just(42),
+		RxObservable.just(123)
+	]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
+	.dispose_with(self)
+	
+#	RxObservable.throw("Planned exception!").subscribe(null, func(e): print("ERR: ", e)).dispose_with(self)
+	
+#	RxObservable.throw("Aloha!").subscribe(func(i): print("i>", i), func(e): print("Err: ", e)).dispose_with(self)
 	
 	return
 	
