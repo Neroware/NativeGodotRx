@@ -27,16 +27,13 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
         auto last_exception = std::make_shared<std::exception_ptr>();
         auto is_disposed = std::make_shared<bool>(false);
 
-        action_t action = RECURSIVE_ACTION {
-            on_error_t on_error = [=, &action](const std::exception_ptr& exn) {
+        auto action = [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state, const auto& _observer, const auto& _action) -> std::shared_ptr<DisposableBase> {
+
+            on_error_t on_error = [=](const std::exception_ptr& exn) {
                 *last_exception = exn;
-                cancelable->set_disposable(_scheduler->schedule(action));
+                cancelable->set_disposable(_scheduler->schedule(ACTION { return _action(scheduler__, state, _observer, _action); }));
             };
 
-            if (*is_disposed) {
-                return nullptr;
-            }
-            
             std::shared_ptr<ObservableBase> current;
             try { 
                 if (*_it != _end) {
@@ -57,17 +54,18 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
                 return nullptr;
             }
             auto d = std::make_shared<SingleAssignmentDisposable>();
-            subscription->set_disposable(d);
             d->set_disposable(current->subscribe(
-                [&observer](const Variant& value) { observer->on_next(value); },
+                [_observer](const Variant& value) { _observer->on_next(value); }, // WTF, observer causes cyclic dependency!?
                 on_error,
-                [&observer]() { observer->on_completed(); },
+                [_observer]() { _observer->on_completed(); },
                 scheduler_
             ));
+
             return nullptr;
+
         };
 
-        cancelable->set_disposable(_scheduler->schedule(action));
+        cancelable->set_disposable(_scheduler->schedule(ACTION { return action(scheduler__, state, observer, action); } ));
 
         dispose_t dispose = [is_disposed]() {
             *is_disposed = true;

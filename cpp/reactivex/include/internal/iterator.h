@@ -123,7 +123,7 @@ struct rx_iterable {
             if (is_end) {
                 return *this;
             }
-            is_end = it->has_next();
+            is_end = !it->has_next();
             current = it->next();
             return *this;
         }

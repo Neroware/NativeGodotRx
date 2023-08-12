@@ -4,7 +4,7 @@ var custom_signal_emitted = null
 
 func _ready():
 	
-	GDRx.iter([1, 2, 3]).foreach(func(i): print("> ", i))
+#	GDRx.iter([1, 2, 3]).foreach(func(i): print("> ", i))
 	
 #	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
 #	const N_REPEATS = 10000
@@ -40,9 +40,22 @@ func _ready():
 #	print("DT: ", (t1 - t0) / 1000.0, "s ; ", (t1 - t0) / float(N_REPEATS), "ms per sub")
 	
 #	RxObservable.just(42).subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")).dispose_with(self)
+	
+	#var obs_list : Array = [
+	#	RxObservable.throw("Planned exception!"),
+	#	RxObservable.just(42),
+	#	RxObservable.just(123)
+	#]
+	#var it = GDRx.iter(obs_list)
+	#while it.has_next():
+	#	print("> ", it.next())
+	
+	var cts = RxScheduler.CurrentThreadSchedulerSingleton()
+	
 	RxObservable.catch([
 		RxObservable.throw("Planned exception!"),
-		RxObservable.just(42),
+		RxObservable.throw("Planned exception 2!"),
+		RxObservable.just(42, cts),
 		RxObservable.just(123)
 	]) \
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \

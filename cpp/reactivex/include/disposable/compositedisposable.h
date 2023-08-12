@@ -22,9 +22,10 @@ public:
     RLock lock;
 
 public:
-    CompositeDisposable(const disposable_init_t& items = {}) 
+    CompositeDisposable() {}
+    CompositeDisposable(const disposable_init_t& items) 
         : disposable(items) {}
-    CompositeDisposable(const disposable_list_t& items = {}) 
+    CompositeDisposable(const disposable_list_t& items) 
         : disposable(items) {}
     ~CompositeDisposable(){ this->dispose(); }
 
