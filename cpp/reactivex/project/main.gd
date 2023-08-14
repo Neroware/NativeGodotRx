@@ -52,14 +52,14 @@ func _ready():
 	
 	var cts = RxScheduler.CurrentThreadSchedulerSingleton()
 	
-	RxObservable.catch([
-		RxObservable.throw("Planned exception!"),
-		RxObservable.throw("Planned exception 2!"),
-		RxObservable.just(42, cts),
-		RxObservable.just(123)
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
-	.dispose_with(self)
+#	RxObservable.catch([
+#		RxObservable.throw("Planned exception!"),
+#		RxObservable.throw("Planned exception 2!"),
+#		RxObservable.just(42, cts),
+#		RxObservable.just(123)
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
+#	.dispose_with(self)
 	
 	var obs_defer = RxObservable.defer(func(__ : RxScheduler): return RxObservable.just("Deferred!"))
 	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)

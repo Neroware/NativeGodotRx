@@ -55,7 +55,7 @@ public:
     virtual void dispose() override;
 
     bool fail(const std::exception_ptr& error);
-    void throw_error(const std::exception_ptr& error) const;
+    [[noreturn]] void throw_error(const std::exception_ptr& error) const;
     
     notifier_t to_notifier();
     std::shared_ptr<ObserverBase> as_observer();

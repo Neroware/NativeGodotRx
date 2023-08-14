@@ -29,6 +29,7 @@ cache/
 *.pdb
 *.lib
 bin
+build
 *.config
 *.creator
 *.creator.user

@@ -5,7 +5,7 @@ set(GODOT_GDEXTENSION_DIR ../gdextension/ CACHE STRING "Path to GDExtension inte
 set(CPP_BINDINGS_PATH ../ CACHE STRING "Path to C++ bindings")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	set(TARGET_PATH x11)
+	set(TARGET_PATH .)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	set(TARGET_PATH win64)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -15,7 +15,7 @@ else()
 endif()
 
 # Change the output directory to the bin directory
-set(BUILD_PATH ${CMAKE_SOURCE_DIR}/bin/${TARGET_PATH})
+set(BUILD_PATH ${CMAKE_SOURCE_DIR}/project/bin/${TARGET_PATH})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${BUILD_PATH}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BUILD_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_PATH}")
@@ -93,7 +93,7 @@ else()
 endif()
 
 # Get Sources
-file(GLOB_RECURSE SOURCES src/*.c**)
+file(GLOB_RECURSE SOURCES src/*.c** lib/*.c**)
 file(GLOB_RECURSE HEADERS include/*.h**)
 
 # Define our godot-cpp library
@@ -103,6 +103,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM
 	PRIVATE
 		${CPP_BINDINGS_PATH}/include
 		${CPP_BINDINGS_PATH}/gen/include
+		${CMAKE_CURRENT_SOURCE_DIR}/include
 		${GODOT_GDEXTENSION_DIR}
 )
 
@@ -131,7 +132,7 @@ endif()
 if(CMAKE_VERSION VERSION_GREATER "3.13")
 	target_link_directories(${PROJECT_NAME}
 		PRIVATE
-		${CPP_BINDINGS_PATH}/bin/
+		${CPP_BINDINGS_PATH}/build/bin/
 	)
 
 	target_link_libraries(${PROJECT_NAME}
@@ -148,3 +149,7 @@ set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS ${GODOT
 set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS ${GODOT_LINKER_FLAGS})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME "reactivex")
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME "reactivex.linux.template_debug.x86_64"
+)

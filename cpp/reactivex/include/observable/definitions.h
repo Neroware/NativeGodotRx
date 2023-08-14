@@ -35,11 +35,25 @@ inline static std::shared_ptr<Observable> defer(const observable_factory_t& fact
 } // END namespace rx::observable
 
 #define OBSERVABLE_CONSTRUCTORS_WRAPPERS \
-    inline static Ref<RxObservable> empty(Ref<RxScheduler> scheduler = Ref<RxScheduler>()) { return RxObservable::wrap(Observables::empty(RxScheduler::unwrap(scheduler))); } \
-    inline static Ref<RxObservable> return_value(const Variant& value, Ref<RxScheduler> scheduler = Ref<RxScheduler>()) { return RxObservable::wrap(Observables::return_value(value, RxScheduler::unwrap(scheduler))); } \
-    inline static Ref<RxObservable> throw_error(const String& what, Ref<RxScheduler> scheduler = Ref<RxScheduler>()) { try { throw rx_exception(what.ascii().get_data()); } catch(...) { return RxObservable::wrap(Observables::throw_error(std::current_exception(), RxScheduler::unwrap(scheduler))); } } \
-    inline static Ref<RxObservable> catch_with_iterable(const Variant& sources) { return RxObservable::wrap(Observables::catch_with_iterable(rx_iterable<RxObservable, ObservableBase>(RxIterable::unwrap(rx::iterator::to_iterable(sources))))); } \
-    inline static Ref<RxObservable> defer(const Callable& factory) { return RxObservable::wrap(Observables::defer(observable_factory_cb(factory))); }
+    inline static Ref<RxObservable> empty(Ref<RxScheduler> scheduler = Ref<RxScheduler>()) {                                                    \
+        return RxObservable::wrap(Observables::empty(RxScheduler::unwrap(scheduler)));                                                          \
+    }                                                                                                                                           \
+    inline static Ref<RxObservable> return_value(const Variant& value, Ref<RxScheduler> scheduler = Ref<RxScheduler>()) {                       \
+        return RxObservable::wrap(Observables::return_value(value, RxScheduler::unwrap(scheduler)));                                            \
+    }                                                                                                                                           \
+    inline static Ref<RxObservable> throw_error(const String& what, Ref<RxScheduler> scheduler = Ref<RxScheduler>()) {                          \
+        try { throw rx_exception(what.ascii().get_data()); } catch(...) {                                                                       \
+            return RxObservable::wrap(Observables::throw_error(std::current_exception(), RxScheduler::unwrap(scheduler)));                      \
+        }                                                                                                                                       \
+    }                                                                                                                                           \
+    inline static Ref<RxObservable> catch_with_iterable(const Variant& sources) {                                                               \
+        return RxObservable::wrap(Observables::catch_with_iterable(                                                                             \
+            rx_iterable<RxObservable, ObservableBase>(RxIterable::unwrap(rx::iterator::to_iterable(sources)))                                   \
+        ));                                                                                                                                     \
+    }                                                                                                                                           \
+    inline static Ref<RxObservable> defer(const Callable& factory) {                                                                            \
+        return RxObservable::wrap(Observables::defer(observable_factory_cb(factory)));                                                          \
+    }                                                                                                                                           \
 
 #define OBSERVABLE_CONSTRUCTORS_BINDS \
     ClassDB::bind_static_method("RxObservable", D_METHOD("empty", "scheduler"), &RxObservable::empty, DEFVAL(Ref<RxScheduler>())); \

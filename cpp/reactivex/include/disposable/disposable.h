@@ -11,7 +11,7 @@ namespace rx::disposable {
 class Disposable : public DisposableBase {
 
 public:
-    bool is_disposed;
+    bool is_disposed = false;
     dispose_t action;
     RLock lock;
 

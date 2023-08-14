@@ -48,7 +48,7 @@ bool Observer::fail(const std::exception_ptr& error) {
     return false;
 }
 
-void Observer::throw_error(const std::exception_ptr& error) const {
+[[noreturn]] void Observer::throw_error(const std::exception_ptr& error) const {
     std::rethrow_exception(error);
 }
 
