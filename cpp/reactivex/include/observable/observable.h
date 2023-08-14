@@ -62,6 +62,8 @@ private:
 
 };
 
-} // END namespace ry::observable
+typedef std::function<std::shared_ptr<Observable>(const std::shared_ptr<SchedulerBase>&)> observable_factory_t;
+
+} // END namespace rx::observable
 
 #endif // RX_OBSERVABLE_OBSRVABLE_H

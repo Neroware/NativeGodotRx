@@ -61,6 +61,9 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
 	.dispose_with(self)
 	
+	var obs_defer = RxObservable.defer(func(__ : RxScheduler): return RxObservable.just("Deferred!"))
+	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
+	
 #	RxObservable.throw("Planned exception!").subscribe(null, func(e): print("ERR: ", e)).dispose_with(self)
 	
 #	RxObservable.throw("Aloha!").subscribe(func(i): print("i>", i), func(e): print("Err: ", e)).dispose_with(self)

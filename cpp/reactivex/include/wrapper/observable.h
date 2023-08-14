@@ -23,6 +23,10 @@ using namespace rx::exception;
 using namespace rx::observable;
 
 namespace rx {
+
+static subscription_t subscription_cb(const Callable& cb);
+static observable_factory_t observable_factory_cb(const Callable& cb);
+
 namespace wrappers {
 
 class RxObservable : public RefCounted {
@@ -48,13 +52,18 @@ public:
 
 using namespace rx::wrappers;
 
-static subscription_t subscription_cb(const Callable& cb) {
+subscription_t subscription_cb(const Callable& cb) {
     return subscription_t([cb](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) {
         Ref<RxDisposable> disp = cb.callv(Array::make(RxObserver::wrap(observer), RxScheduler::wrap(scheduler)));
         return RxDisposable::unwrap(disp);
     });
 }
 
+observable_factory_t observable_factory_cb(const Callable& cb) {
+    return [cb](const std::shared_ptr<SchedulerBase>& scheduler) -> std::shared_ptr<Observable> {
+        return std::static_pointer_cast<Observable>(RxObservable::unwrap(cb.callv(Array::make(RxScheduler::wrap(scheduler)))));
+    };
+}
 
 } // END namespace rx
 

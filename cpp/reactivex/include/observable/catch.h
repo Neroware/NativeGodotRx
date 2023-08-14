@@ -55,7 +55,7 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
             }
             auto d = std::make_shared<SingleAssignmentDisposable>();
             d->set_disposable(current->subscribe(
-                [_observer](const Variant& value) { _observer->on_next(value); }, // WTF, observer causes cyclic dependency!?
+                [_observer](const Variant& value) { _observer->on_next(value); },
                 on_error,
                 [_observer]() { _observer->on_completed(); },
                 scheduler_

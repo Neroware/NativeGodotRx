@@ -5,7 +5,7 @@
 
 namespace rx::observable {
 
-static std::shared_ptr<Observable> throw_(const std::exception_ptr& exception, const std::shared_ptr<SchedulerBase>& scheduler) {
+static std::shared_ptr<Observable> throw_(const std::exception_ptr& exception, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
 
     subscription_t subscription = SUBSCRIBE(nullptr) {
         auto _scheduler = scheduler ? scheduler : ImmediateScheduler::singleton();
