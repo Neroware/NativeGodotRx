@@ -8,6 +8,7 @@
 #include "observable/throw.h"
 #include "observable/catch.h"
 #include "observable/defer.h"
+#include "observable/never.h"
 
 namespace rx::observable {
 
@@ -18,6 +19,9 @@ inline static std::shared_ptr<Observable> empty(const std::shared_ptr<SchedulerB
 }
 inline static std::shared_ptr<Observable> return_value(const Variant& value, const std::shared_ptr<SchedulerBase>& scheduler_ = nullptr) {
     return return_value_(value, scheduler_);
+}
+inline static std::shared_ptr<Observable> never() {
+    return never_();
 }
 inline static std::shared_ptr<Observable> throw_error(const std::exception_ptr& exception, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
     return throw_(exception, scheduler);
@@ -41,6 +45,9 @@ inline static std::shared_ptr<Observable> defer(const observable_factory_t& fact
     inline static Ref<RxObservable> return_value(const Variant& value, Ref<RxScheduler> scheduler = Ref<RxScheduler>()) {                       \
         return RxObservable::wrap(Observables::return_value(value, RxScheduler::unwrap(scheduler)));                                            \
     }                                                                                                                                           \
+    inline static Ref<RxObservable> never() {                                                                                                   \
+        return RxObservable::wrap(Observables::never());                                                                                        \
+    }                                                                                                                                           \
     inline static Ref<RxObservable> throw_error(const String& what, Ref<RxScheduler> scheduler = Ref<RxScheduler>()) {                          \
         try { throw rx_exception(what.ascii().get_data()); } catch(...) {                                                                       \
             return RxObservable::wrap(Observables::throw_error(std::current_exception(), RxScheduler::unwrap(scheduler)));                      \
@@ -59,6 +66,7 @@ inline static std::shared_ptr<Observable> defer(const observable_factory_t& fact
     ClassDB::bind_static_method("RxObservable", D_METHOD("empty", "scheduler"), &RxObservable::empty, DEFVAL(Ref<RxScheduler>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("return_value", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxScheduler>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxScheduler>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "message", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxScheduler>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer);
