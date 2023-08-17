@@ -12,16 +12,16 @@ using namespace rx::exception;
 
 namespace rx::wrappers {
 
-class RxLock : public RefCounted {
-    GDCLASS(RxLock, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxLock, LockBase)
+class RxLockBase : public RefCounted {
+    GDCLASS(RxLockBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxLockBase, LockBase)
 
 protected:
     static inline void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("lock"), &RxLock::lock);
-        ClassDB::bind_method(D_METHOD("unlock"), &RxLock::unlock);
-        ClassDB::bind_method(D_METHOD("try_lock"), &RxLock::try_lock);
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxLock::equals);
+        ClassDB::bind_method(D_METHOD("lock"), &RxLockBase::lock);
+        ClassDB::bind_method(D_METHOD("unlock"), &RxLockBase::unlock);
+        ClassDB::bind_method(D_METHOD("try_lock"), &RxLockBase::try_lock);
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxLockBase::equals);
     }
 public:
     void lock();

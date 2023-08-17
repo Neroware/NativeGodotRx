@@ -39,11 +39,11 @@ inline static std::shared_ptr<Observable> defer_(const observable_factory_t& fac
 } // END namespace rx::observable
 
 #define OBSERVABLE_CONSTRUCTORS_BINDS \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("empty", "scheduler"), &RxObservable::empty, DEFVAL(Ref<RxScheduler>())); \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("return_value", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxScheduler>())); \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxScheduler>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("empty", "scheduler"), &RxObservable::empty, DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("return_value", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never); \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "message", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxScheduler>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "message", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer);
 

@@ -13,17 +13,17 @@ using namespace rx::exception;
 
 namespace rx::wrappers {
 
-class RxIterable : public RefCounted {
-    GDCLASS(RxIterable, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxIterable, IterableBase)
+class RxIterableBase : public RefCounted {
+    GDCLASS(RxIterableBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxIterableBase, IterableBase)
 
 protected:
     static inline void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("iter"), &RxIterable::iter);
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxIterable::equals);
+        ClassDB::bind_method(D_METHOD("iter"), &RxIterableBase::iter);
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxIterableBase::equals);
     }
 public:
-    Ref<RxIterator> iter();
+    Ref<RxIteratorBase> iter();
 };
 
 } // END namespace rx::wrappers

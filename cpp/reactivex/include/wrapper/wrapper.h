@@ -33,20 +33,21 @@ public:                                                                         
         return this->_ptr.get() == other->_ptr.get();                               \
     }
 
-#define RX_WRAPPER(GodotType, Type, BaseType)                                       \
+#define RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                        \
 private:                                                                            \
     std::shared_ptr<Type> _ptr;                                                     \
 public:                                                                             \
     GodotType() { throw NotImplementedException(); }                                \
-    GodotType(const std::shared_ptr<Type>& ptr) : _ptr(ptr), BaseType(ptr) {}       \
+    GodotType(const std::shared_ptr<Type>& ptr)                                     \
+        : _ptr(ptr), GodotBaseType(std::static_pointer_cast<BaseType>(ptr)) {}      \
     ~GodotType(){}                                                                  \
-    inline static Ref<GodotType> wrap(const std::shared_ptr<AbstractType>& ptr) {   \
+    inline static Ref<GodotType> wrap(const std::shared_ptr<Type>& ptr) {           \
         return memnew(GodotType(ptr));                                              \
     }                                                                               \
-    inline static std::shared_ptr<AbstractType> unwrap(Ref<GodotType> ref) {        \
+    inline static std::shared_ptr<Type> unwrap(Ref<GodotType> ref) {                \
         return ref.is_null() ? nullptr : ref->_ptr;                                 \
     }                                                                               \
-    std::shared_ptr<AbstractType> getptr() const { return this->_ptr; }             \
+    std::shared_ptr<BaseType> getptr() const { return this->_ptr; }                 \
     inline String _to_string() const {                                              \
         return "[Rx" + String(#GodotType) + ":" + UtilityFunctions::str(            \
             reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \

@@ -27,24 +27,24 @@ using namespace rx::observable;
 namespace rx {
 namespace wrappers {
 
-class RxSubject : public RefCounted {
-    GDCLASS(RxSubject, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxSubject, SubjectBase)
+class RxSubjectBase : public RefCounted {
+    GDCLASS(RxSubjectBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxSubjectBase, SubjectBase)
 
 protected:
     static inline void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxSubject::equals);
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxSubjectBase::equals);
         {
 		    MethodInfo mi;
 		    mi.name = "subscribe";
-		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxSubject::subscribe, mi);
+		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxSubjectBase::subscribe, mi);
 	    }
-        ClassDB::bind_method(D_METHOD("on_next", "item"), &RxSubject::on_next);
-        ClassDB::bind_method(D_METHOD("on_error", "error"), &RxSubject::on_error);
-        ClassDB::bind_method(D_METHOD("on_completed"), &RxSubject::on_completed);
+        ClassDB::bind_method(D_METHOD("on_next", "item"), &RxSubjectBase::on_next);
+        ClassDB::bind_method(D_METHOD("on_error", "error"), &RxSubjectBase::on_error);
+        ClassDB::bind_method(D_METHOD("on_completed"), &RxSubjectBase::on_completed);
     }
 public:
-    Ref<RxDisposable> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+    Ref<RxDisposableBase> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
     void on_next(const Variant& item);
     void on_error(Ref<RxError> error);
     void on_completed();

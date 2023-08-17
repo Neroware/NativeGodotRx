@@ -57,14 +57,15 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::RxThread>();
 	ClassDB::register_class<rx::RxMainThread>();
 	// wrapper
-	ClassDB::register_abstract_class<rx::wrappers::RxLock>();
-	ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();
-	ClassDB::register_abstract_class<rx::wrappers::RxIterator>();
-	ClassDB::register_abstract_class<rx::wrappers::RxIterable>();
-	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
-	ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
+	ClassDB::register_abstract_class<rx::wrappers::RxLockBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxDisposableBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxIteratorBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxIterableBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSchedulerBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxObserverBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxObservableBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
-	ClassDB::register_abstract_class<rx::wrappers::RxSubject>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSubjectBase>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
 	// scheduler

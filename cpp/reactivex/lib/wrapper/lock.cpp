@@ -2,15 +2,15 @@
 
 namespace rx::wrappers {
 
-void RxLock::lock() { 
+void RxLockBase::lock() { 
     this->_ptr->lock(); 
 }
 
-void RxLock::unlock() { 
+void RxLockBase::unlock() { 
     this->_ptr->unlock(); 
 }
 
-bool RxLock::try_lock() { 
+bool RxLockBase::try_lock() { 
     return this->_ptr->try_lock(); 
 }
 

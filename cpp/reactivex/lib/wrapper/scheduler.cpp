@@ -4,7 +4,7 @@
 
 namespace rx::wrappers {
 
-double RxScheduler::to_seconds(const Variant& value) {
+double RxSchedulerBase::to_seconds(const Variant& value) {
     if (auto t = DYN_CAST_OR_NULL(value, AbsoluteTime)) {
         return t->to_sec();
     }
@@ -14,7 +14,7 @@ double RxScheduler::to_seconds(const Variant& value) {
     return value.operator double();
 }
 
-Ref<AbsoluteTime> RxScheduler::to_datetime(const Variant& value) {
+Ref<AbsoluteTime> RxSchedulerBase::to_datetime(const Variant& value) {
     if (auto t = DYN_CAST_OR_NULL(value, AbsoluteTime)) {
         return t;
     }
@@ -24,7 +24,7 @@ Ref<AbsoluteTime> RxScheduler::to_datetime(const Variant& value) {
     return AbsoluteTime::from_seconds(value.operator double());
 }
 
-Ref<RelativeTime> RxScheduler::to_timedelta(const Variant& value) {
+Ref<RelativeTime> RxSchedulerBase::to_timedelta(const Variant& value) {
     if (auto dt = DYN_CAST_OR_NULL(value, RelativeTime)) {
         return dt;
     }
@@ -34,20 +34,20 @@ Ref<RelativeTime> RxScheduler::to_timedelta(const Variant& value) {
     return RelativeTime::from_seconds(value.operator double());
 }
 
-Ref<RxDisposable> RxScheduler::schedule(const Callable& action, const Variant& state) {
-    return RxDisposable::wrap(this->_ptr->schedule(action_cb(action), state));
+Ref<RxDisposableBase> RxSchedulerBase::schedule(const Callable& action, const Variant& state) {
+    return RxDisposableBase::wrap(this->_ptr->schedule(action_cb(action), state));
 }
-Ref<RxDisposable> RxScheduler::schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state) {
-    return RxDisposable::wrap(this->_ptr->schedule_absolute(duetime->t, action_cb(action), state));
+Ref<RxDisposableBase> RxSchedulerBase::schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state) {
+    return RxDisposableBase::wrap(this->_ptr->schedule_absolute(duetime->t, action_cb(action), state));
 }
-Ref<RxDisposable> RxScheduler::schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state) {
-    return RxDisposable::wrap(this->_ptr->schedule_relative(duetime->dt, action_cb(action), state));
+Ref<RxDisposableBase> RxSchedulerBase::schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state) {
+    return RxDisposableBase::wrap(this->_ptr->schedule_relative(duetime->dt, action_cb(action), state));
 }
-Ref<AbsoluteTime> RxScheduler::now() {
+Ref<AbsoluteTime> RxSchedulerBase::now() {
     return memnew(AbsoluteTime(this->_ptr->now()));
 }
-Ref<RxDisposable> RxScheduler::invoke_action(const Callable& action, const Variant& state) {
-    return RxDisposable::wrap(this->_ptr->invoke_action(action_cb(action), state));
+Ref<RxDisposableBase> RxSchedulerBase::invoke_action(const Callable& action, const Variant& state) {
+    return RxDisposableBase::wrap(this->_ptr->invoke_action(action_cb(action), state));
 }
 
 } // END namespace rx::wrappers

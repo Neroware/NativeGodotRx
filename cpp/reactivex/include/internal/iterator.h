@@ -169,28 +169,28 @@ struct rx_iterable {
 
 namespace iterator {
 
-static Ref<RxIterable> to_iterable(const Variant& it) {
-    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterable)) {
+static Ref<RxIterableBase> to_iterable(const Variant& it) {
+    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
         return iterable;
     }
     if (it.get_type() == Variant::ARRAY) {
-        return RxIterable::wrap(std::make_shared<array_iterable>(it));
+        return RxIterableBase::wrap(std::make_shared<array_iterable>(it));
     }
     if (it.get_type() == Variant::DICTIONARY) {
-        return RxIterable::wrap(std::make_shared<dictionary_iterable>(it));
+        return RxIterableBase::wrap(std::make_shared<dictionary_iterable>(it));
     }
     return to_iterable(Array::make(it));
 }
 
-static Ref<RxIterator> iter(const Variant& it) {
-    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterable)) {
+static Ref<RxIteratorBase> iter(const Variant& it) {
+    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
         return iterable->iter();
     }
     if (it.get_type() == Variant::ARRAY) {
-        return RxIterator::wrap(std::make_shared<array_iterator>(it));
+        return RxIteratorBase::wrap(std::make_shared<array_iterator>(it));
     }
     if (it.get_type() == Variant::DICTIONARY) {
-        return RxIterator::wrap(std::make_shared<dictionary_iterator>(it));
+        return RxIteratorBase::wrap(std::make_shared<dictionary_iterator>(it));
     }
     return iter(Array::make(it));
 }

@@ -14,16 +14,16 @@ using namespace rx::exception;
 namespace rx {
 namespace wrappers {
 
-class RxObserver : public RefCounted {
-    GDCLASS(RxObserver, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxObserver, ObserverBase)
+class RxObserverBase : public RefCounted {
+    GDCLASS(RxObserverBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxObserverBase, ObserverBase)
 
 protected:
     static inline void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("on_next", "item"), &RxObserver::on_next);
-        ClassDB::bind_method(D_METHOD("on_error", "error"), &RxObserver::on_error);
-        ClassDB::bind_method(D_METHOD("on_completed"), &RxObserver::on_completed);
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxObserver::equals);
+        ClassDB::bind_method(D_METHOD("on_next", "item"), &RxObserverBase::on_next);
+        ClassDB::bind_method(D_METHOD("on_error", "error"), &RxObserverBase::on_error);
+        ClassDB::bind_method(D_METHOD("on_completed"), &RxObserverBase::on_completed);
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxObserverBase::equals);
     }
 public:
     void on_next(const Variant& item);

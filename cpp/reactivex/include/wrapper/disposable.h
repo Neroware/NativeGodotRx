@@ -13,15 +13,15 @@ using namespace rx::exception;
 namespace rx {
 namespace wrappers {
 
-class RxDisposable : public RefCounted {
-    GDCLASS(RxDisposable, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxDisposable, DisposableBase)
+class RxDisposableBase : public RefCounted {
+    GDCLASS(RxDisposableBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxDisposableBase, DisposableBase)
     
 protected:
     static inline void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("dispose"), &RxDisposable::dispose);
-        ClassDB::bind_method(D_METHOD("dispose_with", "obj"), &RxDisposable::dispose_with);
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxDisposable::equals);
+        ClassDB::bind_method(D_METHOD("dispose"), &RxDisposableBase::dispose);
+        ClassDB::bind_method(D_METHOD("dispose_with", "obj"), &RxDisposableBase::dispose_with);
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxDisposableBase::equals);
     }
 public:
     void dispose();

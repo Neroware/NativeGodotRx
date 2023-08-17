@@ -74,10 +74,10 @@ public:
 
     ~__GDRxSingleton__(){}
 
-    inline Ref<RxIterator> iter(const Variant& iterable) {
+    inline Ref<RxIteratorBase> iter(const Variant& iterable) {
         return rx::iterator::iter(iterable);
     }
-    inline Ref<RxIterable> to_iterable(const Variant& iterable) {
+    inline Ref<RxIterableBase> to_iterable(const Variant& iterable) {
         return rx::iterator::to_iterable(iterable);
     }
     inline void foreach(const Variant& it, const Callable& what) {

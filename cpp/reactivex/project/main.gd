@@ -3,7 +3,7 @@ extends "res://test_base.gd"
 var custom_signal_emitted = null
 
 func _ready():
-	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
+	var scheduler = RxSchedulerBase.CurrentThreadSchedulerSingleton()
 	
 	RxObservable.catch([
 		RxObservable.throw("Planned exception!", scheduler),
@@ -14,7 +14,7 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
 	.dispose_with(self)
 	
-#	var obs_defer = RxObservable.defer(func(__ : RxScheduler): return RxObservable.just("Deferred!"))
+#	var obs_defer = RxObservableBase.defer(func(__ : RxSchedulerBase): return RxObservableBase.just("Deferred!"))
 #	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
 	
 	get_tree().quit()

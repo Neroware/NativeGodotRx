@@ -29,23 +29,34 @@ static observable_factory_t observable_factory_cb(const Callable& cb);
 
 namespace wrappers {
 
-class RxObservable : public RefCounted {
-    GDCLASS(RxObservable, RefCounted)
-    RX_ABSTRACT_WRAPPER(RxObservable, ObservableBase)
+class RxObservableBase : public RefCounted {
+    GDCLASS(RxObservableBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxObservableBase, ObservableBase)
+
+protected:
+    static inline void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxObservableBase::equals);
+        {
+		    MethodInfo mi;
+		    mi.name = "subscribe";
+		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxObservableBase::subscribe, mi);
+	    }
+    }
+public:
+    Ref<RxDisposableBase> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+};
+
+class RxObservable : public RxObservableBase {
+    GDCLASS(RxObservable, RxObservableBase)
+    RX_WRAPPER(RxObservable, Observable, RxObservableBase, ObservableBase)
+
+public:
+#include "observable/definitions.inc"
 
 protected:
     static inline void _bind_methods() {
         OBSERVABLE_CONSTRUCTORS_BINDS
-        ClassDB::bind_method(D_METHOD("equals", "other"), &RxObservable::equals);
-        {
-		    MethodInfo mi;
-		    mi.name = "subscribe";
-		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxObservable::subscribe, mi);
-	    }
     }
-public:
-    Ref<RxDisposable> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-#include "observable/definitions.inc"
 };
 
 } // END namespace wrapper
@@ -54,14 +65,14 @@ using namespace rx::wrappers;
 
 subscription_t subscription_cb(const Callable& cb) {
     return subscription_t([cb](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) {
-        Ref<RxDisposable> disp = cb.callv(Array::make(RxObserver::wrap(observer), RxScheduler::wrap(scheduler)));
-        return RxDisposable::unwrap(disp);
+        Ref<RxDisposableBase> disp = cb.callv(Array::make(RxObserverBase::wrap(observer), RxSchedulerBase::wrap(scheduler)));
+        return RxDisposableBase::unwrap(disp);
     });
 }
 
 observable_factory_t observable_factory_cb(const Callable& cb) {
     return [cb](const std::shared_ptr<SchedulerBase>& scheduler) -> std::shared_ptr<Observable> {
-        return std::static_pointer_cast<Observable>(RxObservable::unwrap(cb.callv(Array::make(RxScheduler::wrap(scheduler)))));
+        return RxObservable::unwrap(cb.callv(Array::make(RxSchedulerBase::wrap(scheduler))));
     };
 }
 

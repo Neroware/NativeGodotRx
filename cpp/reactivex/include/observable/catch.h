@@ -35,7 +35,7 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
                 return nullptr;
             }
 
-            std::shared_ptr<ObservableBase> current;
+            std::shared_ptr<Observable> current;
             try { 
                 if (*_it != _end) {
                     current = **_it; (*_it)++;

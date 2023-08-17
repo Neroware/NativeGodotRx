@@ -20,7 +20,7 @@ static std::shared_ptr<Observable> case_(
         KeyT key = mapper();
         std::shared_ptr<Observable> result;
         if (sources.contains(key)) {
-            result = std::static_pointer_cast<Observable>(sources[key]);
+            result = sources[key];
         }
         else {
             result = default_source_;

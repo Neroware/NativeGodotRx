@@ -2,8 +2,8 @@
 
 namespace rx::wrappers {
 
-Ref<RxIterator> RxIterable::iter() { 
-    return RxIterator::wrap(this->_ptr->iter()); 
+Ref<RxIteratorBase> RxIterableBase::iter() { 
+    return RxIteratorBase::wrap(this->_ptr->iter()); 
 }
 
 }
