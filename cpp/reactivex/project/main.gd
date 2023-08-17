@@ -5,17 +5,28 @@ var custom_signal_emitted = null
 func _ready():
 	var scheduler = RxSchedulerBase.CurrentThreadSchedulerSingleton()
 	
-	RxObservable.catch([
-		RxObservable.throw("Planned exception!", scheduler),
-		RxObservable.throw("Planned exception 2!", scheduler),
-		RxObservable.just(42, scheduler),
-		RxObservable.just(123, scheduler)
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
-	.dispose_with(self)
+#	RxObservable.catch([
+#		RxObservable.throw("Planned exception!", scheduler),
+#		RxObservable.throw("Planned exception 2!", scheduler),
+#		RxObservable.just(42, scheduler),
+#		RxObservable.just(123, scheduler)
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
+#	.dispose_with(self)
 	
-#	var obs_defer = RxObservableBase.defer(func(__ : RxSchedulerBase): return RxObservableBase.just("Deferred!"))
+#	var obs_defer = RxObservable.defer(func(__ : RxSchedulerBase): return RxObservable.just("Deferred!"))
 #	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
+	
+	RxObservable.case(
+		func(): return "foo", 
+		{
+			"bar": RxObservable.just(":("), 
+			"foo": RxObservable.just(":)")
+		}, 
+		RxObservable.throw("Should not happen!")
+	) \
+	.subscribe(func(i): print("i> ", i)) \
+	.dispose_with(self)
 	
 	get_tree().quit()
 	

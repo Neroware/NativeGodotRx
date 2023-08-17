@@ -20,3 +20,10 @@ inline static Ref<RxObservable> catch_with_iterable(const Variant& sources) {
 inline static Ref<RxObservable> defer(const Callable& factory) {
     return RxObservable::wrap(Observables::defer_(observable_factory_cb(factory)));
 }
+inline static Ref<RxObservable> case_mapper(const Callable& mapper, const Dictionary& sources, Ref<RxObservable> default_source = Ref<RxObservable>()) {
+    return RxObservable::wrap(Observables::case_(
+        std::function<Variant()>([mapper](){ return mapper.callv(Array()); }),
+        dictionary_mapping<RxObservable, Observable>(sources),
+        RxObservable::unwrap(default_source)
+    ));
+}

@@ -9,6 +9,7 @@
 #include "observable/catch.h"
 #include "observable/defer.h"
 #include "observable/never.h"
+#include "observable/case.h"
 
 namespace rx::observable {
 
@@ -33,6 +34,10 @@ inline static std::shared_ptr<Observable> catch_with_iterable_(const T& sources)
 inline static std::shared_ptr<Observable> defer_(const observable_factory_t& factory) {
     return rx::observable::defer_(factory);
 }
+template<typename KeyT, typename MappingT>
+inline static std::shared_ptr<Observable> case_(const std::function<KeyT()>& mapper, const MappingT& sources, const std::shared_ptr<Observable>& default_source = nullptr) {
+    return rx::observable::case_(mapper, sources, default_source);
+}
 
 }; // END struct Observables
 
@@ -45,6 +50,7 @@ inline static std::shared_ptr<Observable> defer_(const observable_factory_t& fac
     ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "message", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable); \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(Ref<RxObservable>()));
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H
