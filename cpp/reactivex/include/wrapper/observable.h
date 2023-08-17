@@ -45,7 +45,7 @@ protected:
     }
 public:
     Ref<RxDisposable> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-    OBSERVABLE_CONSTRUCTORS_WRAPPERS
+#include "observable/definitions.inc"
 };
 
 } // END namespace wrapper

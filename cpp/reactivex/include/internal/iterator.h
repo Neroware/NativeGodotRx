@@ -84,6 +84,26 @@ struct dictionary_iterable : public IterableBase {
     }
 }; // END dictionary_iterable
 
+template<class WrapperT, class BaseT>
+struct dictionary_mapping {
+    Dictionary dict;
+
+    dictionary_mapping(const Dictionary& dict_) 
+        : dict(dict_) {}
+
+    inline std::shared_ptr<BaseT> operator[](const Variant& key) const {
+        if (auto wrapper = DYN_CAST(dict[key], WrapperT)) {
+            return WrapperT::unwrap(wrapper);
+        }
+        throw BadArgumentException("Iterable contained element of wrong type!");
+    }
+
+    inline bool contains(const Variant& key) const {
+        return dict.has(key);
+    }
+
+}; // END dictionary_mapping
+
 /**
  * Utility type to wrap around IterableBase to enable C++-style iterations
  * for GDScript-style iterations. Only use this for wrapping between GodotAPI and Rx!
