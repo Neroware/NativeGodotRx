@@ -27,3 +27,6 @@ inline static Ref<RxObservable> case_mapper(const Callable& mapper, const Dictio
         RxObservable::unwrap(default_source)
     ));
 }
+inline static Ref<RxObservable> combine_latest(const TypedArray<RxObservable>& sources) {
+    return RxObservable::wrap(Observables::combine_latest_(array_container<RxObservable, Observable>(sources)));
+}

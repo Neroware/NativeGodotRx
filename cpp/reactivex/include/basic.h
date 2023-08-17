@@ -8,6 +8,7 @@
 #include <chrono>
 #include <functional>
 #include <exception>
+#include <memory>
 
 #include "exception/exceptionwrapper.h"
 
@@ -68,6 +69,18 @@ bool default_condition(T... args) {
 }
 
 }; // END namespace basic
+
+template<typename T>
+static bool all(const std::shared_ptr<T[]>& arr, int n) {
+    bool allTrue = true;
+    for (int i = 0; i < n; i++) {
+        if (!arr[i]) {
+            allTrue = false;
+            break;
+        }
+    }
+    return allTrue;
+}
 
 }; // END namespace rx
 

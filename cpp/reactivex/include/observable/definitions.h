@@ -10,6 +10,7 @@
 #include "observable/defer.h"
 #include "observable/never.h"
 #include "observable/case.h"
+#include "observable/combinelatest.h"
 
 namespace rx::observable {
 
@@ -38,6 +39,10 @@ template<typename KeyT, typename MappingT>
 inline static std::shared_ptr<Observable> case_(const std::function<KeyT()>& mapper, const MappingT& sources, const std::shared_ptr<Observable>& default_source = nullptr) {
     return rx::observable::case_(mapper, sources, default_source);
 }
+template<typename T>
+static std::shared_ptr<Observable> combine_latest_(const T& sources) {
+    return rx::observable::combine_latest_(sources);
+}
 
 }; // END struct Observables
 
@@ -51,6 +56,7 @@ inline static std::shared_ptr<Observable> case_(const std::function<KeyT()>& map
     ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "message", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer); \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(Ref<RxObservable>()));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(Ref<RxObservable>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("combine_latest", "sources"), &RxObservable::combine_latest); \
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

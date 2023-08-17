@@ -25,7 +25,15 @@ func _ready():
 		}, 
 		RxObservable.throw("Should not happen!")
 	) \
-	.subscribe(func(i): print("i> ", i)) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
+	
+	RxObservable.combine_latest([
+		RxObservable.just(1),
+		RxObservable.just(2),
+		RxObservable.just(3)
+	]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	
 	get_tree().quit()
