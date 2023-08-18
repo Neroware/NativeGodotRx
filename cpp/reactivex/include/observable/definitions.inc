@@ -14,7 +14,7 @@ inline static Ref<RxObservable> throw_error(const String& what, Ref<RxSchedulerB
 }
 inline static Ref<RxObservable> catch_with_iterable(const Variant& sources) {
     return RxObservable::wrap(Observables::catch_with_iterable_(
-        rx_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
+        rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
     ));
 }
 inline static Ref<RxObservable> defer(const Callable& factory) {
@@ -32,7 +32,7 @@ inline static Ref<RxObservable> combine_latest(const TypedArray<RxObservable>& s
 }
 inline static Ref<RxObservable> concat_with_iterable(const Variant& sources) {
     return RxObservable::wrap(Observables::concat_with_iterable_(
-        rx_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
+        rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
     ));
 }
 inline static Ref<RxObservable> fork_join(const TypedArray<RxObservable>& sources) {
@@ -56,5 +56,22 @@ inline static Ref<RxObservable> if_then(const Callable& condition, Ref<RxObserva
         [condition]() -> bool { return condition.callv(Array()); },
         RxObservable::unwrap(then_source),
         RxObservable::unwrap(else_source)
+    ));
+}
+inline static Ref<RxObservable> on_error_resume_next(const Variant& sources, bool use_factory = false) {
+    if (use_factory) {
+        return RxObservable::wrap(Observables::on_error_resume_next_(
+            rx_iterable<std::function<std::shared_ptr<Observable>(const std::exception_ptr&)>, Variant::Type::CALLABLE>(
+                RxIterableBase::unwrap(rx::iterator::to_iterable(sources)),
+                [](const Callable& cb) {
+                    return [cb](const std::exception_ptr& e) -> std::shared_ptr<Observable> {
+                        return RxObservable::unwrap(cb.callv(Array::make(RxError::wrap(e))));
+                    };
+                }
+            )
+        ));
+    }
+    return RxObservable::wrap(Observables::on_error_resume_next_(
+        rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
     ));
 }

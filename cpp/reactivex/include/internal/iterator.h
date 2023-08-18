@@ -137,11 +137,11 @@ struct array_container {
  * WARNING: Incremented iterator values work on the same IteratorBase instance!
 */
 template<class WrapperT, class BaseT>
-struct rx_iterable {
+struct rx_wrapper_iterable {
 
     std::shared_ptr<IterableBase> it;
 
-    rx_iterable(const std::shared_ptr<IterableBase>& it_)
+    rx_wrapper_iterable(const std::shared_ptr<IterableBase>& it_)
         : it(it_) {}
     
     struct const_iterator {
@@ -153,18 +153,16 @@ struct rx_iterable {
             :   it(is_end_ ? nullptr : it_->iter()), 
                 is_end(is_end_ || !it->has_next()), 
                 current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
-
+        
         bool operator!=(const const_iterator& other) const {
             return is_end ^ other.is_end;
         }
-
         const std::shared_ptr<BaseT> operator*() const {
             if (auto wrapper = DYN_CAST(current, WrapperT)) {
                 return WrapperT::unwrap(wrapper);
             }
             throw BadArgumentException("Iterable contained element of wrong type!");
         }
-
         const_iterator& operator++() {
             if (is_end) {
                 return *this;
@@ -173,25 +171,73 @@ struct rx_iterable {
             current = it->next();
             return *this;
         }
-
         const_iterator operator++(int) {
             const_iterator retval = *this; 
             ++(*this); 
             return retval;
         }
     };
-
     const_iterator begin() const {
         return const_iterator(this->it);
     }
-
     const_iterator end() const {
         return const_iterator(this->it, true);
     }
 
+}; // END struct rx_wrapper_iterable
 
+template<class T, Variant::Type type_id>
+struct rx_iterable {
 
-}; // END rx_iterable
+    std::shared_ptr<IterableBase> it;
+    std::function<T(const Variant&)> mapper;
+
+    rx_iterable(const std::shared_ptr<IterableBase>& it_, const std::function<T(const Variant&)>& mapper_)
+        : it(it_), mapper(mapper_) {}
+    
+    struct const_iterator {
+        std::function<T(const Variant&)> mapper;
+        std::shared_ptr<IteratorBase> it;
+        bool is_end;
+        Variant current;
+
+        explicit const_iterator(const std::function<T(const Variant&)>& mapper_, const std::shared_ptr<IterableBase>& it_, bool is_end_ = false)
+            :   mapper(mapper_),
+                it(is_end_ ? nullptr : it_->iter()), 
+                is_end(is_end_ || !it->has_next()), 
+                current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
+        
+        bool operator!=(const const_iterator& other) const {
+            return is_end ^ other.is_end;
+        }
+        const T operator*() const {
+            if (current.get_type() == type_id) {
+                return mapper(current);
+            }
+            throw BadArgumentException("Iterable contained element of wrong type!");
+        }
+        const_iterator& operator++() {
+            if (is_end) {
+                return *this;
+            }
+            is_end = !it->has_next();
+            current = it->next();
+            return *this;
+        }
+        const_iterator operator++(int) {
+            const_iterator retval = *this; 
+            ++(*this); 
+            return retval;
+        }
+    };
+    const_iterator begin() const {
+        return const_iterator(mapper, this->it);
+    }
+    const_iterator end() const {
+        return const_iterator(mapper, this->it, true);
+    }
+    
+}; // END struct rx_iterable
 
 namespace iterator {
 

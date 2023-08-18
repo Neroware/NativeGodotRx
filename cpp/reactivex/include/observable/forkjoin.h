@@ -7,6 +7,8 @@
 #include "disposable/serialdisposable.h"
 #include "disposable/compositedisposable.h"
 
+#include "internal/utils.h"
+
 using namespace rx::disposable;
 using namespace rx::scheduler;
 

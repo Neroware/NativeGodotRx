@@ -69,28 +69,6 @@ bool default_condition(T... args) {
 }
 
 }; // END namespace basic
-
-template<typename T>
-static bool all(const std::shared_ptr<T[]>& arr, int n) {
-    bool allTrue = true;
-    for (int i = 0; i < n; i++) {
-        if (!arr[i]) {
-            allTrue = false;
-            break;
-        }
-    }
-    return allTrue;
-}
-
-template<typename T>
-static godot::Array tuple(const T& values, int n) {
-    Array res; 
-    for (auto i = 0; i < n; i++){ 
-        res.append(values[i]);
-    }
-    return res;
-} 
-
 }; // END namespace rx
 
 #endif // RX_BASIC_H

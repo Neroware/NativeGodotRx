@@ -12,11 +12,11 @@ void RxError::_bind_methods() {
 }
 
 Ref<RxError> RxError::wrap(const std::exception_ptr& err) {
-    return memnew(RxError(err));
+    return err ? memnew(RxError(err)) : Ref<RxError>();
 }
 
 std::exception_ptr RxError::unwrap(Ref<RxError> err) {
-    return err->_err;
+    return err.is_null() ? nullptr : err->_err;
 }
 
 StringName RxError::type() const {

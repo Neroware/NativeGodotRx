@@ -16,6 +16,7 @@
 #include "observable/fromiterable.h"
 #include "observable/generate.h"
 #include "observable/ifthen.h"
+#include "observable/onerrorresumenext.h"
 
 namespace rx::observable {
 
@@ -69,6 +70,10 @@ inline static std::shared_ptr<Observable> generate_(
 inline static std::shared_ptr<Observable> if_then_(const predicate_t<>& condition, const std::shared_ptr<Observable>& then_source, const std::shared_ptr<Observable>& else_source = nullptr) {
     return rx::observable::if_then_(condition, then_source, else_source);
 }
+template<typename T>
+static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
+    return rx::observable::on_error_resume_next_(sources);
+}
 
 }; // END struct Observables
 
@@ -90,6 +95,7 @@ inline static std::shared_ptr<Observable> if_then_(const predicate_t<>& conditio
     ClassDB::bind_static_method("RxObservable", D_METHOD("from", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(Ref<RxObservable>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources", "use_factory"), &RxObservable::on_error_resume_next, DEFVAL(false)); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

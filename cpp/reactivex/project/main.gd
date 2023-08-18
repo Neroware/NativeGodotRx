@@ -5,17 +5,17 @@ var custom_signal_emitted = null
 func _ready():
 	var scheduler = RxSchedulerBase.CurrentThreadSchedulerSingleton()
 	
-#	RxObservable.catch([
-#		RxObservable.throw("Planned exception!", scheduler),
-#		RxObservable.throw("Planned exception 2!", scheduler),
-#		RxObservable.just(42, scheduler),
-#		RxObservable.just(123, scheduler)
-#	]) \
-#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
-#	.dispose_with(self)
+	RxObservable.catch([
+		RxObservable.throw("Planned exception!", scheduler),
+		RxObservable.throw("Planned exception 2!", scheduler),
+		RxObservable.just(42, scheduler),
+		RxObservable.just(123, scheduler)
+	]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
+	.dispose_with(self)
 	
-#	var obs_defer = RxObservable.defer(func(__ : RxSchedulerBase): return RxObservable.just("Deferred!"))
-#	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
+	var obs_defer = RxObservable.defer(func(__ : RxSchedulerBase): return RxObservable.just("Deferred!"))
+	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
 	
 	RxObservable.case(
 		func(): return "foo", 
@@ -61,6 +61,23 @@ func _ready():
 		RxObservable.just(":)"),
 		RxObservable.just(":(")
 	) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
+	
+	RxObservable.on_error_resume_next([
+		RxObservable.just(1),
+		RxObservable.throw("Intentional Error"),
+		RxObservable.from([2, 3, 4])
+	]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
+	
+	RxObservable.on_error_resume_next([
+		func(err : RxError): return RxObservable.just(0),
+		func(err : RxError): return RxObservable.throw("Intentional Error"),
+		func(err : RxError): print("Produce with prev. err: ", err) ; return RxObservable.just(1),
+		func(err : RxError): return RxObservable.from([2, 3, 4])
+	], true) \
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	

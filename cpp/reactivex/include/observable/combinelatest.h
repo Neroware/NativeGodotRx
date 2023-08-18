@@ -7,6 +7,8 @@
 #include "disposable/serialdisposable.h"
 #include "disposable/compositedisposable.h"
 
+#include "internal/utils.h"
+
 #include <cassert>
 
 using namespace rx::disposable;
