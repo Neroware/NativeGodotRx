@@ -4,12 +4,13 @@
 #include "observable/observable.h"
 #include "observable/empty.h"
 #include "observable/defer.h"
+#include "typing.h"
 
 namespace rx::observable {
 
 template<typename KeyT, typename MappingT>
 static std::shared_ptr<Observable> case_(
-    const std::function<KeyT()>& mapper,
+    const mapper_t<KeyT>& mapper,
     const MappingT& sources,
     const std::shared_ptr<Observable>& default_source = nullptr
 ) {

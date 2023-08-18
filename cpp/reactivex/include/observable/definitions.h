@@ -14,6 +14,7 @@
 #include "observable/concat.h"
 #include "observable/forkjoin.h"
 #include "observable/fromiterable.h"
+#include "observable/generate.h"
 
 namespace rx::observable {
 
@@ -57,6 +58,13 @@ inline static std::shared_ptr<Observable> fork_join_(const T& sources) {
 inline static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<IterableBase>& iterable, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
     return rx::observable::from_iterable_(iterable, scheduler);
 }
+inline static std::shared_ptr<Observable> generate_(
+    const Variant& initial_state, 
+    const predicate_t<const Variant&>& condition,
+    const mapper_t<Variant, const Variant&>& iterate
+) {
+    return rx::observable::generate_(initial_state, condition, iterate);
+}
 
 }; // END struct Observables
 
@@ -76,6 +84,7 @@ inline static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<I
     ClassDB::bind_static_method("RxObservable", D_METHOD("fork_join", "sources"), &RxObservable::fork_join); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("from_iterable", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("from", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

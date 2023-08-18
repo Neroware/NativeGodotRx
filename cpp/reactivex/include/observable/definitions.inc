@@ -44,3 +44,10 @@ inline static Ref<RxObservable> from_iterable(const Variant& iterable, Ref<RxSch
         RxSchedulerBase::unwrap(scheduler)
     ));
 }
+inline static Ref<RxObservable> generate(const Variant& initial_state, const Callable& condition, const Callable& iterate) {
+    return RxObservable::wrap(Observables::generate_(
+        initial_state,
+        [condition](const Variant& state) -> bool { return condition.callv(Array::make(state)); },
+        [iterate](const Variant& state) -> Variant { return iterate.callv(Array::make(state)); }
+    ));
+}
