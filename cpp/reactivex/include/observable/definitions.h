@@ -13,6 +13,7 @@
 #include "observable/combinelatest.h"
 #include "observable/concat.h"
 #include "observable/forkjoin.h"
+#include "observable/fromiterable.h"
 
 namespace rx::observable {
 
@@ -53,6 +54,9 @@ template<typename T>
 inline static std::shared_ptr<Observable> fork_join_(const T& sources) {
     return rx::observable::fork_join_(sources);
 }
+inline static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<IterableBase>& iterable, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
+    return rx::observable::from_iterable_(iterable, scheduler);
+}
 
 }; // END struct Observables
 
@@ -70,6 +74,8 @@ inline static std::shared_ptr<Observable> fork_join_(const T& sources) {
     ClassDB::bind_static_method("RxObservable", D_METHOD("combine_latest", "sources"), &RxObservable::combine_latest); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("concat", "sources"), &RxObservable::concat_with_iterable); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("fork_join", "sources"), &RxObservable::fork_join); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("from_iterable", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("from", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

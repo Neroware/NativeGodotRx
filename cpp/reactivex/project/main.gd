@@ -52,6 +52,10 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	
+	RxObservable.from(["ichi", "ni", "san", "shi"]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
+	
 	get_tree().quit()
 	
 #	var example: Example = $Example
