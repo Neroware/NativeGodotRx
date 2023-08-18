@@ -1,5 +1,5 @@
-#ifndef RX_OBSERVABLE_CATCH_H
-#define RX_OBSERVABLE_CATCH_H
+#ifndef RX_OBSERVABLE_CONCAT_H
+#define RX_OBSERVABLE_CONCAT_H
 
 #include "observable/observable.h"
 
@@ -13,27 +13,26 @@ using namespace rx::scheduler;
 namespace rx::observable {
 
 template<typename T>
-static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
-    auto _end = sources.end();
-    auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
+static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
 
     subscription_t subscribe = SUBSCRIBE(nullptr) {
         auto _scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
+        auto _end = sources.end();
+        auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
+
         auto subscription = std::make_shared<SerialDisposable>();
         auto cancelable = std::make_shared<SerialDisposable>();
-        auto last_exception = std::make_shared<std::exception_ptr>();
         auto is_disposed = std::make_shared<bool>(false);
 
-        auto action = [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state, const auto& _action) -> std::shared_ptr<DisposableBase> {
-            on_error_t on_error = [=](const std::exception_ptr& exn) {
-                *last_exception = exn;
-                cancelable->set_disposable(_scheduler->schedule(ACTION { return _action(scheduler__, state, _action); }));
-            };
-
+        auto action = RECURSIVE_ACTION {
             if (*is_disposed) {
                 return nullptr;
             }
+
+            on_completed_t on_completed = [=]() {
+                cancelable->set_disposable(_scheduler->schedule(ACTION { return _action(scheduler__, state, _action); }));
+            };
 
             std::shared_ptr<Observable> current;
             try { 
@@ -41,12 +40,7 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
                     current = **_it; (*_it)++;
                 }
                 else {
-                    if (*last_exception) {
-                        observer->on_error(*last_exception);
-                    }
-                    else {
-                        observer->on_completed();
-                    }
+                    observer->on_completed();
                     return nullptr;
                 }
             }
@@ -58,17 +52,16 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
             subscription->set_disposable(d);
             d->set_disposable(current->subscribe(
                 [observer](const Variant& value) { observer->on_next(value); },
-                on_error,
-                [observer]() { observer->on_completed(); },
-                scheduler_
+                [observer](const std::exception_ptr& error) { observer->on_error(error); },
+                on_completed, scheduler_
             ));
 
             return nullptr;
         };
 
-        cancelable->set_disposable(_scheduler->schedule(ACTION { return action(scheduler__, state, action); } ));
+        cancelable->set_disposable(_scheduler->schedule(ACTION { return action(scheduler__, state, action); }));
 
-        dispose_t dispose = [is_disposed]() {
+        dispose_t dispose = [=]() {
             *is_disposed = true;
         };
 
@@ -82,4 +75,4 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
 
 } // END namespace rx::observable
 
-#endif // RX_OBSERVABLE_CATCH_H
+#endif // RX_OBSERVABLE_CONCAT_H

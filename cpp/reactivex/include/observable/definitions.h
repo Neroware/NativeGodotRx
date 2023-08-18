@@ -11,6 +11,7 @@
 #include "observable/never.h"
 #include "observable/case.h"
 #include "observable/combinelatest.h"
+#include "observable/concat.h"
 
 namespace rx::observable {
 
@@ -43,6 +44,10 @@ template<typename T>
 static std::shared_ptr<Observable> combine_latest_(const T& sources) {
     return rx::observable::combine_latest_(sources);
 }
+template<typename T>
+static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
+    return rx::observable::concat_with_iterable_(sources);
+}
 
 }; // END struct Observables
 
@@ -58,5 +63,7 @@ static std::shared_ptr<Observable> combine_latest_(const T& sources) {
     ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(Ref<RxObservable>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("combine_latest", "sources"), &RxObservable::combine_latest); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("concat", "sources"), &RxObservable::concat_with_iterable); \
+
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

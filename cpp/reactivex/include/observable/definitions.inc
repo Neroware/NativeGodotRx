@@ -30,3 +30,8 @@ inline static Ref<RxObservable> case_mapper(const Callable& mapper, const Dictio
 inline static Ref<RxObservable> combine_latest(const TypedArray<RxObservable>& sources) {
     return RxObservable::wrap(Observables::combine_latest_(array_container<RxObservable, Observable>(sources)));
 }
+inline static Ref<RxObservable> concat_with_iterable(const Variant& sources) {
+    return RxObservable::wrap(Observables::concat_with_iterable_(
+        rx_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
+    ));
+}

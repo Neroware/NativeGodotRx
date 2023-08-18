@@ -128,7 +128,7 @@ struct array_container {
         return arr.is_empty();
     }
 
-}; // END dictionary_mapping
+}; // END array_container
 
 /**
  * Utility type to wrap around IterableBase to enable C++-style iterations
