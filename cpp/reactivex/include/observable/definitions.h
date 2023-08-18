@@ -15,6 +15,7 @@
 #include "observable/forkjoin.h"
 #include "observable/fromiterable.h"
 #include "observable/generate.h"
+#include "observable/ifthen.h"
 
 namespace rx::observable {
 
@@ -65,6 +66,9 @@ inline static std::shared_ptr<Observable> generate_(
 ) {
     return rx::observable::generate_(initial_state, condition, iterate);
 }
+inline static std::shared_ptr<Observable> if_then_(const predicate_t<>& condition, const std::shared_ptr<Observable>& then_source, const std::shared_ptr<Observable>& else_source = nullptr) {
+    return rx::observable::if_then_(condition, then_source, else_source);
+}
 
 }; // END struct Observables
 
@@ -85,6 +89,7 @@ inline static std::shared_ptr<Observable> generate_(
     ClassDB::bind_static_method("RxObservable", D_METHOD("from_iterable", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("from", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(Ref<RxObservable>())); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

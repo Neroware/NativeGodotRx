@@ -51,3 +51,10 @@ inline static Ref<RxObservable> generate(const Variant& initial_state, const Cal
         [iterate](const Variant& state) -> Variant { return iterate.callv(Array::make(state)); }
     ));
 }
+inline static Ref<RxObservable> if_then(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source) {
+    return RxObservable::wrap(Observables::if_then_(
+        [condition]() -> bool { return condition.callv(Array()); },
+        RxObservable::unwrap(then_source),
+        RxObservable::unwrap(else_source)
+    ));
+}

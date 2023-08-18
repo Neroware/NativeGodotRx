@@ -31,7 +31,7 @@ static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<Iterable
             return nullptr;
         };
 
-        dispose_t dispose = [&]() {
+        dispose_t dispose = [disposed]() {
             *disposed = true;
         };
 
