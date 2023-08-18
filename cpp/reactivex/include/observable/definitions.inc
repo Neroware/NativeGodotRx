@@ -35,3 +35,6 @@ inline static Ref<RxObservable> concat_with_iterable(const Variant& sources) {
         rx_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
     ));
 }
+inline static Ref<RxObservable> fork_join(const TypedArray<RxObservable>& sources) {
+    return RxObservable::wrap(Observables::fork_join_(array_container<RxObservable, Observable>(sources)));
+}

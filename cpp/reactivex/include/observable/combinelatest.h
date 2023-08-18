@@ -31,8 +31,7 @@ static std::shared_ptr<Observable> combine_latest_(const T& sources) {
             has_value[i] = true;
 
             if (*has_value_all || all(has_value, n)) {
-                Array res; for (auto i = 0; i < n; i++) res.append(values[i]);
-                observer->on_next(res);
+                observer->on_next(tuple(values, n));
             }
 
             // Would be way shorter with list arithmetic!
