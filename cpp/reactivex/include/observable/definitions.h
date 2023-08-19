@@ -17,6 +17,7 @@
 #include "observable/generate.h"
 #include "observable/ifthen.h"
 #include "observable/onerrorresumenext.h"
+#include "observable/range.h"
 
 namespace rx::observable {
 
@@ -74,6 +75,9 @@ template<typename T>
 static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
     return rx::observable::on_error_resume_next_(sources);
 }
+static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
+    return rx::observable::range_(start, stop, step);
+}
 
 }; // END struct Observables
 
@@ -96,6 +100,7 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
     ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(Ref<RxObservable>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources", "use_factory"), &RxObservable::on_error_resume_next, DEFVAL(false)); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1)); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

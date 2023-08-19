@@ -75,3 +75,6 @@ inline static Ref<RxObservable> on_error_resume_next(const Variant& sources, boo
         rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
     ));
 }
+inline static Ref<RxObservable> range(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1) {
+    return RxObservable::wrap(Observables::range_(start, stop, step));
+}

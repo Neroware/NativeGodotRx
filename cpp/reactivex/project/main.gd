@@ -81,6 +81,10 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	
+	RxObservable.range(0, 10, 3) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
+	
 	get_tree().quit()
 	
 #	var example: Example = $Example
