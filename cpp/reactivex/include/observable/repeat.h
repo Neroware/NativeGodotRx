@@ -8,7 +8,7 @@ using namespace rx::scheduler;
 namespace rx::observable {
 
 static std::shared_ptr<Observable> repeat_() {
-    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
+    subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
         throw NotImplementedException();
     };
 

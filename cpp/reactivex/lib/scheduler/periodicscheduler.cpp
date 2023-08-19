@@ -1,6 +1,7 @@
 #include "scheduler/periodicscheduler.h"
 
 #include "disposable/multiassignmentdisposable.h"
+#include "internal/utils.h"
 
 using namespace rx::disposable;
 
@@ -10,7 +11,7 @@ std::shared_ptr<DisposableBase> PeriodicScheduler::schedule_periodic(const time_
     auto disp = std::make_shared<MultiAssignmentDisposable>();
     time_delta_t seconds = period;
 
-    action_t periodic = [=](const std::shared_ptr<SchedulerBase>& scheduler, const Variant& state = Variant()) -> std::shared_ptr<DisposableBase> {
+    auto periodic = RECURSIVE_ACTION(scheduler, state, _periodic) {
         if (disp->is_disposed) {
             return nullptr;
         }
@@ -28,14 +29,14 @@ std::shared_ptr<DisposableBase> PeriodicScheduler::schedule_periodic(const time_
 
         time_delta_t time = seconds - (scheduler->now() - now);
         disp->set_disposable(
-            scheduler->schedule_relative(time, periodic, _state)
+            scheduler->schedule_relative(time, RECURSIVE_ACTION_FWD(_periodic), _state)
         );
 
         return nullptr;
     };
 
     disp->set_disposable(
-        this->schedule_relative(period, periodic, state)
+        this->schedule_relative(period, RECURSIVE_ACTION_FWD(periodic), state)
     );
     return disp;
 }

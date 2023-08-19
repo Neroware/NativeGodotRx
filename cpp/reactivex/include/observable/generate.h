@@ -16,7 +16,7 @@ static std::shared_ptr<Observable> generate_(
     const mapper_t<Variant, const Variant&>& iterate
 ) {
 
-    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
+    subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
         auto scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
         auto first = std::make_shared<bool>(true);
         auto state0 = std::make_shared<Variant>(initial_state);

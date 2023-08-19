@@ -22,7 +22,7 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
     auto _end = sources.end();
     auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
 
-    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
+    subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
         
         auto scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 

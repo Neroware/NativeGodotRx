@@ -5,10 +5,12 @@
 #include <memory>
 #include <functional>
 
-#include "observable/observable.h"
-
 using namespace godot;
-using namespace rx::observable;
+
+#define SUBSCRIBE(observer, scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler_default) -> std::shared_ptr<DisposableBase>
+#define ACTION(scheduler__, state) [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state = Variant()) -> std::shared_ptr<DisposableBase>
+#define RECURSIVE_ACTION(scheduler__, state, _action) [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state, const auto& _action) -> std::shared_ptr<DisposableBase>
+#define RECURSIVE_ACTION_FWD(_action) ACTION(scheduler__, state) { return _action(scheduler__, state, _action); }
 
 namespace rx {
 

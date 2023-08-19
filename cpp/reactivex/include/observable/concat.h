@@ -15,7 +15,7 @@ namespace rx::observable {
 template<typename T>
 static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
 
-    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
+    subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
         auto _scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
         auto _end = sources.end();

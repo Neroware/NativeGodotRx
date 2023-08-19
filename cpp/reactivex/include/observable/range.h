@@ -10,7 +10,7 @@ using namespace rx::scheduler;
 namespace rx::observable {
 
 static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
-    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
+    subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
 
         auto current = std::make_shared<int64_t>(start);
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();

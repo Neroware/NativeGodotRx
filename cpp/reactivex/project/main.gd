@@ -85,7 +85,13 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	
-	get_tree().quit()
+	RxSchedulerBase.NewThreadScheduler().schedule_periodic(
+		RelativeTime.from_seconds(1.0), 
+		func(__ = null): print("Periodic: ", OS.get_thread_caller_id()),
+	) \
+	.dispose_with(self)
+	
+#	get_tree().quit()
 	
 #	var example: Example = $Example
 #
