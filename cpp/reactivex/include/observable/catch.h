@@ -17,7 +17,7 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
     auto _end = sources.end();
     auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         auto _scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
         auto subscription = std::make_shared<SerialDisposable>();
@@ -28,7 +28,7 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
         auto action = [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state, const auto& _action) -> std::shared_ptr<DisposableBase> {
             on_error_t on_error = [=](const std::exception_ptr& exn) {
                 *last_exception = exn;
-                cancelable->set_disposable(_scheduler->schedule(ACTION { return _action(scheduler__, state, _action); }));
+                cancelable->set_disposable(_scheduler->schedule(RECURSIVE_ACTION_FWD(_action)));
             };
 
             if (*is_disposed) {
@@ -66,7 +66,7 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
             return nullptr;
         };
 
-        cancelable->set_disposable(_scheduler->schedule(ACTION { return action(scheduler__, state, action); } ));
+        cancelable->set_disposable(_scheduler->schedule(RECURSIVE_ACTION_FWD(action)));
 
         dispose_t dispose = [is_disposed]() {
             *is_disposed = true;

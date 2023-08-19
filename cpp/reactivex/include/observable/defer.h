@@ -10,7 +10,7 @@ namespace rx::observable {
 
 static std::shared_ptr<Observable> defer_(const observable_factory_t& factory) {
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         std::shared_ptr<Observable> result;
         try {
             result = factory(scheduler_ ? scheduler_ : ImmediateScheduler::singleton());

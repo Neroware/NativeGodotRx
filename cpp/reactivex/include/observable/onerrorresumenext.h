@@ -22,14 +22,14 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
     auto _end = sources.end();
     auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         
         auto scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
         auto subscription = std::make_shared<SerialDisposable>();
         auto cancelable = std::make_shared<SerialDisposable>();
 
-        auto action = RECURSIVE_ACTION {
+        auto action = RECURSIVE_ACTION(scheduler__, state, _action) {
             std::shared_ptr<Observable> source;
             if (*_it != _end) {
                 // Allow source to be a factory method taking an error
@@ -46,10 +46,10 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
             subscription->set_disposable(d);
 
             auto on_error_resume = [=](const std::exception_ptr& state) {
-                scheduler__->schedule(ACTION { return _action(scheduler__, state, _action); }, RxError::wrap(state));
+                scheduler__->schedule(RECURSIVE_ACTION_FWD(_action), RxError::wrap(state));
             };
             auto on_resume = [=]() {
-                scheduler__->schedule(ACTION { return _action(scheduler__, state, _action); });
+                scheduler__->schedule(RECURSIVE_ACTION_FWD(_action));
             };
             
             d->set_disposable(current->subscribe(
@@ -59,7 +59,7 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
             return nullptr;
         };
 
-        cancelable->set_disposable(scheduler->schedule(ACTION { return action(scheduler__, state, action); }));
+        cancelable->set_disposable(scheduler->schedule(RECURSIVE_ACTION_FWD(action)));
         return std::make_shared<CompositeDisposable>(std::initializer_list<std::shared_ptr<DisposableBase>>{
             subscription, cancelable
         });

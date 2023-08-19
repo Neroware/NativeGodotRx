@@ -10,7 +10,7 @@ using namespace rx::scheduler;
 namespace rx::observable {
 
 static std::shared_ptr<Observable> return_value_(const Variant& value, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
         action_t action = [=](const std::shared_ptr<rx::abstract::SchedulerBase>& scheduler, const godot::Variant& state) {

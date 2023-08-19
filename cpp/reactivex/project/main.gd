@@ -6,8 +6,8 @@ func _ready():
 	var scheduler = RxSchedulerBase.CurrentThreadSchedulerSingleton()
 	
 	RxObservable.catch([
-		RxObservable.throw("Planned exception!", scheduler),
-		RxObservable.throw("Planned exception 2!", scheduler),
+		RxObservable.raise("Planned exception!", scheduler),
+		RxObservable.raise("Planned exception 2!", scheduler),
 		RxObservable.just(42, scheduler),
 		RxObservable.just(123, scheduler)
 	]) \
@@ -23,7 +23,7 @@ func _ready():
 			"bar": RxObservable.just(":("), 
 			"foo": RxObservable.just(":)")
 		}, 
-		RxObservable.throw("Should not happen!")
+		RxObservable.raise("Should not happen!")
 	) \
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
@@ -66,7 +66,7 @@ func _ready():
 	
 	RxObservable.on_error_resume_next([
 		RxObservable.just(1),
-		RxObservable.throw("Intentional Error"),
+		RxObservable.raise("Intentional Error"),
 		RxObservable.from([2, 3, 4])
 	]) \
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
@@ -74,7 +74,7 @@ func _ready():
 	
 	RxObservable.on_error_resume_next([
 		func(err : RxError): return RxObservable.just(0),
-		func(err : RxError): return RxObservable.throw("Intentional Error"),
+		func(err : RxError): return RxObservable.raise("Intentional Error"),
 		func(err : RxError): print("Produce with prev. err: ", err) ; return RxObservable.just(1),
 		func(err : RxError): return RxObservable.from([2, 3, 4])
 	], true) \

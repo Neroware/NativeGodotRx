@@ -1,5 +1,5 @@
-#ifndef RX_OBSERVABLE_NEVER_H
-#define RX_OBSERVABLE_NEVER_H
+#ifndef RX_OBSERVABLE_REPEAT_H
+#define RX_OBSERVABLE_REPEAT_H
 
 #include "observable/observable.h"
 
@@ -7,9 +7,9 @@ using namespace rx::scheduler;
 
 namespace rx::observable {
 
-static std::shared_ptr<Observable> never_() {
+static std::shared_ptr<Observable> repeat_() {
     subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
-        return std::make_shared<Disposable>();
+        throw NotImplementedException();
     };
 
     return Observable::get(subscribe);
@@ -17,4 +17,4 @@ static std::shared_ptr<Observable> never_() {
 
 } // END namespace rx::observable
 
-#endif // RX_OBSERVABLE_NEVER_H
+#endif // RX_OBSERVABLE_REPEAT_H

@@ -16,13 +16,13 @@ static std::shared_ptr<Observable> generate_(
     const mapper_t<Variant, const Variant&>& iterate
 ) {
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         auto scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
         auto first = std::make_shared<bool>(true);
         auto state0 = std::make_shared<Variant>(initial_state);
         auto mad = std::make_shared<MultiAssignmentDisposable>();
 
-        auto action = RECURSIVE_ACTION {
+        auto action = RECURSIVE_ACTION(scheduler__, state, _action) {
             bool has_result = false;
             Variant result;
 
@@ -46,7 +46,7 @@ static std::shared_ptr<Observable> generate_(
 
             if (has_result) {
                 observer->on_next(result);
-                mad->set_disposable(scheduler->schedule(ACTION { return _action(scheduler__, state, _action); }));
+                mad->set_disposable(scheduler->schedule(RECURSIVE_ACTION_FWD(_action)));
             }
             else {
                 observer->on_completed();
@@ -55,7 +55,7 @@ static std::shared_ptr<Observable> generate_(
             return nullptr;
         };
 
-        mad->set_disposable(scheduler->schedule(ACTION { return action(scheduler__, state, action); }));
+        mad->set_disposable(scheduler->schedule(RECURSIVE_ACTION_FWD(action)));
         return mad;
     };
 

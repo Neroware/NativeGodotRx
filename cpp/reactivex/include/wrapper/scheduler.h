@@ -35,6 +35,7 @@ protected:
         ClassDB::bind_method(D_METHOD("schedule", "action", "state"), &RxSchedulerBase::schedule, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &RxSchedulerBase::schedule_absolute, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &RxSchedulerBase::schedule_relative, DEFVAL(Variant()));
+        ClassDB::bind_method(D_METHOD("schedule_periodic", "duetime", "action", "state"), &RxSchedulerBase::schedule_periodic, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("now"), &RxSchedulerBase::now);
         ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &RxSchedulerBase::invoke_action, DEFVAL(Variant()));
 
@@ -55,6 +56,7 @@ public:
     Ref<RxDisposableBase> schedule(const Callable& action, const Variant& state = Variant());
     Ref<RxDisposableBase> schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<RxDisposableBase> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
+    Ref<RxDisposableBase> schedule_periodic(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<AbsoluteTime> now();
     Ref<RxDisposableBase> invoke_action(const Callable& action, const Variant& state);
 
@@ -76,6 +78,12 @@ static action_t action_cb(const Callable& cb) {
             return casted->getptr();
         }
         return std::shared_ptr<rx::abstract::DisposableBase>();
+    });
+}
+
+static periodic_action_t periodic_action_cb(const Callable& cb) {
+    return periodic_action_t([cb](const Variant& state) -> Variant {
+        return cb.callv(Array::make(state));
     });
 }
 

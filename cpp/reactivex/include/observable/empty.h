@@ -9,7 +9,7 @@ namespace rx::observable {
 
 static std::shared_ptr<Observable> empty_(const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : rx::scheduler::ImmediateScheduler::singleton();
 
         action_t action = [=](const std::shared_ptr<SchedulerBase>& __, const Variant& ___) {

@@ -19,7 +19,7 @@ static std::shared_ptr<Observable> fork_join_(const T& sources) {
 
     std::shared_ptr<Observable> parent = sources[0];
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         int n = sources.size();
         std::shared_ptr<Variant[]> values(new Variant[n]());
         std::shared_ptr<bool[]> is_done(new bool[n]{ 0 });

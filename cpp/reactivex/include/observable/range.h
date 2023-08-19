@@ -10,17 +10,17 @@ using namespace rx::scheduler;
 namespace rx::observable {
 
 static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
 
         auto current = std::make_shared<int64_t>(start);
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
         auto sd = std::make_shared<MultiAssignmentDisposable>();
 
-        auto action = RECURSIVE_ACTION {
+        auto action = RECURSIVE_ACTION(scheduler__, state, _action) {
             if (*current < stop) {
                 observer->on_next(*current);
                 *current += step;
-                sd->set_disposable(_scheduler->schedule(ACTION { return _action(scheduler__, state, _action); }, *current));
+                sd->set_disposable(_scheduler->schedule(RECURSIVE_ACTION_FWD(_action), *current));
             }
             else {
                 observer->on_completed();
@@ -28,7 +28,7 @@ static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MA
             return nullptr;
         };
 
-        sd->set_disposable(_scheduler->schedule(ACTION { return action(scheduler__, state, action); }, *current));
+        sd->set_disposable(_scheduler->schedule(RECURSIVE_ACTION_FWD(action), *current));
         return sd;
     };
 

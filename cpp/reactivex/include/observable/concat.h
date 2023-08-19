@@ -15,7 +15,7 @@ namespace rx::observable {
 template<typename T>
 static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         auto _scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
         auto _end = sources.end();
@@ -25,13 +25,13 @@ static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
         auto cancelable = std::make_shared<SerialDisposable>();
         auto is_disposed = std::make_shared<bool>(false);
 
-        auto action = RECURSIVE_ACTION {
+        auto action = RECURSIVE_ACTION(scheduler__, state, _action) {
             if (*is_disposed) {
                 return nullptr;
             }
 
             on_completed_t on_completed = [=]() {
-                cancelable->set_disposable(_scheduler->schedule(ACTION { return _action(scheduler__, state, _action); }));
+                cancelable->set_disposable(_scheduler->schedule(RECURSIVE_ACTION_FWD(_action)));
             };
 
             std::shared_ptr<Observable> current;
@@ -59,7 +59,7 @@ static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
             return nullptr;
         };
 
-        cancelable->set_disposable(_scheduler->schedule(ACTION { return action(scheduler__, state, action); }));
+        cancelable->set_disposable(_scheduler->schedule(RECURSIVE_ACTION_FWD(action)));
 
         dispose_t dispose = [=]() {
             *is_disposed = true;

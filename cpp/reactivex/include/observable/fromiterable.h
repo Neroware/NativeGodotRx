@@ -11,12 +11,12 @@ namespace rx::observable {
 
 static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<IterableBase>& iterable, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
 
-    subscription_t subscribe = SUBSCRIBE(nullptr) {
+    subscription_t subscribe = SUBSCRIBE(scheduler_ = nullptr) {
         auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
         auto iterator = iterable->iter();
         auto disposed = std::make_shared<bool>(false);
 
-        action_t action = ACTION {
+        action_t action = ACTION(scheduler__, state) {
             try {
                 while (!(*disposed) && iterator->has_next()) {
                     observer->on_next(iterator->next());

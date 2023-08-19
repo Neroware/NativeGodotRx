@@ -43,6 +43,13 @@ Ref<RxDisposableBase> RxSchedulerBase::schedule_absolute(Ref<AbsoluteTime> dueti
 Ref<RxDisposableBase> RxSchedulerBase::schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state) {
     return RxDisposableBase::wrap(this->_ptr->schedule_relative(duetime->dt, action_cb(action), state));
 }
+Ref<RxDisposableBase> RxSchedulerBase::schedule_periodic(Ref<RelativeTime> duetime, const Callable& action, const Variant& state) {
+    auto periodic_scheduler = std::dynamic_pointer_cast<PeriodicSchedulerBase>(this->_ptr);
+    if (!periodic_scheduler) {
+        throw NotImplementedException();
+    }
+    return RxDisposableBase::wrap(periodic_scheduler->schedule_periodic(duetime->dt, periodic_action_cb(action), state));
+}
 Ref<AbsoluteTime> RxSchedulerBase::now() {
     return memnew(AbsoluteTime(this->_ptr->now()));
 }
