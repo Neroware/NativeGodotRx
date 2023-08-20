@@ -62,6 +62,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxIteratorBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIterableBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSchedulerBase>();
+	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObserverBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObservableBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObservable>();

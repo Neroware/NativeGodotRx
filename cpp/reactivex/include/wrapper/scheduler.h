@@ -40,13 +40,6 @@ protected:
         ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &RxSchedulerBase::invoke_action, DEFVAL(Variant()));
 
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxSchedulerBase::equals);
-
-        ClassDB::bind_static_method("RxSchedulerBase", D_METHOD("ImmediateSchedulerSingleton"), &RxSchedulerBase::ImmediateSchedulerSingleton);
-        ClassDB::bind_static_method("RxSchedulerBase", D_METHOD("TimeoutSchedulerSingleton"), &RxSchedulerBase::TimeoutSchedulerSingleton);
-        ClassDB::bind_static_method("RxSchedulerBase", D_METHOD("SceneTimeoutSchedulerSingleton", "process_always", "process_in_physics", "ignore_time_scale"), &RxSchedulerBase::SceneTimeoutSchedulerSingleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
-        ClassDB::bind_static_method("RxSchedulerBase", D_METHOD("CurrentThreadSchedulerSingleton"), &RxSchedulerBase::CurrentThreadSchedulerSingleton);
-        ClassDB::bind_static_method("RxSchedulerBase", D_METHOD("CurrentThreadScheduler"), &RxSchedulerBase::CurrentThreadScheduler);
-        ClassDB::bind_static_method("RxSchedulerBase", D_METHOD("NewThreadScheduler"), &RxSchedulerBase::NewThreadScheduler);
     }
 public:
     static double to_seconds(const Variant& value);
@@ -60,14 +53,31 @@ public:
     Ref<AbsoluteTime> now();
     Ref<RxDisposableBase> invoke_action(const Callable& action, const Variant& state);
 
-    static Ref<RxSchedulerBase> ImmediateSchedulerSingleton() { return RxSchedulerBase::wrap(ImmediateScheduler::singleton()); }
-    static Ref<RxSchedulerBase> TimeoutSchedulerSingleton() { return RxSchedulerBase::wrap(TimeoutScheduler::singleton()); }
-    static Ref<RxSchedulerBase> SceneTimeoutSchedulerSingleton(bool f0 = true, bool f1 = false, bool f2 = false) { return RxSchedulerBase::wrap(SceneTreeTimeoutScheduler::singleton(f0, f1, f2)); }
-    static Ref<RxSchedulerBase> CurrentThreadSchedulerSingleton() { return RxSchedulerBase::wrap(CurrentThreadScheduler::singleton()); }
-    static Ref<RxSchedulerBase> CurrentThreadScheduler() { return RxSchedulerBase::wrap(CurrentThreadScheduler::get()); }
-    static Ref<RxSchedulerBase> NewThreadScheduler() { return RxSchedulerBase::wrap(NewThreadScheduler::get()); }
-
 }; // END class RxSchedulerBase
+
+class RxScheduler : public RxSchedulerBase {
+    GDCLASS(RxScheduler, RxSchedulerBase)
+    RX_WRAPPER(RxScheduler, Scheduler, RxSchedulerBase, SchedulerBase)
+
+protected:
+    static inline void _bind_methods() {
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("ImmediateSchedulerSingleton"), &RxScheduler::ImmediateSchedulerSingleton);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("TimeoutSchedulerSingleton"), &RxScheduler::TimeoutSchedulerSingleton);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("SceneTimeoutSchedulerSingleton", "process_always", "process_in_physics", "ignore_time_scale"), &RxScheduler::SceneTimeoutSchedulerSingleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("CurrentThreadSchedulerSingleton"), &RxScheduler::CurrentThreadSchedulerSingleton);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("CurrentThreadScheduler"), &RxScheduler::CurrentThreadScheduler);
+        ClassDB::bind_static_method("RxScheduler", D_METHOD("NewThreadScheduler"), &RxScheduler::NewThreadScheduler);
+    }
+
+public:
+    static Ref<RxScheduler> ImmediateSchedulerSingleton() { return RxScheduler::wrap(ImmediateScheduler::singleton()); }
+    static Ref<RxScheduler> TimeoutSchedulerSingleton() { return RxScheduler::wrap(TimeoutScheduler::singleton()); }
+    static Ref<RxScheduler> SceneTimeoutSchedulerSingleton(bool f0 = true, bool f1 = false, bool f2 = false) { return RxScheduler::wrap(SceneTreeTimeoutScheduler::singleton(f0, f1, f2)); }
+    static Ref<RxScheduler> CurrentThreadSchedulerSingleton() { return RxScheduler::wrap(CurrentThreadScheduler::singleton()); }
+    static Ref<RxScheduler> CurrentThreadScheduler() { return RxScheduler::wrap(CurrentThreadScheduler::get()); }
+    static Ref<RxScheduler> NewThreadScheduler() { return RxScheduler::wrap(NewThreadScheduler::get()); }
+
+}; // END class RxScheduler
 
 } // END namespace wrappers
 

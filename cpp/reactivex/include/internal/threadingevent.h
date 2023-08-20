@@ -14,7 +14,7 @@ private:
     bool _flag = false;
 
 public:
-    bool is_set() const ;
+    bool is_set() const;
     void set_flag();
     void clear();
     bool wait(double timeout = -1.0); 

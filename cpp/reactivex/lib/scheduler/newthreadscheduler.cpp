@@ -43,9 +43,8 @@ std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_periodic(const time
             *state = action(*state);
 
             *timeout = seconds - Scheduler::to_seconds(this->now() - time);
-
-            return Variant();
         }
+        return Variant();
     };
 
     auto thread = this->_thread_factory(run);
@@ -54,7 +53,7 @@ std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_periodic(const time
     }
     thread->start();
 
-    dispose_t dispose = [=]() {
+    dispose_t dispose = [disposed]() {
         disposed->set_flag();
     };
 

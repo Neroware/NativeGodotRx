@@ -3,7 +3,7 @@ extends "res://test_base.gd"
 var custom_signal_emitted = null
 
 func _ready():
-	var scheduler = RxSchedulerBase.CurrentThreadSchedulerSingleton()
+	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
 	
 	RxObservable.catch([
 		RxObservable.raise("Planned exception!", scheduler),
@@ -85,7 +85,7 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	
-	RxSchedulerBase.NewThreadScheduler().schedule_periodic(
+	RxScheduler.NewThreadScheduler().schedule_periodic(
 		RelativeTime.from_seconds(1.0), 
 		func(__ = null): print("Periodic: ", OS.get_thread_caller_id()),
 	) \
