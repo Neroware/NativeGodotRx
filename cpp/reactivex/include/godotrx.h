@@ -8,10 +8,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
-#include <mutex>
-#include <shared_mutex>
-#include <map>
-
+#include "internal/concurrency.h"
 #include "internal/iterator.h"
 #include "internal/thread.h"
 #include "internal/weakkeydictionary.h"
@@ -33,8 +30,8 @@ class __GDRxSingleton__ : public RefCounted {
     GDCLASS(__GDRxSingleton__, RefCounted);
 
 public:
-    /* Thread registry singleton */
-    std::pair<std::shared_mutex, std::unordered_map<std::thread::id, Ref<RxThread>>> thread_registry;
+    /* Thread manager singleton */
+    const std::shared_ptr<ThreadManager> THREAD_MANAGER = std::make_shared<ThreadManager>();
     /* Main thread dummy */
     const Ref<RxThread> MAIN_THREAD = memnew(RxMainThread);
 
@@ -59,9 +56,9 @@ public:
     __GDRxSingleton__(){
         // Insert Main Thread
         {
-            std::unique_lock<std::shared_mutex> writeLock(this->thread_registry.first);
+            std::unique_lock<std::shared_mutex> writeLock(this->THREAD_MANAGER->thread_registry.first);
             auto main_thread_id = std::this_thread::get_id();
-            this->thread_registry.second[main_thread_id] = MAIN_THREAD;
+            this->THREAD_MANAGER->thread_registry.second[main_thread_id] = MAIN_THREAD;
         }
 
         // Scheduler Singletons

@@ -2,17 +2,18 @@
 
 #include "internal/threadingevent.h"
 #include "scheduler/eventloopscheduler.h"
+#include "disposable/compositedisposable.h"
 
 namespace rx::scheduler {
 
 std::shared_ptr<DisposableBase> NewThreadScheduler::schedule(const action_t& action, const Variant& state) {
     auto scheduler = EventLoopScheduler::get(this->_thread_factory, true);
-    return scheduler->schedule(action, state);
+    return std::make_shared<CompositeDisposable>(disposable_list_t{scheduler->schedule(action, state), scheduler});
 }
 
 std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_relative(const time_delta_t& duetime, const action_t& action, const Variant& state) {
     auto scheduler = EventLoopScheduler::get(this->_thread_factory, true);
-    return scheduler->schedule_relative(duetime, action, state);
+    return std::make_shared<CompositeDisposable>(disposable_list_t{scheduler->schedule_relative(duetime, action, state), scheduler});
 }
 
 std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_absolute(const time_point_t& duetime, const action_t& action, const Variant& state) {
@@ -38,11 +39,11 @@ std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_periodic(const time
                 return Variant();
             }
 
-            auto time = this->now();
+            auto time = this_ptr->now();
             
             *state = action(*state);
 
-            *timeout = seconds - Scheduler::to_seconds(this->now() - time);
+            *timeout = seconds - Scheduler::to_seconds(this_ptr->now() - time);
         }
         return Variant();
     };
@@ -53,8 +54,9 @@ std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_periodic(const time
     }
     thread->start();
 
-    dispose_t dispose = [disposed]() {
+    dispose_t dispose = [disposed, thread]() {
         disposed->set_flag();
+        thread->await();
     };
 
     return std::make_shared<Disposable>(dispose);

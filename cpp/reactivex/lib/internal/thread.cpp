@@ -12,12 +12,12 @@ using namespace godot;
 namespace rx {
 
 void RxThread::_register_thread(const std::thread::id& thread_id) const {
-    std::unique_lock<std::shared_mutex> writeLock(GDRX->thread_registry.first);
-    GDRX->thread_registry.second[thread_id] = this;
+    std::unique_lock<std::shared_mutex> writeLock(GDRX->THREAD_MANAGER->thread_registry.first);
+    GDRX->THREAD_MANAGER->thread_registry.second[thread_id] = this;
 }
 void RxThread::_unregister_thread(const std::thread::id& thread_id) const {
-    std::unique_lock<std::shared_mutex> writeLock(GDRX->thread_registry.first);
-    GDRX->thread_registry.second.erase(thread_id);
+    std::unique_lock<std::shared_mutex> writeLock(GDRX->THREAD_MANAGER->thread_registry.first);
+    GDRX->THREAD_MANAGER->thread_registry.second.erase(thread_id);
 }
 Variant RxThread::_thread_callback() const {
     auto thread_id = std::this_thread::get_id();
@@ -34,10 +34,10 @@ void RxThread::_bind_methods() {
 }
 
 Ref<RxThread> RxThread::get_current_thread() {
-    std::shared_lock<std::shared_mutex> readLock(GDRX->thread_registry.first);
+    std::shared_lock<std::shared_mutex> readLock(GDRX->THREAD_MANAGER->thread_registry.first);
     auto thread_id = std::this_thread::get_id();
     try {
-        return GDRX->thread_registry.second.at(thread_id);
+        return GDRX->THREAD_MANAGER->thread_registry.second.at(thread_id);
     }
     catch(std::out_of_range) {
         assert(false && "Querying thread was NOT registered!");

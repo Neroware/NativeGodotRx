@@ -1,5 +1,7 @@
 #include "scheduler/eventloopscheduler.h"
 
+#include "godotrx.h"
+
 namespace rx::scheduler {
 
 std::shared_ptr<DisposableBase> EventLoopScheduler::schedule(const action_t& action, const Variant& state) {
@@ -30,8 +32,7 @@ std::shared_ptr<DisposableBase> EventLoopScheduler::schedule_absolute(const time
         this->_ensure_thread();   
     }
 
-    auto thread = this->_thread;
-    dispose_t on_dispose = [si, thread](){
+    dispose_t on_dispose = [si](){
         si.cancel();
     };
     return std::make_shared<Disposable>(on_dispose);
@@ -52,7 +53,15 @@ bool EventLoopScheduler::_has_thread() {
 void EventLoopScheduler::_ensure_thread() {
     if (!this->_thread) {
         auto this_ptr = getptr();
-        run_t _run = [this_ptr](){ this_ptr->run(); return Variant(); };
+        auto thread_manager = GDRX->THREAD_MANAGER;
+
+        run_t _run = [this_ptr, thread_manager](){
+            auto thread = this_ptr->_thread;
+            this_ptr->run();
+            thread_manager->finish(thread);
+            return EXIT_SUCCESS; 
+        };
+
         auto thread_ = this->_thread_factory(_run);
         if (thread_) {
             this->_thread = thread_;
@@ -133,10 +142,23 @@ void EventLoopScheduler::run() {
 }
 
 void EventLoopScheduler::dispose() {
-    std::lock_guard<Lock> guard(_lock);
-    if (!this->_is_disposed) {
-        this->_is_disposed = true;
-        this->_condition.notify_one();
+    std::shared_ptr<StartableBase> thread;
+    {
+        std::lock_guard<Lock> guard(_lock);
+        if (!this->_is_disposed) {
+            // A priority queue does not free its contents when destroyed.
+            // Also I think we need to free all members here otherwise there 
+            // might be memory leaks (at least according to Godot).
+            this->_is_disposed = true;
+            while(!_queue.empty()) { _queue.pop(); }
+            this->_ready_list.clear();
+            this->_condition.notify_one();
+            thread = this->_thread;
+            this->_thread = nullptr;
+        }
+    }
+    if (thread) { 
+        thread->await();
     }
 }
 

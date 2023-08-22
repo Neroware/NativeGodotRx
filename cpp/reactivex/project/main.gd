@@ -3,95 +3,109 @@ extends "res://test_base.gd"
 var custom_signal_emitted = null
 
 func _ready():
-	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
+#	var scheduler = RxScheduler.CurrentThreadSchedulerSingleton()
+#	
+#	RxObservable.catch([
+#		RxObservable.raise("Planned exception!", scheduler),
+#		RxObservable.raise("Planned exception 2!", scheduler),
+#		RxObservable.just(42, scheduler),
+#		RxObservable.just(123, scheduler)
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
+#	.dispose_with(self)
+#
+#	var obs_defer = RxObservable.defer(func(__ : RxSchedulerBase): return RxObservable.just("Deferred!"))
+#	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
+#
+#	RxObservable.case(
+#		func(): return "foo", 
+#		{
+#			"bar": RxObservable.just(":("), 
+#			"foo": RxObservable.just(":)")
+#		}, 
+#		RxObservable.raise("Should not happen!")
+#	) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.combine_latest([
+#		RxObservable.just(1),
+#		RxObservable.just(2),
+#		RxObservable.just(3)
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.concat([
+#		RxObservable.just("Al"),
+#		RxObservable.just("oh"),
+#		RxObservable.just("a!")
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.fork_join([
+#		RxObservable.just("Al"),
+#		RxObservable.just("oh"),
+#		RxObservable.just("a!")
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.from(["ichi", "ni", "san", "shi"]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.if_then(
+#		func(): return true,
+#		RxObservable.just(":)"),
+#		RxObservable.just(":(")
+#	) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.on_error_resume_next([
+#		RxObservable.just(1),
+#		RxObservable.raise("Intentional Error"),
+#		RxObservable.from([2, 3, 4])
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.on_error_resume_next([
+#		func(err : RxError): return RxObservable.just(0),
+#		func(err : RxError): return RxObservable.raise("Intentional Error"),
+#		func(err : RxError): print("Produce with prev. err: ", err) ; return RxObservable.just(1),
+#		func(err : RxError): return RxObservable.from([2, 3, 4])
+#	], true) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxObservable.range(0, 10, 3) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+#
+#	RxScheduler.NewThreadScheduler().schedule_periodic(
+#		RelativeTime.from_seconds(1.0), 
+#		func(__ = null): print("Periodic: ", OS.get_thread_caller_id()),
+#	) \
+#	.dispose_with(self)
 	
-	RxObservable.catch([
-		RxObservable.raise("Planned exception!", scheduler),
-		RxObservable.raise("Planned exception 2!", scheduler),
-		RxObservable.just(42, scheduler),
-		RxObservable.just(123, scheduler)
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print(":)")) \
-	.dispose_with(self)
+#	RxScheduler.NewThreadScheduler().schedule_relative(
+#		RelativeTime.from_seconds(3.0), 
+#		func(__ = null, ___ = null): print("Scheduled on separate thread!")
+#	) \
+#	.dispose_with(self)
 	
-	var obs_defer = RxObservable.defer(func(__ : RxSchedulerBase): return RxObservable.just("Deferred!"))
-	obs_defer.subscribe(func(i): print("i> ", i)).dispose_with(self)
+	var nts = RxScheduler.NewThreadScheduler()
+	for i in range(1000):
+		nts.schedule_relative(
+			RelativeTime.from_seconds(randi() % 3),
+			func(__ = null, ___ = null): print("Scheduled on thread: ", OS.get_thread_caller_id())
+		) \
+		.dispose_with(self)
 	
-	RxObservable.case(
-		func(): return "foo", 
-		{
-			"bar": RxObservable.just(":("), 
-			"foo": RxObservable.just(":)")
-		}, 
-		RxObservable.raise("Should not happen!")
-	) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.combine_latest([
-		RxObservable.just(1),
-		RxObservable.just(2),
-		RxObservable.just(3)
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.concat([
-		RxObservable.just("Al"),
-		RxObservable.just("oh"),
-		RxObservable.just("a!")
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.fork_join([
-		RxObservable.just("Al"),
-		RxObservable.just("oh"),
-		RxObservable.just("a!")
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.from(["ichi", "ni", "san", "shi"]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.if_then(
-		func(): return true,
-		RxObservable.just(":)"),
-		RxObservable.just(":(")
-	) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.on_error_resume_next([
-		RxObservable.just(1),
-		RxObservable.raise("Intentional Error"),
-		RxObservable.from([2, 3, 4])
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.on_error_resume_next([
-		func(err : RxError): return RxObservable.just(0),
-		func(err : RxError): return RxObservable.raise("Intentional Error"),
-		func(err : RxError): print("Produce with prev. err: ", err) ; return RxObservable.just(1),
-		func(err : RxError): return RxObservable.from([2, 3, 4])
-	], true) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxObservable.range(0, 10, 3) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
-	
-	RxScheduler.NewThreadScheduler().schedule_periodic(
-		RelativeTime.from_seconds(1.0), 
-		func(__ = null): print("Periodic: ", OS.get_thread_caller_id()),
-	) \
-	.dispose_with(self)
-	
-#	get_tree().quit()
+	get_tree().quit()
 	
 #	var example: Example = $Example
 #

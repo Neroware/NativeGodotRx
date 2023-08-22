@@ -17,6 +17,8 @@ class StartableBase {
 
 public:
     virtual void start() = 0;
+    /* Needed for additional cleanup */
+    virtual void await() = 0;
 };
 
 } // END namespace abstract
