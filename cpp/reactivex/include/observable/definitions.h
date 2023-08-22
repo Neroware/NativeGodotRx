@@ -18,6 +18,7 @@
 #include "observable/ifthen.h"
 #include "observable/onerrorresumenext.h"
 #include "observable/range.h"
+#include "observable/timer.h"
 
 namespace rx::observable {
 
@@ -72,11 +73,19 @@ inline static std::shared_ptr<Observable> if_then_(const predicate_t<>& conditio
     return rx::observable::if_then_(condition, then_source, else_source);
 }
 template<typename T>
-static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
+inline static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
     return rx::observable::on_error_resume_next_(sources);
 }
-static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
+inline static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
     return rx::observable::range_(start, stop, step);
+}
+template<typename timeT>
+inline static std::shared_ptr<Observable> timer_(const timeT& duetime, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
+    return rx::observable::timer_(duetime, scheduler);
+}
+template<typename timeT>
+inline static std::shared_ptr<Observable> periodic_timer_(const timeT& duetime, const time_delta_t& period, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
+    return rx::observable::timer_(duetime, period, scheduler);
 }
 
 }; // END struct Observables
@@ -102,6 +111,7 @@ static std::shared_ptr<Observable> range_(int64_t start, int64_t stop = INT64_MA
     ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(Ref<RxObservable>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources", "use_factory"), &RxObservable::on_error_resume_next, DEFVAL(false)); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1)); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("timer", "duetime", "period", "scheduler"), &RxObservable::timer, DEFVAL(Variant()), DEFVAL(Ref<RxSchedulerBase>())); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

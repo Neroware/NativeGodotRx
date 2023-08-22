@@ -81,3 +81,33 @@ inline static Ref<RxObservable> on_error_resume_next(const Variant& sources, boo
 inline static Ref<RxObservable> range(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1) {
     return RxObservable::wrap(Observables::range_(start, stop, step));
 }
+inline static Ref<RxObservable> timer(const Variant& duetime, const Variant& period = Variant(), Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>()) {
+    bool periodic = false;
+    time_delta_t period_;
+    if (auto _period = DYN_CAST_OR_NULL(period, RelativeTime)) {
+        period_ = _period->dt;
+        periodic = true;
+    }
+    else if (IS_NUMBER(period)) {
+        double period_dt = period;
+        period_ = Scheduler::to_timedelta(period_dt);
+        periodic = true;
+    }
+    if (auto _duetime = DYN_CAST_OR_NULL(duetime, AbsoluteTime)) {
+        return periodic ?
+            RxObservable::wrap(Observables::periodic_timer_(_duetime->t, period_, RxSchedulerBase::unwrap(scheduler))) :
+            RxObservable::wrap(Observables::timer_(_duetime->t, RxSchedulerBase::unwrap(scheduler)));
+    }
+    if (auto _duetime = DYN_CAST_OR_NULL(duetime, RelativeTime)) {
+        return periodic ?
+            RxObservable::wrap(Observables::periodic_timer_(_duetime->dt, period_, RxSchedulerBase::unwrap(scheduler))) :
+            RxObservable::wrap(Observables::timer_(_duetime->dt, RxSchedulerBase::unwrap(scheduler)));
+    }
+    if (IS_NUMBER(duetime)) {
+        double duetime_ = duetime;
+        return periodic ?
+            RxObservable::wrap(Observables::periodic_timer_(Scheduler::to_timedelta(duetime_), period_, RxSchedulerBase::unwrap(scheduler))) :
+            RxObservable::wrap(Observables::timer_(Scheduler::to_timedelta(duetime_), RxSchedulerBase::unwrap(scheduler)));
+    }
+    throw BadArgumentException("No timespan type fits into timer observable constructor!");
+}
