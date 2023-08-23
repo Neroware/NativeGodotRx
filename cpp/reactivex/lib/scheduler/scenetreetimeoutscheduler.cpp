@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <thread>
+#include <cassert>
 
 namespace rx::scheduler {
 
@@ -22,14 +23,17 @@ std::shared_ptr<SceneTreeTimeoutScheduler> SceneTreeTimeoutScheduler::singleton(
 std::shared_ptr<DisposableBase> SceneTreeTimeoutScheduler::schedule(const action_t& action, const Variant& state) {
     auto sad = std::make_shared<SingleAssignmentDisposable>();
     auto self = getptr();
-    SceneTree* sceneTree = static_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
-    auto timer = sceneTree->create_timer(0.0, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
 
-    Ref<RxSceneTreeTimeout> timeout(memnew(RxSceneTreeTimeout(timer, sad, self, action)));
-    timer->connect("timeout", Callable(timeout.ptr(), "interval").bindv(Array::make(state)));
+    SceneTree* sceneTree = dynamic_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
+    assert(sceneTree);
+
+    auto timer = sceneTree->create_timer(0.0, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
+    Ref<RxSceneTreeTimeout> timeout(memnew(RxSceneTreeTimeout(timer, sad, self, action, state)));
+    Callable interval = Callable(timeout.ptr(), "_interval").bindv(Array::make(timeout));
+    timer->connect("timeout", interval);
     
-    dispose_t dispose = [timeout]() {
-        timeout->cancel_timer();
+    dispose_t dispose = [timer]() {
+        _cancel_timer(timer);
     };
 
     return std::make_shared<CompositeDisposable>(disposable_list_t{sad, std::make_shared<Disposable>(dispose)});
@@ -43,14 +47,17 @@ std::shared_ptr<DisposableBase> SceneTreeTimeoutScheduler::schedule_relative(con
 
     auto sad = std::make_shared<SingleAssignmentDisposable>();
     auto self = getptr();
-    SceneTree* sceneTree = static_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
-    auto timer = sceneTree->create_timer(seconds, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
 
-    Ref<RxSceneTreeTimeout> timeout(memnew(RxSceneTreeTimeout(timer, sad, self, action)));
-    timer->connect("timeout", Callable(timeout.ptr(), "interval").bindv(Array::make(state)));
+    SceneTree* sceneTree = dynamic_cast<SceneTree*>(Engine::get_singleton()->get_main_loop());
+    assert(sceneTree);
+
+    auto timer = sceneTree->create_timer(seconds, this->_process_always, this->_process_in_physics, this->_ignore_time_scale);
+    Ref<RxSceneTreeTimeout> timeout(memnew(RxSceneTreeTimeout(timer, sad, self, action, state)));
+    Callable interval = Callable(timeout.ptr(), "_interval").bindv(Array::make(timeout));
+    timer->connect("timeout", interval);
     
-    dispose_t dispose = [timeout]() {
-        timeout->cancel_timer();
+    dispose_t dispose = [timer]() {
+        _cancel_timer(timer);
     };
 
     return std::make_shared<CompositeDisposable>(disposable_list_t{sad, std::make_shared<Disposable>(dispose)});

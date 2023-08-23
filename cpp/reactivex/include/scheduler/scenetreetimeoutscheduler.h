@@ -22,6 +22,14 @@ using namespace rx::disposable;
 
 namespace rx::scheduler {
 
+inline static void _cancel_timer(Ref<SceneTreeTimer> timer) {
+    auto connections = timer->get_signal_connection_list("timeout");
+    for (auto i = 0ul; i < connections.size(); i++) {
+        Dictionary conn = connections[i];
+        timer->disconnect("timeout", conn["callable"]);
+    }
+}
+
 class SceneTreeTimeoutScheduler : public PeriodicScheduler {
 
 private:
@@ -55,29 +63,22 @@ private:
     std::shared_ptr<SingleAssignmentDisposable> _sad;
     std::shared_ptr<SceneTreeTimeoutScheduler> _scheduler;
     action_t _action;
+    Variant _state;
 
 protected:
     inline static void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("cancel_timer"), &RxSceneTreeTimeout::cancel_timer);
-        ClassDB::bind_method(D_METHOD("interval", "state"), &RxSceneTreeTimeout::interval);
+        ClassDB::bind_method(D_METHOD("_interval", "self"), &RxSceneTreeTimeout::interval);
     }
 
 public:
     RxSceneTreeTimeout() { throw NotImplementedException(); }
-    RxSceneTreeTimeout(Ref<SceneTreeTimer> timer, const std::shared_ptr<SingleAssignmentDisposable>& forward, const std::shared_ptr<SceneTreeTimeoutScheduler>& scheduler, const action_t& action) :
-        _timer(timer), _sad(forward), _scheduler(scheduler), _action(action) {}
+    RxSceneTreeTimeout(Ref<SceneTreeTimer> timer, const std::shared_ptr<SingleAssignmentDisposable>& forward, const std::shared_ptr<SceneTreeTimeoutScheduler>& scheduler, const action_t& action, const Variant& state) :
+        _timer(timer), _sad(forward), _scheduler(scheduler), _action(action), _state(state) {}
     ~RxSceneTreeTimeout(){}
 
-    inline void cancel_timer() const {
-        auto connections = this->_timer->get_signal_connection_list("timeout");
-        for (auto i = 0ul; i < connections.size(); i++) {
-            Dictionary conn = connections[i];
-            this->_timer->disconnect("timeout", conn["callable"]);
-        }
-    }
-    inline void interval(const Variant& state) const {
-        _sad->set_disposable(_scheduler->invoke_action(_action, state));
-        this->cancel_timer();
+    inline void interval(Ref<RxSceneTreeTimeout> __ = Ref<RxSceneTreeTimeout>()) const {
+        _cancel_timer(this->_timer);
+        _sad->set_disposable(_scheduler->invoke_action(_action, _state));
     }
 
 };

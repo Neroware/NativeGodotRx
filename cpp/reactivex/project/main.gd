@@ -119,7 +119,7 @@ func _ready():
 	var tos = RxScheduler.SceneTimeoutSchedulerSingleton()
 	#tos.schedule_relative(RelativeTime.from_seconds(1.0), func(__ = null, ___ = null): print("Action1")).dispose_with(self)
 	#tos.schedule_relative(RelativeTime.from_seconds(2.0), func(__ = null, ___ = null): print("Action2")).dispose_with(self)
-	tos.schedule_periodic(RelativeTime.from_seconds(1.0), func(__ = null, ___ = null): print("Action")).dispose_with(self)
+	tos.schedule_periodic(RelativeTime.from_seconds(3.0), func(__ = null, ___ = null): print("Action")).dispose_with(self)
 	
 #	var example: Example = $Example
 #
