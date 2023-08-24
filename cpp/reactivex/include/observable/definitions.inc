@@ -111,3 +111,13 @@ inline static Ref<RxObservable> timer(const Variant& duetime, const Variant& per
     }
     throw BadArgumentException("No timespan type fits into timer observable constructor!");
 }
+inline static Ref<RxObservable> using_resource(const Callable& resource_factory, const Callable& observable_factory) {
+    return RxObservable::wrap(Observables::using_(
+        [resource_factory]() -> std::shared_ptr<DisposableBase> {
+            return RxDisposableBase::unwrap(resource_factory.callv(Array())); 
+        },
+        [observable_factory](const std::shared_ptr<DisposableBase>& d) -> std::shared_ptr<Observable> { 
+            return RxObservable::unwrap(observable_factory.callv(Array::make(RxDisposableBase::wrap(d)))); 
+        }
+    ));
+}

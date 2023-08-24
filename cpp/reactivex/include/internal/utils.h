@@ -5,6 +5,11 @@
 #include <memory>
 #include <functional>
 
+#include "abstract/disposable.h"
+#include "abstract/observable.h"
+#include "abstract/observer.h"
+#include "abstract/scheduler.h"
+
 using namespace godot;
 
 #define SUBSCRIBE(observer, scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler_default) -> std::shared_ptr<DisposableBase>
@@ -14,6 +19,11 @@ using namespace godot;
 #define PERIODIC_ACTION(state) [=](const Variant& state = Variant()) -> Variant
 
 namespace rx {
+
+typedef std::shared_ptr<DisposableBase> disposable_t;
+typedef std::shared_ptr<ObservableBase> observable_t;
+typedef std::shared_ptr<ObserverBase> observer_t;
+typedef std::shared_ptr<SchedulerBase> scheduler_t;
 
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {

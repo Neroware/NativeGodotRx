@@ -19,6 +19,7 @@
 #include "observable/onerrorresumenext.h"
 #include "observable/range.h"
 #include "observable/timer.h"
+#include "observable/using.h"
 
 namespace rx::observable {
 
@@ -87,6 +88,12 @@ template<typename timeT>
 inline static std::shared_ptr<Observable> periodic_timer_(const timeT& duetime, const time_delta_t& period, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) {
     return rx::observable::timer_(duetime, period, scheduler);
 }
+inline static std::shared_ptr<Observable> using_(
+    const std::function<disposable_t()>& resource_factory,
+    const std::function<std::shared_ptr<Observable>(const disposable_t&)>& observable_factory
+) {
+    return rx::observable::using_(resource_factory, observable_factory);
+}
 
 }; // END struct Observables
 
@@ -112,6 +119,7 @@ inline static std::shared_ptr<Observable> periodic_timer_(const timeT& duetime, 
     ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources", "use_factory"), &RxObservable::on_error_resume_next, DEFVAL(false)); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1)); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("timer", "duetime", "period", "scheduler"), &RxObservable::timer, DEFVAL(Variant()), DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("using", "resource_factory", "observable_factory"), &RxObservable::using_resource); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H
