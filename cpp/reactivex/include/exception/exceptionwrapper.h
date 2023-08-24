@@ -42,7 +42,7 @@ public:
     static std::exception_ptr unwrap(Ref<RxError> err);
     void raise() const;
 
-    inline String _to_string() const { return "[" + this->type() + ":" + this->what() + "]"; }
+    inline String _to_string() const { return "[" + this->type() + ": " + this->what() + "]"; }
 };
 
 }; // END namespace rx::exception

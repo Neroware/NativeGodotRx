@@ -97,7 +97,7 @@ inline static std::shared_ptr<Observable> periodic_timer_(const timeT& duetime, 
     ClassDB::bind_static_method("RxObservable", D_METHOD("return_value", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::return_value, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never); \
-    ClassDB::bind_static_method("RxObservable", D_METHOD("raise", "message", "scheduler"), &RxObservable::throw_message, DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("raise", "message", "type", "scheduler"), &RxObservable::throw_message, DEFVAL("RxError"), DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "error", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer); \

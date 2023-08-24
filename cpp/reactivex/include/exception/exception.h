@@ -12,15 +12,16 @@ class rx_exception : public std::exception
 {
 private:
     std::string _what;
+    std::string _type;
 
 public:
-    rx_exception(const std::string& what_ = "") : _what(what_) {}
+    rx_exception(const std::string& what_ = "", const std::string& type = "RxError") : _what(what_), _type(type) {}
 
     virtual const char* what() const noexcept override {
         return _what.c_str();
     }
     virtual const char* type() const noexcept {
-        return "RxError";
+        return this->_type.c_str();
     }
 };
 

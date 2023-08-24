@@ -7,8 +7,8 @@ inline static Ref<RxObservable> return_value(const Variant& value, Ref<RxSchedul
 inline static Ref<RxObservable> never() {
     return RxObservable::wrap(Observables::never_());
 }
-inline static Ref<RxObservable> throw_message(const String& what, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>()) {
-    try { throw rx_exception(what.ascii().get_data()); } catch(...) {
+inline static Ref<RxObservable> throw_message(const String& what, const String& type = "RxError", Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>()) {
+    try { throw rx_exception(what.ascii().get_data(), type.ascii().get_data()); } catch(...) {
         return RxObservable::wrap(Observables::throw_(std::current_exception(), RxSchedulerBase::unwrap(scheduler)));
     }
 }
