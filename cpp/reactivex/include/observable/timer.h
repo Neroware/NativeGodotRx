@@ -104,7 +104,7 @@ static std::shared_ptr<Observable> observable_timer_timespan_and_period(const ti
             auto _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : SceneTreeTimeoutScheduler::singleton();
 
             periodic_action_t action = PERIODIC_ACTION(count) {
-                if (count) {
+                if (count.get_type() != Variant::NIL) {
                     uint64_t _count = count;
                     observer->on_next(_count);
                     return _count + 1;

@@ -111,14 +111,22 @@ func _ready():
 #		func(__ = null, ___ = null): print("Scheduled timeout!")
 #	) \
 #	.dispose_with(self)
+#	
+#	RxObservable.timer(3.0, 1.0) \
+#		.subscribe(func(i): print("Timeout!")) \
+#		.dispose_with(self)
 	
-	RxObservable.timer(3.0, 1.0) \
-		.subscribe(func(i): print("Timeout!")) \
-		.dispose_with(self)
+#	RxObservable.raise("This is an intentional error", "IntentionalError") \
+#		.subscribe(func(__): pass, func(e): print("ERR: ", e)) \
+#		.dispose_with(self)
 	
-	RxObservable.raise("This is an intentional error", "IntentionalError") \
-		.subscribe(func(__): pass, func(e): print("ERR: ", e)) \
-		.dispose_with(self)
+	RxObservable.with_latest_from(RxObservable.timer(1.0), [
+		RxObservable.timer(0.0, 0.1),
+		RxObservable.just(42),
+		RxObservable.from_iterable([1, 2, 3, 4]),
+	]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
 	
 #	var example: Example = $Example
 #

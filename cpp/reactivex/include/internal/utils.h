@@ -18,6 +18,10 @@ using namespace godot;
 #define RECURSIVE_ACTION_FWD(_action) ACTION(scheduler__, state) { return _action(scheduler__, state, _action); }
 #define PERIODIC_ACTION(state) [=](const Variant& state = Variant()) -> Variant
 
+#define ONNEXT_FWD(observer) [observer](const Variant& value) { observer->on_next(value); }
+#define ONERROR_FWD(observer) [observer](const std::exception_ptr& error) { observer->on_error(error); }
+#define ONCOMPLETED_FWD(observer) [observer]() { observer->on_completed(); }
+
 namespace rx {
 
 typedef std::shared_ptr<DisposableBase> disposable_t;

@@ -20,6 +20,7 @@
 #include "observable/range.h"
 #include "observable/timer.h"
 #include "observable/using.h"
+#include "observable/withlatestfrom.h"
 
 namespace rx::observable {
 
@@ -94,6 +95,13 @@ inline static std::shared_ptr<Observable> using_(
 ) {
     return rx::observable::using_(resource_factory, observable_factory);
 }
+template<typename T>
+static std::shared_ptr<Observable> with_latest_from_(
+    const std::shared_ptr<Observable>& parent,
+    const T& sources
+) {
+    return rx::observable::with_latest_from_(parent, sources);
+}
 
 }; // END struct Observables
 
@@ -120,6 +128,7 @@ inline static std::shared_ptr<Observable> using_(
     ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1)); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("timer", "duetime", "period", "scheduler"), &RxObservable::timer, DEFVAL(Variant()), DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("using", "resource_factory", "observable_factory"), &RxObservable::using_resource); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("with_latest_from", "parent", "sources"), &RxObservable::with_latest_from); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

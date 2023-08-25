@@ -121,3 +121,6 @@ inline static Ref<RxObservable> using_resource(const Callable& resource_factory,
         }
     ));
 }
+inline static Ref<RxObservable> with_latest_from(Ref<RxObservable> parent, const TypedArray<RxObservable>& sources) {
+    return RxObservable::wrap(Observables::with_latest_from_(RxObservable::unwrap(parent), array_container<RxObservable, Observable>(sources)));
+}
