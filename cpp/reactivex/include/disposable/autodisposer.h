@@ -19,23 +19,23 @@ using namespace rx::exception;
 
 namespace rx::disposable {
 
-class AutoDisposer : public RefCounted {
-    GDCLASS(AutoDisposer, RefCounted)
+class RxAutoDisposer : public RefCounted {
+    GDCLASS(RxAutoDisposer, RefCounted)
 
 private:
     std::shared_ptr<DisposableBase> _disp;
 
 public:
-    AutoDisposer() { throw NotImplementedException(); }
-    AutoDisposer(const std::shared_ptr<DisposableBase>& disp) : _disp(disp) {}
-    ~AutoDisposer() {}
+    RxAutoDisposer() { throw NotImplementedException(); }
+    RxAutoDisposer(const std::shared_ptr<DisposableBase>& disp) : _disp(disp) {}
+    ~RxAutoDisposer() {}
 
 protected:
     static inline void _bind_methods() {}
 
 public:
     inline static void add_to(Object* obj, const std::shared_ptr<DisposableBase>& disp) {
-        Ref<AutoDisposer> disposer(memnew(AutoDisposer(disp)));
+        Ref<RxAutoDisposer> disposer(memnew(RxAutoDisposer(disp)));
         uint64_t id = reinterpret_cast<uint64_t>(disp.get());
         String meta_entry = "autodisposer" + String::num_uint64(id);
         obj->set_meta(meta_entry, disposer);

@@ -22,14 +22,9 @@
 #include "internal/time.h"
 #include "internal/thread.h"
 // wrappers
-#include "wrapper/lock.h"
-#include "wrapper/disposable.h"
-#include "wrapper/iterator.h"
-#include "wrapper/iterable.h"
+#include "wrapper/abstract.h"
 #include "wrapper/scheduler.h"
-#include "wrapper/observer.h"
 #include "wrapper/observable.h"
-#include "wrapper/subject.h"
 // disposable
 #include "disposable/autodisposer.h"
 // scheduler
@@ -68,7 +63,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSubjectBase>();
 	// disposable
-	ClassDB::register_abstract_class<rx::disposable::AutoDisposer>();
+	ClassDB::register_abstract_class<rx::disposable::RxAutoDisposer>();
 	// scheduler
 	ClassDB::register_abstract_class<rx::scheduler::RxSceneTreeTimeout>();
 

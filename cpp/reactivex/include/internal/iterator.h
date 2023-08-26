@@ -4,8 +4,7 @@
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 
-#include "wrapper/iterable.h"
-#include "wrapper/iterator.h"
+#include "wrapper/abstract.h"
 #include "cast.h"
 
 using namespace godot;
