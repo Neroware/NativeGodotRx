@@ -6,12 +6,14 @@
 #include "exception/exception.h"
 
 #include <memory>
+#include <vector>
 #include <list>
 
 namespace rx::disposable {
 
 typedef std::shared_ptr<DisposableBase> disposable_t;
 typedef std::list<disposable_t> disposable_list_t;
+typedef std::vector<disposable_t> disposable_vec_t;
 
 class CompositeDisposable : public DisposableBase {
 

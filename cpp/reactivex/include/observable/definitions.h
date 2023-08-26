@@ -21,6 +21,7 @@
 #include "observable/timer.h"
 #include "observable/using.h"
 #include "observable/withlatestfrom.h"
+#include "observable/zip.h"
 
 namespace rx::observable {
 
@@ -102,6 +103,10 @@ static std::shared_ptr<Observable> with_latest_from_(
 ) {
     return rx::observable::with_latest_from_(parent, sources);
 }
+template<typename T>
+static std::shared_ptr<Observable> zip_(const T& sources) {
+    return rx::observable::zip_(sources);
+}
 
 }; // END struct Observables
 
@@ -127,8 +132,10 @@ static std::shared_ptr<Observable> with_latest_from_(
     ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources", "use_factory"), &RxObservable::on_error_resume_next, DEFVAL(false)); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1)); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("timer", "duetime", "period", "scheduler"), &RxObservable::timer, DEFVAL(Variant()), DEFVAL(Ref<RxSchedulerBase>())); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("periodic_timer", "period", "scheduler"), &RxObservable::periodic_timer, DEFVAL(Ref<RxSchedulerBase>())); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("using", "resource_factory", "observable_factory"), &RxObservable::using_resource); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("with_latest_from", "parent", "sources"), &RxObservable::with_latest_from); \
+    ClassDB::bind_static_method("RxObservable", D_METHOD("zip", "sources"), &RxObservable::zip); \
 
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

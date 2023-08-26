@@ -31,14 +31,30 @@ typedef std::shared_ptr<SchedulerBase> scheduler_t;
 
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {
-    bool allTrue = true;
     for (int i = 0; i < n; i++) {
         if (!arr[i]) {
-            allTrue = false;
-            break;
+            return false;
         }
     }
-    return allTrue;
+    return true;
+}
+template<typename T>
+static bool all(const std::shared_ptr<T[]>& arr, int n, const std::function<bool(const T&)>& pred) {
+    for (int i = 0; i < n; i++) {
+        if (!pred(arr[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+template<typename T>
+static bool all(const T& arr) {
+    for (int i = 0; i < arr.size(); i++) {
+        if (!arr[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 template<typename T>

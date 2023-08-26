@@ -120,10 +120,18 @@ func _ready():
 #		.subscribe(func(__): pass, func(e): print("ERR: ", e)) \
 #		.dispose_with(self)
 	
-	RxObservable.with_latest_from(RxObservable.timer(1.0), [
-		RxObservable.timer(0.0, 0.1),
-		RxObservable.just(42),
-		RxObservable.from_iterable([1, 2, 3, 4]),
+#	RxObservable.with_latest_from(RxObservable.timer(1.0), [
+#		RxObservable.timer(0.0, 0.1),
+#		RxObservable.just(42),
+#		RxObservable.from_iterable([1, 2, 3, 4]),
+#	]) \
+#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#	.dispose_with(self)
+	
+	RxObservable.zip([
+		RxObservable.periodic_timer(0.5),
+		RxObservable.periodic_timer(1.0),
+		RxObservable.periodic_timer(2.0)
 	]) \
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
