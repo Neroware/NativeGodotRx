@@ -136,6 +136,10 @@ func _ready():
 	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	.dispose_with(self)
 	
+	var disp = RxSingleAssignmentDisposable.get()
+	disp.disposable = RxDisposable.get(func(): print("Disposed"))
+	disp.dispose()
+	
 #	var example: Example = $Example
 #
 #	# Signal.

@@ -23,6 +23,7 @@
 #include "internal/thread.h"
 // wrappers
 #include "wrapper/abstract.h"
+#include "wrapper/disposable.h"
 #include "wrapper/scheduler.h"
 #include "wrapper/observable.h"
 // disposable
@@ -51,7 +52,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::ItEnd>();
 	ClassDB::register_class<rx::RxThread>();
 	ClassDB::register_class<rx::RxMainThread>();
-	// wrapper
+	// abstract
 	ClassDB::register_abstract_class<rx::wrappers::RxLockBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxDisposableBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxIteratorBase>();
@@ -64,6 +65,14 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxSubjectBase>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::RxAutoDisposer>();
+	ClassDB::register_abstract_class<rx::wrappers::RxBooleanDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSingleAssignmentDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxMultiAssignmentDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSerialDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxRefCountDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxScheduledDisposable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxCompositeDisposable>();
 	// scheduler
 	ClassDB::register_abstract_class<rx::scheduler::RxSceneTreeTimeout>();
 
