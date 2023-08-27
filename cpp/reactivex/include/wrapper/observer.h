@@ -26,6 +26,7 @@ protected:
         ClassDB::bind_method(D_METHOD("fail", "error"), &RxObserver::fail);
         ClassDB::bind_method(D_METHOD("throw", "error"), &RxObserver::throw_error);
         ClassDB::bind_method(D_METHOD("as_observer"), &RxObserver::as_observer);
+        RX_WRAPPER_CAST_BINDS(RxObserver)
     }
 
 public:
@@ -74,6 +75,8 @@ protected:
 
         ClassDB::bind_method(D_METHOD("ensure_active"), &RxScheduledObserver::ensure_active);
         ClassDB::bind_method(D_METHOD("run", "scheduler", "state"), &RxScheduledObserver::run);
+
+        RX_WRAPPER_CAST_BINDS(RxScheduledObserver)
     }
 
 public:
@@ -112,6 +115,7 @@ class RxObserveOnObserver : public RxScheduledObserver {
 protected:
     static inline void _bind_methods() {
         ClassDB::bind_static_method("RxObserveOnObserver", D_METHOD("get", "observer", "scheduler"), &RxObserveOnObserver::get);
+        RX_WRAPPER_CAST_BINDS(RxObserveOnObserver)
     }
 
 public:
@@ -137,6 +141,8 @@ protected:
         ClassDB::bind_method(D_METHOD("set_disposable", "disp"), &RxAutoDetachObserver::set_disposable);
         ClassDB::bind_method(D_METHOD("dispose"), &RxAutoDetachObserver::dispose);
         ClassDB::bind_method(D_METHOD("fail", "error"), &RxAutoDetachObserver::fail);
+
+        RX_WRAPPER_CAST_BINDS(RxAutoDetachObserver)
     }
 
 public:

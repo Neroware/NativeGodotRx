@@ -32,7 +32,7 @@ namespace wrappers {
     ClassDB::bind_method(D_METHOD("try_lock"), &Class::try_lock); \
     ClassDB::bind_method(D_METHOD("_set_is_disposed", "v"), &Class::_set_is_disposed); \
     ClassDB::bind_method(D_METHOD("_get_is_disposed"), &Class::_get_is_disposed); \
-    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_disposed"), "_set_is_disposed", "_get_is_disposed"); \
+    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_disposed"), "_set_is_disposed", "_get_is_disposed");
 
 class RxBooleanDisposable : public RxDisposableBase {
     GDCLASS(RxBooleanDisposable, RxDisposableBase)
@@ -41,6 +41,7 @@ class RxBooleanDisposable : public RxDisposableBase {
 protected:
     static inline void _bind_methods() {
         DISPOSABLE_SETGET_BIND(RxBooleanDisposable)
+        RX_WRAPPER_CAST_BINDS(RxBooleanDisposable)
         ClassDB::bind_static_method("RxBooleanDisposable", D_METHOD("get"), &RxBooleanDisposable::get);
     }
 public:
@@ -58,6 +59,7 @@ class RxSingleAssignmentDisposable : public RxDisposableBase {
 protected:
     static inline void _bind_methods() {
         DISPOSABLE_SETGET_BIND(RxSingleAssignmentDisposable)
+        RX_WRAPPER_CAST_BINDS(RxSingleAssignmentDisposable)
         ClassDB::bind_static_method("RxSingleAssignmentDisposable", D_METHOD("get"), &RxSingleAssignmentDisposable::get);
 
         ClassDB::bind_method(D_METHOD("get_disposable"), &RxSingleAssignmentDisposable::get_disposable);
@@ -81,6 +83,7 @@ class RxMultiAssignmentDisposable : public RxDisposableBase {
 protected:
     static inline void _bind_methods() {
         DISPOSABLE_SETGET_BIND(RxMultiAssignmentDisposable)
+        RX_WRAPPER_CAST_BINDS(RxMultiAssignmentDisposable)
         ClassDB::bind_static_method("RxMultiAssignmentDisposable", D_METHOD("get"), &RxMultiAssignmentDisposable::get);
 
         ClassDB::bind_method(D_METHOD("get_disposable"), &RxMultiAssignmentDisposable::get_disposable);
@@ -104,6 +107,7 @@ class RxSerialDisposable : public RxDisposableBase {
 protected:
     static inline void _bind_methods() {
         DISPOSABLE_SETGET_BIND(RxSerialDisposable)
+        RX_WRAPPER_CAST_BINDS(RxSerialDisposable)
         ClassDB::bind_static_method("RxSerialDisposable", D_METHOD("get"), &RxSerialDisposable::get);
 
         ClassDB::bind_method(D_METHOD("get_disposable"), &RxSerialDisposable::get_disposable);
@@ -127,6 +131,7 @@ class RxDisposable : public RxDisposableBase {
 protected:
     static inline void _bind_methods() {
         DISPOSABLE_SETGET_BIND(RxDisposable)
+        RX_WRAPPER_CAST_BINDS(RxDisposable)
         ClassDB::bind_static_method("RxDisposable", D_METHOD("get", "dispose"), &RxDisposable::get);
     }
 public:
@@ -144,6 +149,7 @@ class RxRefCountDisposable : public RxDisposableBase {
 protected:
     static inline void _bind_methods() {
         DISPOSABLE_SETGET_BIND(RxRefCountDisposable)
+        RX_WRAPPER_CAST_BINDS(RxRefCountDisposable)
         ClassDB::bind_static_method("RxRefCountDisposable", D_METHOD("get", "disp"), &RxRefCountDisposable::get);
 
         ClassDB::bind_method(D_METHOD("_get_is_primary_disposed"), &RxRefCountDisposable::_get_is_primary_disposed);
@@ -185,6 +191,7 @@ class RxScheduledDisposable : public RxDisposableBase {
 
 protected:
     static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxScheduledDisposable)
         ClassDB::bind_method(D_METHOD("lock"), &RxScheduledDisposable::lock); 
         ClassDB::bind_method(D_METHOD("unlock"), &RxScheduledDisposable::unlock); 
         ClassDB::bind_method(D_METHOD("try_lock"), &RxScheduledDisposable::try_lock);
@@ -216,6 +223,7 @@ class RxCompositeDisposable : public RxDisposableBase {
 
 protected:
     static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxCompositeDisposable)
         DISPOSABLE_SETGET_BIND(RxCompositeDisposable)
         ClassDB::bind_static_method("RxCompositeDisposable", D_METHOD("get", "items"), &RxCompositeDisposable::get);
 

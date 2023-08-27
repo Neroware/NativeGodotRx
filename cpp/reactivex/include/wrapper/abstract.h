@@ -34,6 +34,7 @@ protected:
         ClassDB::bind_method(D_METHOD("unlock"), &RxLockBase::unlock);
         ClassDB::bind_method(D_METHOD("try_lock"), &RxLockBase::try_lock);
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxLockBase::equals);
+        RX_WRAPPER_CAST_BINDS(RxLockBase)
     }
 public:
     void lock();
@@ -55,6 +56,7 @@ protected:
         ClassDB::bind_method(D_METHOD("dispose"), &RxDisposableBase::dispose);
         ClassDB::bind_method(D_METHOD("dispose_with", "obj"), &RxDisposableBase::dispose_with);
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxDisposableBase::equals);
+        RX_WRAPPER_CAST_BINDS(RxDisposableBase)
     }
 public:
     void dispose();
@@ -84,6 +86,7 @@ protected:
         ClassDB::bind_method(D_METHOD("foreach", "cb"), &RxIteratorBase::foreach);
         ClassDB::bind_method(D_METHOD("enumerate", "cb"), &RxIteratorBase::enumerate);
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxIteratorBase::equals);
+        RX_WRAPPER_CAST_BINDS(RxIteratorBase)
     }
 
 public:
@@ -102,6 +105,7 @@ protected:
     static inline void _bind_methods() {
         ClassDB::bind_method(D_METHOD("iter"), &RxIterableBase::iter);
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxIterableBase::equals);
+        RX_WRAPPER_CAST_BINDS(RxIterableBase)
     }
 public:
     Ref<RxIteratorBase> iter();
@@ -122,6 +126,7 @@ protected:
         ClassDB::bind_method(D_METHOD("on_error", "error"), &RxObserverBase::on_error);
         ClassDB::bind_method(D_METHOD("on_completed"), &RxObserverBase::on_completed);
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxObserverBase::equals);
+        RX_WRAPPER_CAST_BINDS(RxObserverBase)
     }
 public:
     void on_next(const Variant& item);

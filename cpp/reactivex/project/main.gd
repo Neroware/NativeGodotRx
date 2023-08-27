@@ -140,6 +140,14 @@ func _ready():
 	disp.disposable = RxDisposable.get(func(): print("Disposed"))
 	disp.dispose()
 	
+	var els = RxEventLoopScheduler.get()
+	var els_disp : RxDisposableBase = RxDisposableBase.dyn_cast(els)
+	var els_obs : RxObservable = RxObservable.dyn_cast_or_null(els)
+	print(">>> ", els_disp)
+	var scheduler : RxScheduler = RxScheduler.dyn_cast_or_null(els)
+	print(">>> ", scheduler)
+	print(">>> ", RxDisposableBase.dyn_cast_or_null(scheduler))
+	
 #	var example: Example = $Example
 #
 #	# Signal.

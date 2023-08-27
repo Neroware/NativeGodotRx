@@ -24,7 +24,9 @@ class RxScheduler : public RxSchedulerBase {
     RX_WRAPPER(RxScheduler, Scheduler, RxSchedulerBase, SchedulerBase)
 
 protected:
-    static inline void _bind_methods() {}
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxScheduler)
+    }
 public:
 
 }; // END class RxScheduler
@@ -59,6 +61,7 @@ protected:
         ClassDB::bind_static_method("RxTrampolineScheduler", D_METHOD("get"), &RxTrampolineScheduler::get);
         ClassDB::bind_method(D_METHOD("schedule_required"), &RxTrampolineScheduler::schedule_required);
         ClassDB::bind_method(D_METHOD("ensure_trampoline"), &RxTrampolineScheduler::ensure_trampoline);
+        RX_WRAPPER_CAST_BINDS(RxTrampolineScheduler)
     }
 
 public:
@@ -79,6 +82,7 @@ protected:
     static inline void _bind_methods() {
         ClassDB::bind_static_method("RxCurrentThreadScheduler", D_METHOD("get"), &RxCurrentThreadScheduler::get);
         ClassDB::bind_static_method("RxCurrentThreadScheduler", D_METHOD("singleton"), &RxCurrentThreadScheduler::singleton);
+        RX_WRAPPER_CAST_BINDS(RxCurrentThreadScheduler)
     }
 
 public:
@@ -97,9 +101,10 @@ class RxEventLoopScheduler : public RxScheduler {
 
 protected:
     static inline void _bind_methods() {
-        ClassDB::bind_static_method("RxEventLoopScheduler", D_METHOD("get"), &RxEventLoopScheduler::get, DEFVAL(false));
+        ClassDB::bind_static_method("RxEventLoopScheduler", D_METHOD("get", "exit_if_empty"), &RxEventLoopScheduler::get, DEFVAL(false));
         ClassDB::bind_method(D_METHOD("dispose"), &RxEventLoopScheduler::dispose);
         ClassDB::bind_method(D_METHOD("run"), &RxEventLoopScheduler::run);
+        RX_WRAPPER_CAST_BINDS(RxEventLoopScheduler)
     }
 
 public:
@@ -120,6 +125,7 @@ protected:
     static inline void _bind_methods() {
         ClassDB::bind_static_method("RxImmediateScheduler", D_METHOD("get"), &RxImmediateScheduler::get);
         ClassDB::bind_static_method("RxImmediateScheduler", D_METHOD("singleton"), &RxImmediateScheduler::singleton);
+        RX_WRAPPER_CAST_BINDS(RxImmediateScheduler)
     }
 
 public:
@@ -139,6 +145,7 @@ class RxNewThreadScheduler : public RxScheduler {
 protected:
     static inline void _bind_methods() {
         ClassDB::bind_static_method("RxNewThreadScheduler", D_METHOD("get"), &RxNewThreadScheduler::get);
+        RX_WRAPPER_CAST_BINDS(RxNewThreadScheduler)
     }
 
 public:
@@ -157,6 +164,7 @@ protected:
     static inline void _bind_methods() {
         ClassDB::bind_static_method("RxSceneTreeTimeoutScheduler", D_METHOD("get", "process_always", "process_in_physics", "ignore_time_scale"), &RxSceneTreeTimeoutScheduler::get, DEFVAL(true), DEFVAL(false), DEFVAL(false));
         ClassDB::bind_static_method("RxSceneTreeTimeoutScheduler", D_METHOD("singleton", "process_always", "process_in_physics", "ignore_time_scale"), &RxSceneTreeTimeoutScheduler::singleton, DEFVAL(true), DEFVAL(false), DEFVAL(false));
+        RX_WRAPPER_CAST_BINDS(RxSceneTreeTimeoutScheduler)
     }
 
 public:
@@ -177,6 +185,7 @@ protected:
     static inline void _bind_methods() {
         ClassDB::bind_static_method("RxTimeoutScheduler", D_METHOD("get"), &RxTimeoutScheduler::get);
         ClassDB::bind_static_method("RxTimeoutScheduler", D_METHOD("singleton"), &RxTimeoutScheduler::singleton);
+        RX_WRAPPER_CAST_BINDS(RxTimeoutScheduler)
     }
 
 public:

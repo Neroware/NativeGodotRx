@@ -34,6 +34,7 @@ protected:
         ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_disposed"), "_set_is_disposed", "_get_is_disposed");
 
         BIND_SETGET_PROPERTY(RxSubject, error, _set_error, _get_error, OBJECT)
+        RX_WRAPPER_CAST_BINDS(RxSubject)
     }
 
 public:
@@ -66,6 +67,8 @@ protected:
         BIND_SETGET_PROPERTY(RxReplaySubject, buffer_size, _set_buffer_size, _get_buffer_size, INT)
         BIND_SETGET_PROPERTY(RxReplaySubject, scheduler, _set_scheduler, _get_scheduler, OBJECT)
         BIND_SETGET_PROPERTY(RxReplaySubject, window, _set_window, _get_window, OBJECT)
+
+        RX_WRAPPER_CAST_BINDS(RxReplaySubject)
     }
 
 public:
@@ -99,6 +102,7 @@ protected:
         ClassDB::bind_static_method("RxBehaviorSubject", D_METHOD("get", "value"), &RxBehaviorSubject::get);
 
         BIND_SETGET_PROPERTY(RxBehaviorSubject, value, _set_value, _get_value, VARIANT_MAX)
+        RX_WRAPPER_CAST_BINDS(RxBehaviorSubject)
     }
 
 public:
@@ -122,6 +126,7 @@ protected:
 
         BIND_SETGET_PROPERTY(RxAsyncSubject, value, _set_value, _get_value, VARIANT_MAX)
         BIND_SETGET_PROPERTY(RxAsyncSubject, has_value, _set_has_value, _get_has_value, BOOL)
+        RX_WRAPPER_CAST_BINDS(RxAsyncSubject)
     }
 
 public:

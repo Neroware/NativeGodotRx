@@ -28,6 +28,7 @@ public:
 protected:
     static inline void _bind_methods() {
         OBSERVABLE_CONSTRUCTORS_BINDS
+        RX_WRAPPER_CAST_BINDS(RxObservable)
     }
 };
 
