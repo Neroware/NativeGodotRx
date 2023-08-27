@@ -105,12 +105,12 @@ func _ready():
 #		) \
 #		.dispose_with(self)
 	
-#	var tos = RxScheduler.SceneTimeoutSchedulerSingleton()
-#	tos.schedule_relative(
-#		RelativeTime.from_seconds(3), 
-#		func(__ = null, ___ = null): print("Scheduled timeout!")
-#	) \
-#	.dispose_with(self)
+	var tos = RxSceneTreeTimeoutScheduler.singleton()
+	tos.schedule_relative(
+		RelativeTime.from_seconds(3), 
+		func(__ = null, ___ = null): print("Scheduled timeout!")
+	) \
+	.dispose_with(self)
 #	
 #	RxObservable.timer(3.0, 1.0) \
 #		.subscribe(func(i): print("Timeout!")) \

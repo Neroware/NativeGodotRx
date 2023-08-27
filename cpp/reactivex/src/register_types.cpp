@@ -75,6 +75,14 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxCompositeDisposable>();
 	// scheduler
 	ClassDB::register_abstract_class<rx::scheduler::RxSceneTreeTimeout>();
+	ClassDB::register_abstract_class<rx::wrappers::RxCatchScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxTrampolineScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxCurrentThreadScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxEventLoopScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxImmediateScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxNewThreadScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSceneTreeTimeoutScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxTimeoutScheduler>();
 
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 
