@@ -22,6 +22,17 @@ using namespace godot;
 #define ONERROR_FWD(observer) [observer](const std::exception_ptr& error) { observer->on_error(error); }
 #define ONCOMPLETED_FWD(observer) [observer]() { observer->on_completed(); }
 
+#define BIND_SETGET_PROPERTY(Class, name, setter, getter, type) \
+    ClassDB::bind_method(D_METHOD(#setter, "v"), &Class::setter); \
+    ClassDB::bind_method(D_METHOD(#getter), &Class::getter); \
+    ADD_PROPERTY(PropertyInfo(Variant::type, #name), #setter, #getter);
+#define BIND_SET_PROPERTY(Class, name, setter, type) \
+    ClassDB::bind_method(D_METHOD(#setter, "v"), &Class::setter); \
+    ADD_PROPERTY(PropertyInfo(Variant::type, #name), #setter, "");
+#define BIND_GET_PROPERTY(Class, name, getter, type) \
+    ClassDB::bind_method(D_METHOD(#getter), &Class::getter); \
+    ADD_PROPERTY(PropertyInfo(Variant::type, #name), "", #getter);
+
 namespace rx {
 
 typedef std::shared_ptr<DisposableBase> disposable_t;

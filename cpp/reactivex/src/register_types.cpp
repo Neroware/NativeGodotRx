@@ -23,8 +23,9 @@
 #include "internal/thread.h"
 // wrappers
 #include "wrapper/abstract.h"
-#include "wrapper/disposable.h"
 #include "wrapper/scheduler.h"
+#include "wrapper/disposable.h"
+#include "wrapper/observer.h"
 #include "wrapper/observable.h"
 // disposable
 #include "disposable/autodisposer.h"
@@ -83,6 +84,11 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxNewThreadScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSceneTreeTimeoutScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxTimeoutScheduler>();
+	// observer
+	ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
+	ClassDB::register_abstract_class<rx::wrappers::RxScheduledObserver>();
+	ClassDB::register_abstract_class<rx::wrappers::RxObserveOnObserver>();
+	ClassDB::register_abstract_class<rx::wrappers::RxAutoDetachObserver>();
 
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 
