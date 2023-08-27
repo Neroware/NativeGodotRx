@@ -27,6 +27,7 @@
 #include "wrapper/disposable.h"
 #include "wrapper/observer.h"
 #include "wrapper/observable.h"
+#include "wrapper/subject.h"
 // disposable
 #include "disposable/autodisposer.h"
 // scheduler
@@ -89,7 +90,12 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduledObserver>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObserveOnObserver>();
 	ClassDB::register_abstract_class<rx::wrappers::RxAutoDetachObserver>();
-
+	// subject
+	ClassDB::register_abstract_class<rx::wrappers::RxSubject>();
+	ClassDB::register_abstract_class<rx::wrappers::RxReplaySubject>();
+	ClassDB::register_abstract_class<rx::wrappers::RxBehaviorSubject>();
+	ClassDB::register_abstract_class<rx::wrappers::RxAsyncSubject>();
+	// GodotRx Singleton
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 
 	Engine::get_singleton()->register_singleton(GDRX_SINGLETON_NAME, memnew(rx::__GDRxSingleton__));
