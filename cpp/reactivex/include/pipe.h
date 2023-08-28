@@ -3,16 +3,25 @@
 
 namespace rx::pipe {
 
-template <typename... Args>
-auto compose(Args... ops) {
+template <typename Ops>
+auto compose(Ops op) {
+    return op;
+}
+template <typename FirstOp, typename... Ops>
+auto compose(FirstOp firstOp, Ops... ops) {
     return [=](auto x) {
-        return (ops(x), ...);
+        return compose(ops...)(firstOp(x));
     };
 }
 
-template <typename T, typename... Args>
-auto pipe(T value, Args... fns) {
+template <typename T, typename... Ops>
+auto pipe(T value, Ops... fns) {
     return compose(fns...)(value);
+}
+
+template <typename T, typename... Ops>
+auto operator|(T value, Ops... fns) {
+    return pipe(value, fns...);
 }
 
 }

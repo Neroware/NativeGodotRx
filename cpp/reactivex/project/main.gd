@@ -8,7 +8,16 @@ func _ready():
 #		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 #		.dispose_with(self)
 	
-	RxObservable.periodic_timer(1.0).amb(RxObservable.periodic_timer(0.5)) \
+#	RxObservable.periodic_timer(1.0).amb(RxObservable.periodic_timer(0.5)) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+	
+#	RxObservable.periodic_timer(1.0).map(func(i): return i * 0.5) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+	
+	RxObservable.from_iterable([1, 2, 3]) \
+		.last() \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

@@ -147,3 +147,28 @@ inline Ref<RxObservable> amb(Ref<RxObservable> right_source) {
         RxObservable::unwrap(right_source)
     )(this->_ptr));
 }
+inline Ref<RxObservable> as_observable() {
+    return RxObservable::wrap(Operators::as_observable_()(this->_ptr));
+}
+inline Ref<RxObservable> map(const Callable& mapper) {
+    return RxObservable::wrap(Operators::map_(
+        [mapper](const Variant& v) -> Variant { return mapper.callv(Array::make(v)); }
+    )(this->_ptr));
+}
+inline Ref<RxObservable> last_or_default(const Variant& default_value = Variant()) {
+    return RxObservable::wrap(Operators::last_or_default_(default_value)(this->_ptr));
+}
+inline Ref<RxObservable> last_or_default_predicated(const Callable& predicate, const Variant& default_value = Variant()) {
+    return RxObservable::wrap(Operators::last_or_default_(
+        default_value,
+        [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
+    )(this->_ptr));
+}
+inline Ref<RxObservable> last() {
+    return RxObservable::wrap(Operators::last_()(this->_ptr));
+}
+inline Ref<RxObservable> last_predicated(const Callable& predicate) {
+    return RxObservable::wrap(Operators::last_(
+        [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
+    )(this->_ptr));
+}

@@ -48,8 +48,8 @@ public:
         const std::shared_ptr<SchedulerBase>& scheduler = nullptr
     ) override;
     
-    template <typename... Args>
-    inline auto pipe(Args... fns) {
+    template <typename... Ops>
+    inline auto pipe(Ops... fns) {
         return rx::pipe::pipe(getptr(), fns...);
     }
 

@@ -6,6 +6,9 @@
 template<typename KeyT, typename... ArgsT>
 using mapper_t = std::function<KeyT(ArgsT...)>;
 
+template<typename KeyT, typename T>
+using mapper_indexed_t = mapper_t<KeyT, T, uint64_t>;
+
 template<typename... ArgsT>
 using predicate_t = std::function<bool(ArgsT...)>;
 

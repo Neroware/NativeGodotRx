@@ -88,6 +88,20 @@ public:
     }
 };
 
+class SequenceContainsNoElementsException : public rx_exception
+{
+
+public:
+    SequenceContainsNoElementsException(){}
+
+    virtual const char* what() const noexcept override {
+        return "The provided sequence does not contain an element!";
+    }
+    virtual const char* type() const noexcept override {
+        return "SequenceContainsNoElementsException";
+    }
+};
+
 } // END namespace exception
 
 typedef std::function<bool(const std::exception_ptr& e)> handler_t;

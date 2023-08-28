@@ -12,6 +12,8 @@
 
 using namespace godot;
 
+#define VNULL Variant()
+
 #define SUBSCRIBE(observer, scheduler_default) [=](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler_default) -> std::shared_ptr<DisposableBase>
 #define OP(source) [=](const std::shared_ptr<Observable>& source) -> std::shared_ptr<Observable>
 #define ACTION(scheduler__, state) [=](const std::shared_ptr<SchedulerBase>& scheduler__, const Variant& state = Variant()) -> std::shared_ptr<DisposableBase>
