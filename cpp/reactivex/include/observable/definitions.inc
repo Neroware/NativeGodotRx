@@ -130,3 +130,15 @@ inline static Ref<RxObservable> with_latest_from(Ref<RxObservable> parent, const
 inline static Ref<RxObservable> zip(const TypedArray<RxObservable>& sources) {
     return RxObservable::wrap(Observables::zip_(array_container<RxObservable, Observable>(sources)));
 }
+
+
+inline Ref<RxObservable> filter(const Callable& predicate) {
+    return RxObservable::wrap(Operators::filter_(
+        [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
+    )(this->_ptr));
+}
+inline Ref<RxObservable> filter_indexed(const Callable& predicate) {
+    return RxObservable::wrap(Operators::filter_indexed_(
+        [predicate](const Variant& v, uint64_t i) -> bool { return predicate.callv(Array::make(v, i)); }
+    )(this->_ptr));
+}

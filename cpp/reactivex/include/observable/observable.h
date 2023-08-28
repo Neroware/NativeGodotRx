@@ -62,6 +62,7 @@ private:
 };
 
 typedef std::function<std::shared_ptr<Observable>(const std::shared_ptr<SchedulerBase>&)> observable_factory_t;
+typedef std::function<std::shared_ptr<Observable>(const std::shared_ptr<Observable>&)> observable_op_t;
 
 } // END namespace rx::observable
 

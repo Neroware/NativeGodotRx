@@ -23,6 +23,8 @@
 #include "observable/withlatestfrom.h"
 #include "observable/zip.h"
 
+#include "observable/operators/_filter.h"
+
 namespace rx::observable {
 
 struct Observables {
@@ -110,6 +112,17 @@ static std::shared_ptr<Observable> zip_(const T& sources) {
 
 }; // END struct Observables
 
+struct Operators {
+
+static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
+    return rx::observable::filter_(predicate);
+}
+static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate) {
+    return rx::observable::filter_indexed_(predicate);
+}
+
+}; // END struct Operators
+
 } // END namespace rx::observable
 
 #define OBSERVABLE_CONSTRUCTORS_BINDS \
@@ -137,5 +150,8 @@ static std::shared_ptr<Observable> zip_(const T& sources) {
     ClassDB::bind_static_method("RxObservable", D_METHOD("with_latest_from", "parent", "sources"), &RxObservable::with_latest_from); \
     ClassDB::bind_static_method("RxObservable", D_METHOD("zip", "sources"), &RxObservable::zip); \
 
+#define OBSERVABLE_OPERATOR_BINDS \
+    ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter); \
+    ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed); \
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H
