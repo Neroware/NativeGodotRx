@@ -4,7 +4,11 @@ var custom_signal_emitted = null
 
 func _ready():
 	
-	RxObservable.periodic_timer(1.0).filter(func(i): return i % 2 == 0) \
+#	RxObservable.periodic_timer(1.0).filter(func(i): return i % 2 == 0) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+	
+	RxObservable.periodic_timer(1.0).amb(RxObservable.periodic_timer(0.5)) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

@@ -142,3 +142,8 @@ inline Ref<RxObservable> filter_indexed(const Callable& predicate) {
         [predicate](const Variant& v, uint64_t i) -> bool { return predicate.callv(Array::make(v, i)); }
     )(this->_ptr));
 }
+inline Ref<RxObservable> amb(Ref<RxObservable> right_source) {
+    return RxObservable::wrap(Operators::amb_(
+        RxObservable::unwrap(right_source)
+    )(this->_ptr));
+}

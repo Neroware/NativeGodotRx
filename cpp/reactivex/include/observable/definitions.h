@@ -24,6 +24,7 @@
 #include "observable/zip.h"
 
 #include "observable/operators/_filter.h"
+#include "observable/operators/_amb.h"
 
 namespace rx::observable {
 
@@ -120,6 +121,9 @@ static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
 static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate) {
     return rx::observable::filter_indexed_(predicate);
 }
+static observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
+    return rx::observable::amb_(right_source);
+}
 
 }; // END struct Operators
 
@@ -153,5 +157,6 @@ static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>
 #define OBSERVABLE_OPERATOR_BINDS \
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter); \
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed); \
+    ClassDB::bind_method(D_METHOD("amb", "right_source"), &RxObservable::amb); \
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H
