@@ -13,6 +13,8 @@ namespace rx::scheduler {
 
 class CurrentThreadScheduler : public TrampolineScheduler {
 
+public:
+    static std::shared_ptr<variant_key_t> cls;
 private:
     weakkey_dictionary<variant_key_t, std::shared_ptr<Trampoline>> _tramps;
 
@@ -27,6 +29,8 @@ public:
     std::shared_ptr<Trampoline> get_trampoline() override;
 
 }; // END CurrentThreadScheduler
+
+inline std::shared_ptr<variant_key_t> CurrentThreadScheduler::cls = nullptr;
 
 
 class _CurrentThreadScheduler_Local {

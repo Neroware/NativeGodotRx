@@ -5,9 +5,6 @@
 namespace rx::scheduler {
 
 std::shared_ptr<CurrentThreadScheduler> CurrentThreadScheduler::singleton() {
-    auto cls = std::make_shared<variant_key_t>("CurrentThreadScheduler");
-    // auto& global = GDRX->CurrentThreadScheduler_global_;
-
     auto thread = std::make_shared<variant_key_t>(RxThread::get_current_thread());
     auto& class_map = GDRX->CurrentThreadScheduler_global_[cls];
     

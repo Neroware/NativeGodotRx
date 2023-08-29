@@ -20,7 +20,8 @@
 #include "scheduler/scenetreetimeoutscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
-#define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
+#define GDRX __GDRxSingleton__::singleton()
+// #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
 
 using namespace godot;
 using namespace rx::scheduler;
@@ -47,6 +48,7 @@ public:
     const Ref<NotSet> NOT_SET = memnew(NotSet);
 
 private:
+    static __GDRxSingleton__* p_instance;
 
 protected:
 	static inline void _bind_methods() {
@@ -57,7 +59,17 @@ protected:
     }
 
 public:
+    inline static __GDRxSingleton__* singleton() {
+        return __GDRxSingleton__::p_instance;
+    }
+
     __GDRxSingleton__(){
+        // Singleton values
+        {
+            __GDRxSingleton__::p_instance = this;
+            CurrentThreadScheduler::cls = std::make_shared<variant_key_t>("CurrentThreadScheduler");
+        }
+
         // Insert Main Thread
         {
             std::unique_lock<std::shared_mutex> writeLock(this->THREAD_MANAGER->thread_registry.first);
@@ -88,6 +100,8 @@ public:
         this->iter(it)->enumerate(what);
     }
 };
+
+inline __GDRxSingleton__* __GDRxSingleton__::p_instance = nullptr;
 
 }; // END namespace rx
 
