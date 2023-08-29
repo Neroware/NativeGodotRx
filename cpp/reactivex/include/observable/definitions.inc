@@ -137,7 +137,10 @@ inline Ref<RxObservable> filter(const Callable& predicate) {
         [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
     )(this->_ptr));
 }
-inline Ref<RxObservable> filter_indexed(const Callable& predicate) {
+inline Ref<RxObservable> filter_indexed(const Callable& predicate = Callable()) {
+    if (predicate.is_null()) {
+        return RxObservable::wrap(Operators::filter_indexed_()(this->_ptr));
+    }
     return RxObservable::wrap(Operators::filter_indexed_(
         [predicate](const Variant& v, uint64_t i) -> bool { return predicate.callv(Array::make(v, i)); }
     )(this->_ptr));
@@ -150,24 +153,27 @@ inline Ref<RxObservable> amb(Ref<RxObservable> right_source) {
 inline Ref<RxObservable> as_observable() {
     return RxObservable::wrap(Operators::as_observable_()(this->_ptr));
 }
-inline Ref<RxObservable> map(const Callable& mapper) {
+inline Ref<RxObservable> map(const Callable& mapper = Callable()) {
+    if (mapper.is_null()) {
+        return RxObservable::wrap(Operators::map_()(this->_ptr));
+    }
     return RxObservable::wrap(Operators::map_(
         [mapper](const Variant& v) -> Variant { return mapper.callv(Array::make(v)); }
     )(this->_ptr));
 }
-inline Ref<RxObservable> last_or_default(const Variant& default_value = Variant()) {
-    return RxObservable::wrap(Operators::last_or_default_(default_value)(this->_ptr));
-}
-inline Ref<RxObservable> last_or_default_predicated(const Callable& predicate, const Variant& default_value = Variant()) {
+inline Ref<RxObservable> last_or_default(const Variant& default_value = Variant(), const Callable& predicate = Callable()) {
+    if (predicate.is_null()) {
+        return RxObservable::wrap(Operators::last_or_default_(default_value)(this->_ptr));
+    }
     return RxObservable::wrap(Operators::last_or_default_(
         default_value,
         [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
     )(this->_ptr));
 }
-inline Ref<RxObservable> last() {
-    return RxObservable::wrap(Operators::last_()(this->_ptr));
-}
-inline Ref<RxObservable> last_predicated(const Callable& predicate) {
+inline Ref<RxObservable> last(const Callable& predicate = Callable()) {
+    if (predicate.is_null()) {
+        return RxObservable::wrap(Operators::last_()(this->_ptr));
+    }
     return RxObservable::wrap(Operators::last_(
         [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
     )(this->_ptr));

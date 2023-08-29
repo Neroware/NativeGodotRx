@@ -122,7 +122,7 @@ struct Operators {
 static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
     return rx::observable::filter_(predicate);
 }
-static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate) {
+static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate = nullptr) {
     return rx::observable::filter_indexed_(predicate);
 }
 static observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
@@ -131,7 +131,7 @@ static observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
 static observable_op_t as_observable_() {
     return rx::observable::as_observable_();
 }
-static observable_op_t map_(const mapper_t<Variant, const Variant&>& mapper) {
+static observable_op_t map_(const mapper_t<Variant, const Variant&>& mapper = nullptr) {
     return rx::observable::map_(mapper);
 }
 // TODO map_indexed
@@ -173,13 +173,11 @@ static observable_op_t last_(const predicate_t<const Variant&>& predicate = null
 
 #define OBSERVABLE_OPERATOR_BINDS \
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter); \
-    ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed); \
+    ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(Callable())); \
     ClassDB::bind_method(D_METHOD("amb", "right_source"), &RxObservable::amb); \
     ClassDB::bind_method(D_METHOD("as_observable"), &RxObservable::as_observable); \
-    ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map); \
-    ClassDB::bind_method(D_METHOD("last_or_default", "default_value"), &RxObservable::last_or_default, DEFVAL(Variant())); \
-    ClassDB::bind_method(D_METHOD("last_or_default_predicated", "predicate", "default_value"), &RxObservable::last_or_default_predicated, DEFVAL(Variant())); \
-    ClassDB::bind_method(D_METHOD("last"), &RxObservable::last); \
-    ClassDB::bind_method(D_METHOD("last_predicated", "predicate"), &RxObservable::last_predicated); \
+    ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map, DEFVAL(Callable())); \
+    ClassDB::bind_method(D_METHOD("last_or_default", "default_value", "predicate"), &RxObservable::last_or_default, DEFVAL(Variant()), DEFVAL(Callable())); \
+    ClassDB::bind_method(D_METHOD("last", "predicate"), &RxObservable::last, DEFVAL(Callable())); \
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

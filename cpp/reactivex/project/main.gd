@@ -17,9 +17,11 @@ func _ready():
 #		.dispose_with(self)
 	
 	RxObservable.from_iterable([1, 2, 3]) \
-		.last() \
+		.last(func(i): return i % 2 == 0) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
+	
+	RxObservable.just(21).map(func(i): return i * 2).subscribe(func(i): print(">>> ", i))
 	
 #	var example: Example = $Example
 #

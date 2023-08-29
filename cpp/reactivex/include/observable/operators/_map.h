@@ -10,13 +10,15 @@ using namespace rx::disposable;
 
 namespace rx::observable {
 
-observable_op_t map_(const mapper_t<Variant, const Variant&>& mapper) {
+observable_op_t map_(const mapper_t<Variant, const Variant&>& mapper = nullptr) {
+
+    auto _mapper = mapper ? mapper : basic::identity<const Variant&>;
 
     observable_op_t map = OP(source) {
         subscription_t subscribe = SUBSCRIBE(obv, scheduler = nullptr) {
             auto on_next = [=](const Variant& value) {
                 try {
-                    auto result = mapper(value);
+                    Variant result = _mapper(value);
                     obv->on_next(result);
                 } catch (...) {
                     obv->on_error(std::current_exception());

@@ -40,7 +40,7 @@ static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
     return filter;
 }
 
-static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate) {
+static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate = nullptr) {
 
     observable_op_t filter = OP(source) {
 
@@ -49,15 +49,17 @@ static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>
             auto count = std::make_shared<uint64_t>(0);
 
             on_next_t on_next = [=](const Variant& value) {
-                bool should_run;
-                try {
-                    should_run = predicate(value, *count);
+                bool should_run = true;
+                if (predicate) {
+                    try {
+                        should_run = predicate(value, *count);
+                    }
+                    catch(...) {
+                        observer->on_error(std::current_exception());
+                        return;
+                    }
+                    (*count)++;
                 }
-                catch(...) {
-                    observer->on_error(std::current_exception());
-                    return;
-                }
-                (*count)++;
 
                 if (should_run) {
                     observer->on_next(value);
