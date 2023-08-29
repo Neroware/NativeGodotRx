@@ -12,6 +12,7 @@
 #include "internal/iterator.h"
 #include "internal/thread.h"
 #include "internal/weakkeydictionary.h"
+#include "internal/utils.h"
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
@@ -41,6 +42,9 @@ public:
     const std::shared_ptr<ImmediateScheduler> ImmediateScheduler_ = ImmediateScheduler::get();
     const std::shared_ptr<TimeoutScheduler> TimeoutScheduler_ = TimeoutScheduler::get();
     std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_;
+
+    /* Not Set */
+    const Ref<NotSet> NOT_SET = memnew(NotSet);
 
 private:
 

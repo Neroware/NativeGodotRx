@@ -7,7 +7,7 @@
 
 namespace rx::observable {
 
-observable_op_t all_(const predicate_t<const Variant&>& predicate) {
+observable_op_t all_(const predicate_t<Variant>& predicate) {
 
     // TODO
 

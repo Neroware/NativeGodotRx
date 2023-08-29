@@ -15,7 +15,7 @@ using namespace rx::disposable;
 
 namespace rx::observable {
 
-observable_op_t last_(const predicate_t<const Variant&>& predicate = nullptr) {
+observable_op_t last_(const predicate_t<Variant>& predicate = nullptr) {
     observable_op_t last = OP(source) {
         if (predicate) {
             return source->pipe(

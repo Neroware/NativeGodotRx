@@ -178,3 +178,21 @@ inline Ref<RxObservable> last(const Callable& predicate = Callable()) {
         [predicate](const Variant& v) -> bool { return predicate.callv(Array::make(v)); }
     )(this->_ptr));
 }
+inline Ref<RxObservable> scan(const Callable& accumulator, const Variant& seed = NotSet::value()) {
+    return RxObservable::wrap(Operators::scan_(
+        [accumulator](const Variant& state, const Variant& x) -> Variant { 
+            return accumulator.callv(Array::make(state, x)); 
+        },
+        seed
+    )(this->_ptr));
+}
+inline Ref<RxObservable> average(const Callable& key_mapper = Callable()) {
+    if (key_mapper.is_null()) {
+        return RxObservable::wrap(rx::observable::average_()(this->_ptr));
+    }
+    return RxObservable::wrap(rx::observable::average_(
+        [key_mapper](const Variant& x) -> double {
+            return key_mapper.callv(Array::make(x));
+        }
+    )(this->_ptr));
+}

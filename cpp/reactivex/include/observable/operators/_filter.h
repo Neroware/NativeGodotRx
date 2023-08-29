@@ -7,7 +7,7 @@
 
 namespace rx::observable {
 
-static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
+static observable_op_t filter_(const predicate_t<Variant>& predicate) {
 
     observable_op_t filter = OP(source) {
 
@@ -40,7 +40,7 @@ static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
     return filter;
 }
 
-static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate = nullptr) {
+static observable_op_t filter_indexed_(const predicate_indexed_t<Variant>& predicate = nullptr) {
 
     observable_op_t filter = OP(source) {
 

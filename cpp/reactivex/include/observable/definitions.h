@@ -29,6 +29,8 @@
 #include "observable/operators/_map.h"
 #include "observable/operators/_lastordefault.h"
 #include "observable/operators/_last.h"
+#include "observable/operators/_scan.h"
+#include "observable/operators/_average.h"
 
 namespace rx::observable {
 
@@ -74,8 +76,8 @@ inline static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<I
 }
 inline static std::shared_ptr<Observable> generate_(
     const Variant& initial_state, 
-    const predicate_t<const Variant&>& condition,
-    const mapper_t<Variant, const Variant&>& iterate
+    const predicate_t<Variant>& condition,
+    const mapper_t<Variant, Variant>& iterate
 ) {
     return rx::observable::generate_(initial_state, condition, iterate);
 }
@@ -104,14 +106,14 @@ inline static std::shared_ptr<Observable> using_(
     return rx::observable::using_(resource_factory, observable_factory);
 }
 template<typename T>
-static std::shared_ptr<Observable> with_latest_from_(
+inline static std::shared_ptr<Observable> with_latest_from_(
     const std::shared_ptr<Observable>& parent,
     const T& sources
 ) {
     return rx::observable::with_latest_from_(parent, sources);
 }
 template<typename T>
-static std::shared_ptr<Observable> zip_(const T& sources) {
+inline static std::shared_ptr<Observable> zip_(const T& sources) {
     return rx::observable::zip_(sources);
 }
 
@@ -119,27 +121,33 @@ static std::shared_ptr<Observable> zip_(const T& sources) {
 
 struct Operators {
 
-static observable_op_t filter_(const predicate_t<const Variant&>& predicate) {
+inline static observable_op_t filter_(const predicate_t<Variant>& predicate) {
     return rx::observable::filter_(predicate);
 }
-static observable_op_t filter_indexed_(const predicate_indexed_t<const Variant&>& predicate = nullptr) {
+inline static observable_op_t filter_indexed_(const predicate_indexed_t<Variant>& predicate = nullptr) {
     return rx::observable::filter_indexed_(predicate);
 }
-static observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
+inline static observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
     return rx::observable::amb_(right_source);
 }
-static observable_op_t as_observable_() {
+inline static observable_op_t as_observable_() {
     return rx::observable::as_observable_();
 }
-static observable_op_t map_(const mapper_t<Variant, const Variant&>& mapper = nullptr) {
+inline static observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr) {
     return rx::observable::map_(mapper);
 }
 // TODO map_indexed
-static observable_op_t last_or_default_(const Variant& default_value = Variant(), const predicate_t<const Variant&>& predicate = nullptr) {
+inline static observable_op_t last_or_default_(const Variant& default_value = Variant(), const predicate_t<Variant>& predicate = nullptr) {
     return rx::observable::last_or_default_(default_value, predicate);
 }
-static observable_op_t last_(const predicate_t<const Variant&>& predicate = nullptr) {
+inline static observable_op_t last_(const predicate_t<Variant>& predicate = nullptr) {
     return rx::observable::last_(predicate);
+}
+inline static observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) {
+    return rx::observable::scan_(accumulator, seed);
+}
+inline static observable_op_t average_(const mapper_t<double, Variant>& key_mapper = nullptr) {
+    return rx::observable::average_(key_mapper);
 }
 
 }; // END struct Operators
@@ -179,5 +187,7 @@ static observable_op_t last_(const predicate_t<const Variant&>& predicate = null
     ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map, DEFVAL(Callable())); \
     ClassDB::bind_method(D_METHOD("last_or_default", "default_value", "predicate"), &RxObservable::last_or_default, DEFVAL(Variant()), DEFVAL(Callable())); \
     ClassDB::bind_method(D_METHOD("last", "predicate"), &RxObservable::last, DEFVAL(Callable())); \
+    ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet))); \
+    ClassDB::bind_method(D_METHOD("average", "key_mapper"), &RxObservable::average, DEFVAL(Callable())); \
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

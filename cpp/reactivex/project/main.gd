@@ -16,12 +16,18 @@ func _ready():
 #		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 #		.dispose_with(self)
 	
-	RxObservable.from_iterable([1, 2, 3]) \
-		.last(func(i): return i % 2 == 0) \
+	#RxObservable.from_iterable([1, 2, 3]) \
+	#	.last(func(i): return i % 2 == 0) \
+	#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	#	.dispose_with(self)
+	
+	RxObservable.from([1, 2, 3, 4]).scan(func(state, x): return state + x, -1) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
-	RxObservable.just(21).map(func(i): return i * 2).subscribe(func(i): print(">>> ", i))
+	RxObservable.from([1, 2, 3, 4]).average() \
+		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+		.dispose_with(self)
 	
 #	var example: Example = $Example
 #

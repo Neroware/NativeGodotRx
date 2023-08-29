@@ -10,7 +10,7 @@ using namespace rx::disposable;
 
 namespace rx::observable {
 
-observable_op_t map_(const mapper_t<Variant, const Variant&>& mapper = nullptr) {
+observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr) {
 
     auto _mapper = mapper ? mapper : basic::identity<const Variant&>;
 

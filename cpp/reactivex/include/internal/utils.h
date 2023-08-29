@@ -2,6 +2,8 @@
 #define RX_UTILS_H
 
 #include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
+
 #include <memory>
 #include <functional>
 
@@ -38,10 +40,25 @@ using namespace godot;
 
 namespace rx {
 
-typedef std::shared_ptr<DisposableBase> disposable_t;
-typedef std::shared_ptr<ObservableBase> observable_t;
-typedef std::shared_ptr<ObserverBase> observer_t;
-typedef std::shared_ptr<SchedulerBase> scheduler_t;
+class NotSet : public RefCounted {
+    GDCLASS(NotSet, RefCounted)
+public:
+    static bool is(const Variant& v);
+    static Ref<NotSet> value();
+protected:
+    inline static void _bind_methods() {
+        ClassDB::bind_static_method("NotSet", D_METHOD("is", "value"), &NotSet::is);
+        ClassDB::bind_static_method("NotSet", D_METHOD("value"), &NotSet::value);
+    }
+};
+
+#define NOT_SET(x) NotSet::is(x)
+#define IS_SET(x) !NotSet::is(x)
+
+typedef std::shared_ptr<rx::abstract::DisposableBase> disposable_t;
+typedef std::shared_ptr<rx::abstract::ObservableBase> observable_t;
+typedef std::shared_ptr<rx::abstract::ObserverBase> observer_t;
+typedef std::shared_ptr<rx::abstract::SchedulerBase> scheduler_t;
 
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {

@@ -12,8 +12,8 @@ namespace rx::observable {
 
 static std::shared_ptr<Observable> generate_(
     const Variant& initial_state, 
-    const predicate_t<const Variant&>& condition,
-    const mapper_t<Variant, const Variant&>& iterate
+    const predicate_t<Variant>& condition,
+    const mapper_t<Variant, Variant>& iterate
 ) {
 
     subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {

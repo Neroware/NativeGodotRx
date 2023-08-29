@@ -21,6 +21,7 @@
 // internal
 #include "internal/time.h"
 #include "internal/thread.h"
+#include "internal/utils.h"
 // wrappers
 #include "wrapper/abstract.h"
 #include "wrapper/scheduler.h"
@@ -54,6 +55,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::ItEnd>();
 	ClassDB::register_class<rx::RxThread>();
 	ClassDB::register_class<rx::RxMainThread>();
+	ClassDB::register_class<rx::NotSet>();
 	// abstract
 	ClassDB::register_abstract_class<rx::wrappers::RxLockBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxDisposableBase>();

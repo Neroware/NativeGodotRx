@@ -48,7 +48,7 @@ std::shared_ptr<Observable> last_or_default_async_(
 
 observable_op_t last_or_default_(
     const Variant& default_value = VNULL,
-    const predicate_t<const Variant&>& predicate = nullptr) {
+    const predicate_t<Variant>& predicate = nullptr) {
 
     observable_op_t last_or_default = OP(source) {
         if (predicate) {
