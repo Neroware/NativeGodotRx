@@ -36,7 +36,7 @@ std::shared_ptr<DisposableBase> SceneTreeTimeoutScheduler::schedule(const action
         _cancel_timer(timer);
     };
 
-    return std::make_shared<CompositeDisposable>(disposable_list_t{sad, std::make_shared<Disposable>(dispose)});
+    return std::make_shared<CompositeDisposable>(sad, std::make_shared<Disposable>(dispose));
 }
 
 std::shared_ptr<DisposableBase> SceneTreeTimeoutScheduler::schedule_relative(const time_delta_t& duetime, const action_t& action, const Variant& state) {
@@ -60,7 +60,7 @@ std::shared_ptr<DisposableBase> SceneTreeTimeoutScheduler::schedule_relative(con
         _cancel_timer(timer);
     };
 
-    return std::make_shared<CompositeDisposable>(disposable_list_t{sad, std::make_shared<Disposable>(dispose)});
+    return std::make_shared<CompositeDisposable>(sad, std::make_shared<Disposable>(dispose));
 }
 
 std::shared_ptr<DisposableBase> SceneTreeTimeoutScheduler::schedule_absolute(const time_point_t& duetime, const action_t& action, const Variant& state) {

@@ -31,12 +31,12 @@ static std::shared_ptr<Observable> using_(
         }
         catch(...) {
             auto d = throw_(std::current_exception())->subscribe(observer, scheduler);
-            return std::make_shared<CompositeDisposable>(disposable_list_t{d, disp});
+            return std::make_shared<CompositeDisposable>(d, disp);
         }
 
-        return std::make_shared<CompositeDisposable>(disposable_list_t{
+        return std::make_shared<CompositeDisposable>(
             source->subscribe(observer, scheduler), disp
-        });
+        );
 
     };
 

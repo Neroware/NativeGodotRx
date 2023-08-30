@@ -60,9 +60,7 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
         };
 
         cancelable->set_disposable(scheduler->schedule(RECURSIVE_ACTION_FWD(action)));
-        return std::make_shared<CompositeDisposable>(std::initializer_list<std::shared_ptr<DisposableBase>>{
-            subscription, cancelable
-        });
+        return std::make_shared<CompositeDisposable>(subscription, cancelable);
 
     };
 

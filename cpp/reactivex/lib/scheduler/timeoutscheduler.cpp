@@ -33,8 +33,7 @@ std::shared_ptr<DisposableBase> TimeoutScheduler::schedule(const action_t& actio
         *cancel = true;
     };
 
-    disposable_list_t disps = {sad, std::make_shared<Disposable>(dispose)};
-    return std::make_shared<CompositeDisposable>(disps);
+    return std::make_shared<CompositeDisposable>(sad, std::make_shared<Disposable>(dispose));
 }
 
 std::shared_ptr<DisposableBase> TimeoutScheduler::schedule_relative(const time_delta_t& duetime, const action_t& action, const Variant& state) {
@@ -59,8 +58,7 @@ std::shared_ptr<DisposableBase> TimeoutScheduler::schedule_relative(const time_d
         *cancel = true;
     };
 
-    disposable_list_t disps = {sad, std::make_shared<Disposable>(dispose)};
-    return std::make_shared<CompositeDisposable>(disps);
+    return std::make_shared<CompositeDisposable>(sad, std::make_shared<Disposable>(dispose));
 }
 
 std::shared_ptr<DisposableBase> TimeoutScheduler::schedule_absolute(const time_point_t& duetime, const action_t& action, const Variant& state) {

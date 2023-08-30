@@ -65,9 +65,9 @@ static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
             *is_disposed = true;
         };
 
-        return std::make_shared<CompositeDisposable>(std::initializer_list<std::shared_ptr<DisposableBase>>{
+        return std::make_shared<CompositeDisposable>(
             subscription, cancelable, std::make_shared<Disposable>(dispose)
-        });
+        );
     };
 
     return Observable::get(subscribe);

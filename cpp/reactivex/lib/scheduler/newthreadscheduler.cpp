@@ -8,12 +8,12 @@ namespace rx::scheduler {
 
 std::shared_ptr<DisposableBase> NewThreadScheduler::schedule(const action_t& action, const Variant& state) {
     auto scheduler = EventLoopScheduler::get(this->_thread_factory, true);
-    return std::make_shared<CompositeDisposable>(disposable_list_t{scheduler->schedule(action, state), scheduler});
+    return std::make_shared<CompositeDisposable>(scheduler->schedule(action, state), scheduler);
 }
 
 std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_relative(const time_delta_t& duetime, const action_t& action, const Variant& state) {
     auto scheduler = EventLoopScheduler::get(this->_thread_factory, true);
-    return std::make_shared<CompositeDisposable>(disposable_list_t{scheduler->schedule_relative(duetime, action, state), scheduler});
+    return std::make_shared<CompositeDisposable>(scheduler->schedule_relative(duetime, action, state), scheduler);
 }
 
 std::shared_ptr<DisposableBase> NewThreadScheduler::schedule_absolute(const time_point_t& duetime, const action_t& action, const Variant& state) {

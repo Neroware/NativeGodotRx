@@ -106,7 +106,7 @@ observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
                 on_next_right, on_error_right, on_completed_right, scheduler);
             right_subscription->set_disposable(right_d);
 
-            return std::make_shared<CompositeDisposable>(disposable_list_t{left_subscription, right_subscription});
+            return std::make_shared<CompositeDisposable>(left_subscription, right_subscription);
         };
 
         return Observable::get(subscribe);

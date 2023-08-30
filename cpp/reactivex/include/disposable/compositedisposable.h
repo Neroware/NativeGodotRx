@@ -30,6 +30,10 @@ public:
     CompositeDisposable(const ContainerT& items) {
         for (auto& item : items) this->disposable.push_back(item);
     }
+    template<typename... Args>
+    CompositeDisposable(const Args&... items) {
+        this->disposable = disposable_list_t{items...};
+    }
     ~CompositeDisposable(){ this->dispose(); }
 
     void dispose() override;

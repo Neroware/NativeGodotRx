@@ -39,6 +39,11 @@ func _ready():
 	var t1 = Time.get_ticks_msec()
 	print(">>> ", t1 - t0, "ms")
 	
+	var d1 = RxDisposable.get(func(): print("Dispose 1"))
+	var d2 = RxDisposable.get(func(): print("Dispose 2"))
+	var d3 = RxCompositeDisposable.get([d1, d2])
+	d3.dispose()
+	
 #	get_tree().quit()
 	
 #	var example: Example = $Example

@@ -36,9 +36,9 @@ static std::shared_ptr<Observable> from_iterable_(const std::shared_ptr<Iterable
         };
 
         auto disp = std::make_shared<Disposable>(dispose);
-        return std::make_shared<CompositeDisposable>(std::initializer_list<std::shared_ptr<DisposableBase>>{
+        return std::make_shared<CompositeDisposable>(
             _scheduler->schedule(action), disp
-        });
+        );
     };
 
     return Observable::get(subscribe);
