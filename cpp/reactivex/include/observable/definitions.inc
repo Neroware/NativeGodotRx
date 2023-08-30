@@ -196,3 +196,22 @@ inline Ref<RxObservable> average(const Callable& key_mapper = Callable()) {
         }
     )(this->_ptr));
 }
+inline Ref<RxObservable> catch_with_handler(const Variant& handler) {
+    if (auto obs = DYN_CAST_OR_NULL(handler, RxObservable)) {
+        return RxObservable::wrap(Operators::catch_(
+            RxObservable::unwrap(obs)
+        )(this->_ptr));
+    }
+    if (IS_TYPE(handler, CALLABLE)) {
+        Callable _handler = handler;
+        return RxObservable::wrap(Operators::catch_(
+            [_handler](const std::exception_ptr& error, const std::shared_ptr<Observable> observable) -> std::shared_ptr<Observable> {
+                return RxObservable::unwrap(_handler.callv(Array::make(
+                    RxError::wrap(error),
+                    RxObservable::wrap(observable)
+                )));
+            }
+        )(this->_ptr));
+    }
+    return RxObservable::wrap(this->_ptr);
+}

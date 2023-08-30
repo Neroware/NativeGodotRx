@@ -31,6 +31,7 @@
 #include "observable/operators/_last.h"
 #include "observable/operators/_scan.h"
 #include "observable/operators/_average.h"
+#include "observable/operators/_catch.h"
 
 namespace rx::observable {
 
@@ -149,6 +150,12 @@ inline static observable_op_t scan_(const accumulator_t<Variant, Variant>& accum
 inline static observable_op_t average_(const mapper_t<double, Variant>& key_mapper = nullptr) {
     return rx::observable::average_(key_mapper);
 }
+inline static observable_op_t catch_(const std::shared_ptr<Observable>& handler) {
+    return rx::observable::catch_(handler);
+}
+inline static observable_op_t catch_(const handler_t& handler) {
+    return rx::observable::catch_(handler);
+}
 
 }; // END struct Operators
 
@@ -189,5 +196,6 @@ inline static observable_op_t average_(const mapper_t<double, Variant>& key_mapp
     ClassDB::bind_method(D_METHOD("last", "predicate"), &RxObservable::last, DEFVAL(Callable())); \
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet))); \
     ClassDB::bind_method(D_METHOD("average", "key_mapper"), &RxObservable::average, DEFVAL(Callable())); \
+    ClassDB::bind_method(D_METHOD("catch_with", "handler"), &RxObservable::catch_with_handler); \
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

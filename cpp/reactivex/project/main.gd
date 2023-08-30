@@ -21,13 +21,25 @@ func _ready():
 	#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 	#	.dispose_with(self)
 	
-	RxObservable.from([1, 2, 3, 4]).scan(func(state, x): return state + x, -1) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+#	RxObservable.from([1, 2, 3, 4]).scan(func(state, x): return state + x, -1) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
-	RxObservable.from([1, 2, 3, 4]).average() \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+	var scheduler = RxCurrentThreadScheduler.singleton()
+	var ims = RxImmediateScheduler.singleton()
+	
+	const N_REPEATS = 10000
+	
+	var obs = RxObservable.just(42) #RxObservable.from([1, 2, 3, 4], ims).average()
+	
+	var t0 = Time.get_ticks_msec()
+	for __ in N_REPEATS:
+		obs.subscribe()
+		#RxCurrentThreadScheduler.singleton()
+	var t1 = Time.get_ticks_msec()
+	print(">>> ", t1 - t0, "ms")
+	
+#	get_tree().quit()
 	
 #	var example: Example = $Example
 #

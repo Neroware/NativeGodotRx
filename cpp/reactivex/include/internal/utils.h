@@ -60,6 +60,16 @@ typedef std::shared_ptr<rx::abstract::ObservableBase> observable_t;
 typedef std::shared_ptr<rx::abstract::ObserverBase> observer_t;
 typedef std::shared_ptr<rx::abstract::SchedulerBase> scheduler_t;
 
+typedef std::list<disposable_t> disposable_list_t;
+typedef std::vector<disposable_t> disposable_vec_t;
+
+namespace observable {
+    class Observable;
+}
+typedef std::shared_ptr<rx::observable::Observable> rx_observable_t;
+typedef std::list<rx_observable_t> observable_list_t;
+typedef std::vector<rx_observable_t> observable_vec_t;
+
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {
     for (int i = 0; i < n; i++) {
