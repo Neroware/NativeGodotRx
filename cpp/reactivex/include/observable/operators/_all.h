@@ -5,14 +5,14 @@
 
 #include "typing.h"
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-observable_op_t all_(const predicate_t<Variant>& predicate) {
+static observable_op_t all_(const predicate_t<Variant>& predicate) {
 
     // TODO
 
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_ALL_H

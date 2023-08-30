@@ -73,6 +73,12 @@ static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
     return Observable::get(subscribe);
 }
 
+template<typename... Args>
+static std::shared_ptr<Observable> concat_with_variadic_(const Args&... sources) {
+    std::vector<std::shared_ptr<Observable>> args = {sources...};
+    return concat_with_iterable_(args);
+}
+
 } // END namespace rx::observable
 
 #endif // RX_OBSERVABLE_CONCAT_H

@@ -5,7 +5,7 @@
 
 #include "typing.h"
 
-namespace rx::observable {
+namespace rx::observable::op {
 
 static observable_op_t filter_(const predicate_t<Variant>& predicate) {
 
@@ -78,6 +78,6 @@ static observable_op_t filter_indexed_(const predicate_indexed_t<Variant>& predi
     return filter;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_FILTER_H

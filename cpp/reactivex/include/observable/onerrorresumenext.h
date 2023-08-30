@@ -67,6 +67,12 @@ static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
     return Observable::get(subscribe);
 }
 
+template<typename... Args>
+static std::shared_ptr<Observable> on_error_resume_next_(const Args&... sources) {
+    std::vector<std::shared_ptr<Observable>> args = {sources...};
+    return on_error_resume_next_(args);
+}
+
 } // END namespace rx::observable
 
 #endif // RX_OBSERVABLE_ONERRORRESUMENEXT_H

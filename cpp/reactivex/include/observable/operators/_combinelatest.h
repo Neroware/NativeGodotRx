@@ -4,7 +4,7 @@
 #include "observable/observable.h"
 #include "observable/combinelatest.h"
 
-namespace rx::observable {
+namespace rx::observable::op {
 
 /* template <typename T>
 static observable_op_t combine_latest_(const T& sources) {
@@ -16,6 +16,6 @@ static observable_op_t combine_latest_(const T& sources) {
     return combine_latest_op;
 }*/
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_COMBINE_LATEST_H

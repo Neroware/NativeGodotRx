@@ -6,9 +6,9 @@
 
 using namespace rx::disposable;
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-observable_op_t as_observable_() {
+static observable_op_t as_observable_() {
 
     observable_op_t as_observable = OP(source) {
         subscription_t subscribe = SUBSCRIBE(observer, scheduler = nullptr) {
@@ -22,6 +22,6 @@ observable_op_t as_observable_() {
     return as_observable;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_ASOBSERVABLE_H

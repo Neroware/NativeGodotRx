@@ -12,7 +12,8 @@ using namespace rx::disposable;
 namespace rx::observable {
 
 template<typename T>
-static std::shared_ptr<Observable> zip_(const T& sources) {
+static std::shared_ptr<Observable> zip_(const T& sources_) {
+    observable_vec_t sources(sources_.begin(), sources_.end());
 
     subscription_t subscribe = SUBSCRIBE(observer, scheduler = nullptr) {
        size_t n = sources.size();
@@ -86,6 +87,12 @@ static std::shared_ptr<Observable> zip_(const T& sources) {
     };
 
     return Observable::get(subscribe);
+}
+
+template<typename... Args>
+static std::shared_ptr<Observable> zip_(const Args&... sources) {
+    std::vector<std::shared_ptr<Observable>> args = {sources...};
+    return zip_(args);
 }
 
 }

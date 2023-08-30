@@ -13,9 +13,9 @@
 using namespace rx::exception;
 using namespace rx::disposable;
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-observable_op_t last_(const predicate_t<Variant>& predicate = nullptr) {
+static observable_op_t last_(const predicate_t<Variant>& predicate = nullptr) {
     observable_op_t last = OP(source) {
         if (predicate) {
             return source->pipe(
@@ -30,6 +30,6 @@ observable_op_t last_(const predicate_t<Variant>& predicate = nullptr) {
     return last;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_LAST_H

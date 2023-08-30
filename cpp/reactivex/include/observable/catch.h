@@ -80,6 +80,12 @@ static std::shared_ptr<Observable> catch_with_iterable_(const T& sources) {
     return Observable::get(subscribe);
 }
 
+template<typename... Args>
+static std::shared_ptr<Observable> catch_with_variadic_(const Args&... sources) {
+    observable_vec_t args = {sources...};
+    return catch_with_iterable_(args);
+}
+
 } // END namespace rx::observable
 
 #endif // RX_OBSERVABLE_CATCH_H

@@ -26,11 +26,7 @@ public:
 #include "observable/definitions.inc"
 
 protected:
-    static inline void _bind_methods() {
-        OBSERVABLE_CONSTRUCTORS_BINDS
-        OBSERVABLE_OPERATOR_BINDS
-        RX_WRAPPER_CAST_BINDS(RxObservable)
-    }
+    static void _bind_methods();
 };
 
 } // END namespace wrapper

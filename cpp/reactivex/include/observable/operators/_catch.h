@@ -9,7 +9,7 @@
 #include "typing.h"
 #include "internal/utils.h"
 
-namespace rx::observable {
+namespace rx::observable::op {
 
 using handler_t = std::function<std::shared_ptr<Observable>(const std::exception_ptr&, const std::shared_ptr<Observable>&)>;
 
@@ -64,6 +64,6 @@ static observable_op_t catch_(const handler_t& handler) {
     return _catch;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_CATCH_H

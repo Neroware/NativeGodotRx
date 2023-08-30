@@ -10,9 +10,9 @@
 
 using namespace rx::disposable;
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
+static observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
 
     auto obs = right_source;
 
@@ -115,6 +115,6 @@ observable_op_t amb_(const std::shared_ptr<Observable>& right_source) {
     return amb;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_AMB_H

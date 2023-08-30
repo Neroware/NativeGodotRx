@@ -8,9 +8,9 @@
 
 #include "typing.h"
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) {
+static observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) {
 
     bool has_seed = IS_SET(seed);
 
@@ -39,6 +39,6 @@ observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const 
     return scan;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_SCAN_H

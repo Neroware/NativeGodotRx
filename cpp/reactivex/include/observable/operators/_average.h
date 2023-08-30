@@ -9,7 +9,7 @@
 
 #include "typing.h"
 
-namespace rx::observable {
+namespace rx::observable::op {
 
 static observable_op_t average_(const mapper_t<double, Variant>& key_mapper = nullptr) {
 
@@ -48,6 +48,6 @@ static observable_op_t average_(const mapper_t<double, Variant>& key_mapper = nu
     return average;
 }
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_AVERAGE_H

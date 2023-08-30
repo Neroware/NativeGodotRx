@@ -14,14 +14,15 @@ namespace rx::observable {
 template<typename T>
 static std::shared_ptr<Observable> with_latest_from_(
     const std::shared_ptr<Observable>& parent,
-    const T& sources
+    const T& sources_
 ) {
+    observable_vec_t sources(sources_.begin(), sources_.end());
 
     subscription_t subscribe = SUBSCRIBE(observer, scheduler = nullptr) {
 
         auto subscribeall = [=](
             const std::shared_ptr<Observable>& parent,
-            const T& children
+            const observable_vec_t& children
         ) -> std::vector<std::shared_ptr<SingleAssignmentDisposable>> {
 
             auto n = children.size();
@@ -71,6 +72,12 @@ static std::shared_ptr<Observable> with_latest_from_(
     };
 
     return Observable::get(subscribe);
+}
+
+template<typename... Args>
+static std::shared_ptr<Observable> with_latest_from_(const std::shared_ptr<Observable>& parent, const Args&... sources) {
+    std::vector<std::shared_ptr<Observable>> args = {sources...};
+    return with_latest_from_(parent, args);
 }
 
 }

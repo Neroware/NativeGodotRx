@@ -12,9 +12,9 @@
 using namespace rx::exception;
 using namespace rx::disposable;
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-std::shared_ptr<Observable> last_or_default_async_(
+static std::shared_ptr<Observable> last_or_default_async_(
     const std::shared_ptr<Observable>& source,
     bool has_default = false,
     const Variant& default_value = VNULL) {
@@ -46,7 +46,7 @@ std::shared_ptr<Observable> last_or_default_async_(
 }
 
 
-observable_op_t last_or_default_(
+static observable_op_t last_or_default_(
     const Variant& default_value = VNULL,
     const predicate_t<Variant>& predicate = nullptr) {
 
@@ -65,7 +65,7 @@ observable_op_t last_or_default_(
 }
 
 
-} // END namespace rx::observable
+} // END namespace rx::observable::op
 
 
 

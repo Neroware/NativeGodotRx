@@ -8,9 +8,9 @@
 
 using namespace rx::disposable;
 
-namespace rx::observable {
+namespace rx::observable::op {
 
-observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr) {
+static observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr) {
 
     auto _mapper = mapper ? mapper : basic::identity<const Variant&>;
 
@@ -37,6 +37,8 @@ observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr) {
     return map;
 }
 
-} // END namespace rx::observable
+// TODO map_indexed
+
+} // END namespace rx::observable::op
 
 #endif // RX_OBSERVABLE_OPERATORS_MAP_H

@@ -103,32 +103,6 @@ struct dictionary_mapping {
 
 }; // END dictionary_mapping
 
-template<class WrapperT, class BaseT>
-struct array_container {
-    Array arr;
-
-    array_container(const Array& arr_) 
-        : arr(arr_) {}
-    array_container(const TypedArray<WrapperT>& arr_) 
-        : arr(arr_) {}
-
-    inline const std::shared_ptr<BaseT> operator[](int p_index) const {
-        if (auto wrapper = DYN_CAST(arr[p_index], WrapperT)) {
-            return WrapperT::unwrap(wrapper);
-        }
-        throw BadArgumentException("Iterable contained element of wrong type!");
-    }
-
-    inline size_t size() const {
-        return arr.size();
-    }
-
-    inline bool empty() const {
-        return arr.is_empty();
-    }
-
-}; // END array_container
-
 /**
  * Utility type to wrap around IterableBase to enable C++-style iterations
  * for GDScript-style iterations. Only use this for wrapping between GodotAPI and Rx!
@@ -144,6 +118,12 @@ struct rx_wrapper_iterable {
         : it(it_) {}
     
     struct const_iterator {
+        using difference_type = std::ptrdiff_t;
+        using value_type = std::shared_ptr<BaseT>;
+        using reference = value_type;
+        using pointer = value_type*;
+        using iterator_category = std::input_iterator_tag;
+
         std::shared_ptr<IteratorBase> it;
         bool is_end;
         Variant current;
@@ -195,6 +175,12 @@ struct rx_iterable {
         : it(it_), mapper(mapper_) {}
     
     struct const_iterator {
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using reference = value_type;
+        using pointer = value_type*;
+        using iterator_category = std::input_iterator_tag;
+
         std::function<T(const Variant&)> mapper;
         std::shared_ptr<IteratorBase> it;
         bool is_end;
