@@ -11,12 +11,7 @@ observable_op_t combine_latest_(const T& others_) {
     observable_vec_t others(others_.begin(), others_.end());
 
     observable_op_t combine_latest = OP(source) {
-        observable_vec_t sources(others.size() + 1);
-        sources[0] = source;
-        for (auto i = 1; i < sources.size(); i++) {
-            sources[i] = others[i - 1];
-        }
-        return rx::observable::combine_latest_(sources);
+        return rx::observable::combine_latest_(insert_front(source, others));
     };
 
     return combine_latest;

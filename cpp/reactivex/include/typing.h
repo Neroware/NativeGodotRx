@@ -15,6 +15,12 @@ using predicate_t = std::function<bool(const ArgsT&...)>;
 template<typename T>
 using predicate_indexed_t = predicate_t<T, uint64_t>;
 
+template<typename T>
+using comparer_t = std::function<bool(const T&, const T&)>;
+
+template<typename T>
+using sub_comparer_t = std::function<int(const T&, const T&)>;
+
 template<typename StateT, typename T>
 using accumulator_t = std::function<StateT(const StateT&, const T&)>;
 

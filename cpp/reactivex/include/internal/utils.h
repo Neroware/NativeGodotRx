@@ -107,6 +107,16 @@ static Array tuple(const T& values, int n) {
     return res;
 } 
 
+template <typename T>
+static std::vector<T> insert_front(const T& single, const std::vector<T>& vec) {
+    std::vector<T> res(vec.size() + 1);
+    res[0] = single;
+    for (auto i = 1ul; i < res.size(); i++) {
+        res[i] = vec[i - 1];
+    }
+    return res;
+}
+
 } // END namespace rx
 
 #endif // RX_UTILS_H
