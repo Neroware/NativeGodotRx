@@ -11,7 +11,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t count_(const predicate_t<Variant>& predicate = nullptr) {
+static observable_op_t count_(const predicate_t<Variant>& predicate = nullptr) {
 
     if (predicate) {
         return pipe::compose(

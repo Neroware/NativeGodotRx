@@ -9,7 +9,7 @@
 namespace rx::observable::op {
 
 template<typename T>
-observable_op_t concat_(const T& sources_) {
+static observable_op_t concat_(const T& sources_) {
     observable_vec_t sources(sources_.begin(), sources_.end());
 
     observable_op_t concat = OP(source) {
@@ -20,7 +20,7 @@ observable_op_t concat_(const T& sources_) {
 }
 
 template<typename... Args>
-observable_op_t concat_(const Args&... others) {
+static observable_op_t concat_(const Args&... others) {
 
     observable_op_t concat = OP(source) {
         return concat_with_variadic_(source, others...);

@@ -203,6 +203,13 @@ Ref<RxObservable> RxObservable::zip(const Variant& sources) {
 
 /* OPERATORS HERE */
 
+// _all.h
+inline Ref<RxObservable> RxObservable::all(const Callable& predicate) {
+    return RxObservable::wrap(op::Operators::all(
+        predicate_cb<Variant>(predicate)
+    )(this->_ptr));
+}
+
 // _amb.h
 inline Ref<RxObservable> RxObservable::amb(Ref<RxObservable> right_source) {
     return RxObservable::wrap(op::Operators::amb(
@@ -258,6 +265,31 @@ Ref<RxObservable> RxObservable::combine_latest_with(const Variant **args, GDExte
     UNWRAP_VARIADICS_AND_FORWARD(combine_latest_withv);
 }
 
+
+// _concat.h
+Ref<RxObservable> RxObservable::concat_withv(const Variant& sources) {
+    return RxObservable::wrap(op::Operators::concat(
+        VARIANT_ITERABLE(sources)
+    )(this->_ptr));
+}
+Ref<RxObservable> RxObservable::concat_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+    UNWRAP_VARIADICS_AND_FORWARD(concat_withv);
+}
+
+
+// _contains.h
+Ref<RxObservable> RxObservable::contains(const Variant& value, const Callable& comparer) {
+    return RxObservable::wrap(op::Operators::contains(
+        value, comparer_cb<Variant>(comparer)
+    )(this->_ptr));
+}
+
+// _count.h
+Ref<RxObservable> RxObservable::count(const Callable& predicate) {
+    return RxObservable::wrap(op::Operators::count(predicate_cb<Variant>(predicate))(this->_ptr));
+}
+
+
 // _filter.h
 Ref<RxObservable> RxObservable::filter(const Callable& predicate) {
     return RxObservable::wrap(op::Operators::filter(
@@ -294,6 +326,13 @@ Ref<RxObservable> RxObservable::last_or_default(const Variant& default_value, co
     )(this->_ptr));
 }
 
+// _reduce.h
+Ref<RxObservable> RxObservable::reduce(const Callable& accumulator, const Variant& seed) {
+    return RxObservable::wrap(op::Operators::reduce(
+        accumulator_cb<Variant, Variant>(accumulator), seed
+    )(this->_ptr));
+}
+
 // _map.h
 Ref<RxObservable> RxObservable::map(const Callable& mapper) {
     if (mapper.is_null()) {
@@ -311,6 +350,13 @@ Ref<RxObservable> RxObservable::scan(const Callable& accumulator, const Variant&
             return accumulator.callv(Array::make(state, x)); 
         },
         seed
+    )(this->_ptr));
+}
+
+// _some.h
+Ref<RxObservable> RxObservable::some(const Callable& predicate) {
+    return RxObservable::wrap(op::Operators::some(
+        predicate_cb<Variant>(predicate)
     )(this->_ptr));
 }
 
@@ -366,6 +412,8 @@ void RxObservable::_bind_methods() {
 
     /* OPERATORS */
 
+    ClassDB::bind_method(D_METHOD("all", "predicate"), &RxObservable::all);
+
     ClassDB::bind_method(D_METHOD("amb", "right_source"), &RxObservable::amb);
 
     ClassDB::bind_method(D_METHOD("as_observable"), &RxObservable::as_observable);
@@ -377,6 +425,13 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("combine_latest_withv", "sources"), &RxObservable::combine_latest_withv);
     BIND_VARARG_METHOD(RxObservable, combine_latest_with, OBJECT, sources)
 
+    ClassDB::bind_method(D_METHOD("concat_withv", "sources"), &RxObservable::concat_withv);
+    BIND_VARARG_METHOD(RxObservable, concat_with, OBJECT, sources)
+
+    ClassDB::bind_method(D_METHOD("contains", "value", "comparer"), &RxObservable::contains, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("count", "predicate"), &RxObservable::count, DEFVAL(Callable()));
+
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter);
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(Callable()));
 
@@ -384,9 +439,13 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("last_or_default", "default_value", "predicate"), &RxObservable::last_or_default, DEFVAL(Variant()), DEFVAL(Callable()));
 
+    ClassDB::bind_method(D_METHOD("reduce", "accumulator", "seed"), &RxObservable::reduce, DEFVAL(Callable()), DEFVAL(memnew(NotSet)));
+
     ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map, DEFVAL(Callable()));
 
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet)));
+
+    ClassDB::bind_method(D_METHOD("some", "predicate"), &RxObservable::some, DEFVAL(Callable())); 
 
 }
 

@@ -12,7 +12,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t reduce_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) {
+static observable_op_t reduce_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) {
 
     if (IS_SET(seed)) {
         auto scanner = scan_(accumulator, seed);

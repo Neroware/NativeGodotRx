@@ -43,11 +43,25 @@ func _ready():
 #	var d2 = RxDisposable.get(func(): print("Dispose 2"))
 #	var d3 = RxCompositeDisposable.get([d1, d2])
 #	d3.dispose()
+#
+#	var obs1 = RxObservable.periodic_timer(0.5)
+#	var obs2 = RxObservable.periodic_timer(1.0)
+#	var obs3 = RxObservable.from([1, 2, 3, 4])
+#	obs1.combine_latest_with(obs2, obs3) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+#
+#	RxObservable.from([1, 2, 3, 4]).count(func(i : int): return i < 4) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
-	var obs1 = RxObservable.periodic_timer(0.5)
-	var obs2 = RxObservable.periodic_timer(1.0)
-	var obs3 = RxObservable.from([1, 2, 3, 4])
-	obs1.combine_latest_with(obs2, obs3) \
+	RxObservable.from([1, 2, 3, 4]).concat_with(
+		RxObservable.from([5, 6]),
+		RxObservable.from([7]),
+		RxObservable.from([7]),
+		RxObservable.from([7]),
+		RxObservable.from([7]),
+	) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

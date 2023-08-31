@@ -23,16 +23,22 @@
 #include "observable/withlatestfrom.h"
 #include "observable/zip.h"
 
+#include "observable/operators/_all.h"
 #include "observable/operators/_amb.h"
 #include "observable/operators/_asobservable.h"
 #include "observable/operators/_average.h"
 #include "observable/operators/_catch.h"
 #include "observable/operators/_combinelatest.h"
+#include "observable/operators/_concat.h"
+#include "observable/operators/_contains.h"
+#include "observable/operators/_count.h"
 #include "observable/operators/_filter.h"
 #include "observable/operators/_last.h"
 #include "observable/operators/_lastordefault.h"
 #include "observable/operators/_map.h"
+#include "observable/operators/_reduce.h"
 #include "observable/operators/_scan.h"
+#include "observable/operators/_some.h"
 
 namespace rx::observable {
 
@@ -93,6 +99,8 @@ namespace op {
 
 struct Operators {
 
+// _all.h
+inline static observable_op_t all(const predicate_t<Variant>& predicate) { return all_(predicate); }
 // _amb.h
 inline static observable_op_t amb(const std::shared_ptr<Observable>& right_source) { return amb_(right_source); }
 // _asobservable.h
@@ -105,6 +113,13 @@ inline static observable_op_t catch_with_handler(const handler_t& handler) { ret
 // _combinelatest.h
 template <typename T> inline static observable_op_t combine_latest(const T& others) { return rx::observable::op::combine_latest_(others); }
 template <typename... Args> inline static observable_op_t combine_latest(const Args&... others) { return rx::observable::op::combine_latest_(others...); }
+// _concat.h
+template<typename T> inline static observable_op_t concat(const T& sources) { return rx::observable::op::concat_(sources); }
+template<typename... Args> inline static observable_op_t concat(const Args&... others) { return rx::observable::op::concat_(others...); }
+// _contains.h
+inline static observable_op_t contains(const Variant& value, const comparer_t<Variant>& comparer = nullptr) { return contains_(value, comparer); }
+// _count.h
+inline static observable_op_t count(const predicate_t<Variant>& predicate = nullptr) { return count_(predicate); } 
 // _filter.h
 inline static observable_op_t filter(const predicate_t<Variant>& predicate) { return filter_(predicate); }
 inline static observable_op_t filter_indexed(const predicate_indexed_t<Variant>& predicate = nullptr) { return filter_indexed_(predicate); }
@@ -112,10 +127,14 @@ inline static observable_op_t filter_indexed(const predicate_indexed_t<Variant>&
 inline static observable_op_t last(const predicate_t<Variant>& predicate = nullptr) { return last_(predicate); }
 // _lastordefault.h
 inline static observable_op_t last_or_default(const Variant& default_value = VNULL, const predicate_t<Variant>& predicate = nullptr) { return last_or_default_(default_value, predicate); }
+// _reduce.h
+inline static observable_op_t reduce(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return reduce_(accumulator, seed); }
 // _map.h
 inline static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nullptr) { return map_(mapper); }
 // _scan.h
 inline static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return scan_(accumulator, seed); }
+// _some.h
+inline static observable_op_t some(const predicate_t<Variant>& predicate = nullptr) { return some_(predicate); }
 
 }; // END struct Operators
 

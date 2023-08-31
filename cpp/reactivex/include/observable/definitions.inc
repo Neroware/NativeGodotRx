@@ -44,6 +44,8 @@ static Ref<RxObservable> zip(const Variant& sources);
 
 /* OPERATORS */
 
+// _all.h
+Ref<RxObservable> all(const Callable& predicate);
 // _amb.h
 Ref<RxObservable> amb(Ref<RxObservable> right_source);
 // _asobservable.h
@@ -55,6 +57,13 @@ Ref<RxObservable> catch_with_handler(const Variant& handler);
 // _combine_latest.h
 Ref<RxObservable> combine_latest_withv(const Variant& sources);
 Ref<RxObservable> combine_latest_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+// _concat.h
+Ref<RxObservable> concat_withv(const Variant& sources);
+Ref<RxObservable> concat_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+// _contains.h
+Ref<RxObservable> contains(const Variant& value, const Callable& comparer = Callable());
+// _count.h
+Ref<RxObservable> count(const Callable& predicate = Callable());
 // _filter.h
 Ref<RxObservable> filter(const Callable& predicate);
 Ref<RxObservable> filter_indexed(const Callable& predicate = Callable());
@@ -62,7 +71,11 @@ Ref<RxObservable> filter_indexed(const Callable& predicate = Callable());
 Ref<RxObservable> last(const Callable& predicate = Callable());
 // _lastordefault.h
 Ref<RxObservable> last_or_default(const Variant& default_value = Variant(), const Callable& predicate = Callable());
+// _reduce.h
+Ref<RxObservable> reduce(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _map.h
 Ref<RxObservable> map(const Callable& mapper = Callable());
 // _scan.h
 Ref<RxObservable> scan(const Callable& accumulator, const Variant& seed = NotSet::value());
+// _some.h
+Ref<RxObservable> some(const Callable& predicate = Callable());

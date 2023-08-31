@@ -7,7 +7,7 @@
 namespace rx::observable::op {
 
 template <typename T>
-observable_op_t combine_latest_(const T& others_) {
+static observable_op_t combine_latest_(const T& others_) {
     observable_vec_t others(others_.begin(), others_.end());
 
     observable_op_t combine_latest = OP(source) {
@@ -18,7 +18,7 @@ observable_op_t combine_latest_(const T& others_) {
 }
 
 template <typename... Args>
-observable_op_t combine_latest_(const Args&... others) {
+static observable_op_t combine_latest_(const Args&... others) {
 
     observable_op_t combine_latest = OP(source) {
         return rx::observable::combine_latest_(source, others...);

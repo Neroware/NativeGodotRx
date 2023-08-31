@@ -11,7 +11,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t all_(const predicate_t<Variant>& predicate) {
+static observable_op_t all_(const predicate_t<Variant>& predicate) {
 
     auto filter = [=](const Variant& v) {
         return !predicate(v);

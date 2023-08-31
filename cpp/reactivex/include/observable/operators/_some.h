@@ -8,7 +8,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t some_(const predicate_t<Variant>& predicate = nullptr) {
+static observable_op_t some_(const predicate_t<Variant>& predicate = nullptr) {
 
     observable_op_t some = OP(source) {
 
