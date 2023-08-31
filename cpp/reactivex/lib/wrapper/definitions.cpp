@@ -2,18 +2,15 @@
 
 namespace rx::wrappers {
 
-#define UNWRAP_VARIADICS(sources) \
-    TypedArray<RxObservable> sources; \
-    for (auto i = 0ul; i < arg_count; i++) { \
-        sources.push_back(*(args[i])); \
-    }
-
-#define UNWRAP_VARIADICS_AND_FORWARD(method) \
-    UNWRAP_VARIADICS(sources) \
-    return method(sources);
-
+#define UNWRAP_VARIADICS(argv) TypedArray<RxObservable> argv; for (auto argi = 0ul; argi < arg_count; argi++) argv.push_back(*(args[argi])); 
+#define UNWRAP_VARIADICS_AND_FORWARD(method) UNWRAP_VARIADICS(sources) return method(sources);
 #define VARIANT_ITERABLE(sources) rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
-
+#define BIND_VARARG_METHOD(Cls, method_name, arg_type, arg_name) { \
+        MethodInfo mi; \
+		mi.arguments.push_back(PropertyInfo(Variant::arg_type, #arg_name)); \
+		mi.name = #method_name; \
+		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, #method_name, &Cls::method_name, mi); \
+    }
 
 
 /* WRAPPER METHODS FOR ENGINE INTERFACE */
@@ -251,6 +248,16 @@ Ref<RxObservable> RxObservable::catch_with_handler(const Variant& handler) {
     return RxObservable::wrap(this->_ptr);
 }
 
+// _combinelatest.h
+Ref<RxObservable> RxObservable::combine_latest_withv(const Variant& others) {
+    return RxObservable::wrap(op::Operators::combine_latest(
+        VARIANT_ITERABLE(others)
+    )(this->_ptr));
+}
+Ref<RxObservable> RxObservable::combine_latest_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+    UNWRAP_VARIADICS_AND_FORWARD(combine_latest_withv);
+}
+
 // _filter.h
 Ref<RxObservable> RxObservable::filter(const Callable& predicate) {
     return RxObservable::wrap(op::Operators::filter(
@@ -346,11 +353,9 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::just, DEFVAL(Ref<RxSchedulerBase>()));
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("raise", "message", "type", "scheduler"), &RxObservable::throw_message, DEFVAL("RxError"), DEFVAL(Ref<RxSchedulerBase>()));
-
     ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "error", "scheduler"), &RxObservable::throw_error, DEFVAL(Ref<RxSchedulerBase>()));
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("timer", "duetime", "period", "scheduler"), &RxObservable::timer, DEFVAL(Variant()), DEFVAL(Ref<RxSchedulerBase>()));
-
     ClassDB::bind_static_method("RxObservable", D_METHOD("periodic_timer", "period", "scheduler"), &RxObservable::periodic_timer, DEFVAL(Ref<RxSchedulerBase>()));
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("using", "resource_factory", "observable_factory"), &RxObservable::using_resource);
@@ -368,6 +373,9 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("average", "key_mapper"), &RxObservable::average, DEFVAL(Callable()));
 
     ClassDB::bind_method(D_METHOD("catch_with", "handler"), &RxObservable::catch_with_handler);
+
+    ClassDB::bind_method(D_METHOD("combine_latest_withv", "sources"), &RxObservable::combine_latest_withv);
+    BIND_VARARG_METHOD(RxObservable, combine_latest_with, OBJECT, sources)
 
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter);
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(Callable()));

@@ -52,6 +52,9 @@ Ref<RxObservable> as_observable();
 Ref<RxObservable> average(const Callable& key_mapper = Callable());
 // _catch.h
 Ref<RxObservable> catch_with_handler(const Variant& handler);
+// _combine_latest.h
+Ref<RxObservable> combine_latest_withv(const Variant& sources);
+Ref<RxObservable> combine_latest_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 // _filter.h
 Ref<RxObservable> filter(const Callable& predicate);
 Ref<RxObservable> filter_indexed(const Callable& predicate = Callable());

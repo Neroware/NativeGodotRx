@@ -25,24 +25,31 @@ func _ready():
 #		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 #		.dispose_with(self)
 	
-	var scheduler = RxCurrentThreadScheduler.singleton()
-	var ims = RxImmediateScheduler.singleton()
+#	var scheduler = RxCurrentThreadScheduler.singleton()
+#	var ims = RxImmediateScheduler.singleton()
+#
+#	const N_REPEATS = 10000
+#
+#	var obs = RxObservable.just(42) #RxObservable.from([1, 2, 3, 4], ims).average()
+#
+#	var t0 = Time.get_ticks_msec()
+#	for __ in N_REPEATS:
+#		obs.subscribe()
+#		#RxCurrentThreadScheduler.singleton()
+#	var t1 = Time.get_ticks_msec()
+#	print(">>> ", t1 - t0, "ms")
+#
+#	var d1 = RxDisposable.get(func(): print("Dispose 1"))
+#	var d2 = RxDisposable.get(func(): print("Dispose 2"))
+#	var d3 = RxCompositeDisposable.get([d1, d2])
+#	d3.dispose()
 	
-	const N_REPEATS = 10000
-	
-	var obs = RxObservable.just(42) #RxObservable.from([1, 2, 3, 4], ims).average()
-	
-	var t0 = Time.get_ticks_msec()
-	for __ in N_REPEATS:
-		obs.subscribe()
-		#RxCurrentThreadScheduler.singleton()
-	var t1 = Time.get_ticks_msec()
-	print(">>> ", t1 - t0, "ms")
-	
-	var d1 = RxDisposable.get(func(): print("Dispose 1"))
-	var d2 = RxDisposable.get(func(): print("Dispose 2"))
-	var d3 = RxCompositeDisposable.get([d1, d2])
-	d3.dispose()
+	var obs1 = RxObservable.periodic_timer(0.5)
+	var obs2 = RxObservable.periodic_timer(1.0)
+	var obs3 = RxObservable.from([1, 2, 3, 4])
+	obs1.combine_latest_with(obs2, obs3) \
+		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+		.dispose_with(self)
 	
 #	get_tree().quit()
 	

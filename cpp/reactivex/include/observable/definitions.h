@@ -102,16 +102,19 @@ inline static observable_op_t average(const mapper_t<double, Variant>& key_mappe
 // _catch.h
 inline static observable_op_t catch_with_handler(const std::shared_ptr<Observable>& handler) { return catch_(handler); }
 inline static observable_op_t catch_with_handler(const handler_t& handler) { return catch_(handler); }
-// filter.h
+// _combinelatest.h
+template <typename T> inline static observable_op_t combine_latest(const T& others) { return rx::observable::op::combine_latest_(others); }
+template <typename... Args> inline static observable_op_t combine_latest(const Args&... others) { return rx::observable::op::combine_latest_(others...); }
+// _filter.h
 inline static observable_op_t filter(const predicate_t<Variant>& predicate) { return filter_(predicate); }
 inline static observable_op_t filter_indexed(const predicate_indexed_t<Variant>& predicate = nullptr) { return filter_indexed_(predicate); }
-// last.h
+// _last.h
 inline static observable_op_t last(const predicate_t<Variant>& predicate = nullptr) { return last_(predicate); }
-// lastordefault.h
+// _lastordefault.h
 inline static observable_op_t last_or_default(const Variant& default_value = VNULL, const predicate_t<Variant>& predicate = nullptr) { return last_or_default_(default_value, predicate); }
-// map.h
+// _map.h
 inline static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nullptr) { return map_(mapper); }
-// scan.h
+// _scan.h
 inline static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return scan_(accumulator, seed); }
 
 }; // END struct Operators
