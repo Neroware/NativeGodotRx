@@ -54,8 +54,8 @@ bool Observer::fail(const std::exception_ptr& error) {
 
 notifier_t Observer::to_notifier() {
     std::shared_ptr<ObserverBase> self = getptr();
-    notifier_t notifier_fun = [self](const notification_t& notifier) {
-        notifier.accept(self);
+    notifier_t notifier_fun = [self](const std::shared_ptr<notification_t>& notifier) {
+        notifier->accept(self);
     };
     return notifier_fun;
 }

@@ -10,7 +10,8 @@ using namespace rx::abstract;
 
 namespace rx {
 
-struct notification_t : public std::enable_shared_from_this<notification_t> {
+class notification_t : public std::enable_shared_from_this<notification_t> {
+public:
     bool has_value = false;
     Variant value;
     String kind = "";
@@ -30,9 +31,9 @@ public:
     /* Dumb comparison, which is just laughably slow... Too bad! */
     inline bool operator==(const notification_t& other) const { return this->kind == other.kind; }
 
-}; // END struct notification_t 
+}; // END class notification_t 
 
-struct notification_on_next_t : public notification_t {
+class notification_on_next_t : public notification_t {
 protected:
     notification_on_next_t(const Variant& value = Variant()) {
         this->has_value = true;
@@ -48,9 +49,10 @@ public:
     void accept(const std::shared_ptr<ObserverBase>& observer) const override;
     String to_string() const override;
     
-}; // END struct notification_on_next_t 
+}; // END class notification_on_next_t 
 
-struct notification_on_error_t : public notification_t {
+class notification_on_error_t : public notification_t {
+public:
     std::exception_ptr exception;
 
 protected:
@@ -68,9 +70,9 @@ public:
     void accept(const std::shared_ptr<ObserverBase>& observer) const override;
     String to_string() const override;
 
-}; // END struct notification_on_error_t 
+}; // END class notification_on_error_t 
 
-struct notification_on_completed_t : public notification_t {
+class notification_on_completed_t : public notification_t {
 protected:
     notification_on_completed_t() { this->kind = "C"; }
 public:
@@ -82,10 +84,12 @@ public:
     void accept(const std::shared_ptr<ObserverBase>& observer) const override;
     String to_string() const override;
 
-}; // END struct notification_on_completed_t 
+}; // END class notification_on_completed_t 
 
 typedef std::function<void(const std::shared_ptr<notification_t>&)> notification_handler_t;
-static std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t& handler);
+
+notification_handler_t notification_handler_cb(const Callable& handler);
+std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t& handler);
 
 } // END namespace rx
 

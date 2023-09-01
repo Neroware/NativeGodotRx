@@ -15,8 +15,10 @@
 #include "abstract/subject.h"
 
 #include "internal/time.h"
+#include "internal/utils.h"
 #include "cast.h"
 #include "exception/exception.h"
+#include "notification.h"
 
 using namespace godot;
 using namespace rx::abstract;
@@ -172,8 +174,8 @@ protected:
         ClassDB::bind_method(D_METHOD("schedule_periodic", "duetime", "action", "state"), &RxSchedulerBase::schedule_periodic, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("now"), &RxSchedulerBase::now);
         ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &RxSchedulerBase::invoke_action, DEFVAL(Variant()));
-
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxSchedulerBase::equals);
+        RX_WRAPPER_CAST_BINDS(RxSchedulerBase)
     }
 public:
     static double to_seconds(const Variant& value);
@@ -224,6 +226,7 @@ protected:
 		    mi.name = "subscribe";
 		    ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "subscribe", &RxObservableBase::subscribe, mi);
 	    }
+        RX_WRAPPER_CAST_BINDS(RxObservableBase)
     }
 public:
     Ref<RxDisposableBase> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
@@ -260,6 +263,7 @@ protected:
         ClassDB::bind_method(D_METHOD("on_next", "item"), &RxSubjectBase::on_next);
         ClassDB::bind_method(D_METHOD("on_error", "error"), &RxSubjectBase::on_error);
         ClassDB::bind_method(D_METHOD("on_completed"), &RxSubjectBase::on_completed);
+        RX_WRAPPER_CAST_BINDS(RxSubjectBase)
     }
 public:
     Ref<RxDisposableBase> subscribe(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
@@ -274,5 +278,64 @@ public:
 using namespace rx::wrappers;
 
 } // END namespace rx
+
+namespace rx::wrappers {
+
+class RxNotification : public RefCounted {
+    GDCLASS(RxNotification, RefCounted)
+
+private:
+    std::shared_ptr<notification_t> _ptr;
+public:
+    RxNotification() { throw NotImplementedException(); }
+    RxNotification(const std::shared_ptr<notification_t>& ptr) : _ptr(ptr) {}
+    ~RxNotification(){}
+
+    inline static Ref<RxNotification> wrap(const std::shared_ptr<notification_t>& ptr) {
+        return ptr ? memnew(RxNotification(ptr)) : Ref<RxNotification>();
+    }
+    inline static std::shared_ptr<notification_t> unwrap(Ref<RxNotification> ref) {
+        return ref.is_null() ? nullptr : ref->_ptr;
+    }
+    inline bool equals(Ref<RxNotification> other) const {
+        return *(this->_ptr) == *(other->_ptr);
+    }
+    inline String _to_string() const {
+        return this->_ptr->to_string();
+    }
+    inline static Ref<RxNotification> dyn_cast(const Variant& input) {
+        return dyn_wrapper_cast<notification_t, RxNotification>(input);
+    }
+    inline static Ref<RxNotification> dyn_cast_or_null(const Variant& input) {
+        return dyn_wrapper_cast_or_null<notification_t, RxNotification>(input);
+    } 
+
+    inline bool _get_has_value() {
+        return this->_ptr->has_value;
+    }
+    inline Variant _get_value() {
+        return this->_ptr->value;
+    }
+    inline String _get_kind() {
+        return this->_ptr->kind;
+    }
+
+    inline Ref<RxObservableBase> to_observable(Ref<RxSchedulerBase> scheduler = VNULL) {
+        return RxObservableBase::wrap(this->_ptr->to_observable(RxSchedulerBase::unwrap(scheduler)));
+    }
+
+protected:
+    static inline void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxNotification::equals);
+        ClassDB::bind_method(D_METHOD("to_observable", "scheduler"), &RxNotification::to_observable, DEFVAL(Ref<RxSchedulerBase>()));
+        BIND_GET_PROPERTY(RxNotification, has_value, _get_has_value, BOOL);
+        BIND_GET_PROPERTY(RxNotification, value, _get_value, VARIANT_MAX);
+        BIND_GET_PROPERTY(RxNotification, kind, _get_kind, STRING);
+        RX_WRAPPER_CAST_BINDS(RxNotification)
+    }
+
+};
+
+} // END namespace rx::wrappers
 
 #endif // RX_WRAPPER_ABSTRACT_H

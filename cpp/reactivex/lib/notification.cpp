@@ -64,7 +64,7 @@ String notification_on_completed_t::to_string() const {
     return "OnCompleted()";
 }
 
-static std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t& handler) {
+std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t& handler) {
     on_next_t _on_next = [=](const Variant& value) {
         handler(notification_on_next_t::get(value));
     };
@@ -75,6 +75,12 @@ static std::shared_ptr<ObserverBase> from_notifier(const notification_handler_t&
         handler(notification_on_completed_t::get());
     };
     return rx::observer::Observer::get(_on_next, _on_error, _on_completed);
+}
+
+notification_handler_t notification_handler_cb(const Callable& handler) {
+    return [handler](const std::shared_ptr<notification_t>& n) {
+        handler.callv(Array::make(RxNotification::wrap(n)));
+    };
 }
 
 } // END namespace rx

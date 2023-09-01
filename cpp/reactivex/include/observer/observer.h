@@ -15,7 +15,7 @@ using namespace rx::disposable;
 
 namespace rx::observer {
 
-typedef std::function<void(const notification_t&)> notifier_t;
+typedef std::function<void(const std::shared_ptr<notification_t>&)> notifier_t;
 
 class Observer : public ObserverBase, public DisposableBase, public std::virtual_enable_shared_from_this<Observer> {
 

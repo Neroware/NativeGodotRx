@@ -14,6 +14,8 @@
 #include "internal/weakkeydictionary.h"
 #include "internal/utils.h"
 
+#include "notification.h"
+
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
 #include "scheduler/timeoutscheduler.h"
@@ -56,6 +58,7 @@ protected:
         ClassDB::bind_method(D_METHOD("to_iterable", "it"), &__GDRxSingleton__::to_iterable);
         ClassDB::bind_method(D_METHOD("foreach", "it", "action"), &__GDRxSingleton__::foreach);
         ClassDB::bind_method(D_METHOD("enumerate", "it", "action"), &__GDRxSingleton__::enumerate);
+        ClassDB::bind_method(D_METHOD("from_notifier", "handler"), &__GDRxSingleton__::from_notifier);
     }
 
 public:
@@ -98,6 +101,9 @@ public:
     }
     inline void enumerate(const Variant& it, const Callable& what) {
         this->iter(it)->enumerate(what);
+    }
+    inline Ref<RxObserverBase> from_notifier(const Callable& handler) {
+        return RxObserverBase::wrap(rx::from_notifier(notification_handler_cb(handler)));
     }
 };
 
