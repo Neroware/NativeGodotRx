@@ -34,6 +34,7 @@ mapper_t<KeyT, ArgsT...> mapper_cb(const godot::Callable& mapper) {
         return mapper.callv(Array::make(v...)); 
     };
 }
+
 template<typename... ArgsT>
 predicate_t<ArgsT...> predicate_cb(const godot::Callable& predicate) {
     if (predicate.is_null()) {

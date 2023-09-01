@@ -34,6 +34,7 @@ protected:
 using namespace rx::wrappers;
 
 observable_factory_t observable_factory_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return [cb](const std::shared_ptr<SchedulerBase>& scheduler) -> std::shared_ptr<Observable> {
         return RxObservable::unwrap(cb.callv(Array::make(RxSchedulerBase::wrap(scheduler))));
     };

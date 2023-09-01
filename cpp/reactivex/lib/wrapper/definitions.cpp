@@ -13,6 +13,20 @@ namespace rx::wrappers {
     }
 
 
+static time_delta_t variant_to_timedelta(const Variant& time) {
+    if (IS_NUMBER(time)) {
+        double time_ = time;
+        return Scheduler::to_timedelta(time_);
+    }
+    if (auto t = DYN_CAST_OR_NULL(time, AbsoluteTime)) {
+        return Scheduler::to_timedelta(t->t);
+    }
+    if (auto dt = DYN_CAST_OR_NULL(time, RelativeTime)) {
+        return dt->dt;
+    }
+    throw BadArgumentException("The provided argument was not a timespan!");
+} 
+
 /* WRAPPER METHODS FOR ENGINE INTERFACE */
 
 // case.h
@@ -289,6 +303,85 @@ Ref<RxObservable> RxObservable::count(const Callable& predicate) {
     return RxObservable::wrap(op::Operators::count(predicate_cb<Variant>(predicate))(this->_ptr));
 }
 
+// _debounce.h
+Ref<RxObservable> RxObservable::debounce(const Variant& duetime, Ref<RxSchedulerBase> scheduler) {
+    return RxObservable::wrap(op::Operators::debounce(
+        variant_to_timedelta(duetime)
+    )(this->_ptr));
+}
+Ref<RxObservable> RxObservable::throttle_with_mapper(const Callable& throttle_duration_mapper) {
+    return RxObservable::wrap(op::Operators::throttle_with_mapper(
+        [throttle_duration_mapper](const Variant& v) -> rx_observable_t {
+            return RxObservable::unwrap(throttle_duration_mapper.callv(Array::make(v)));
+        }
+    )(this->_ptr));
+}
+
+// _defaultifempty.h
+Ref<RxObservable> RxObservable::default_if_empty(const Variant& default_value) {
+    return RxObservable::wrap(op::Operators::default_if_empty(
+        default_value
+    )(this->_ptr));
+}
+
+// _distinct.h
+Ref<RxObservable> RxObservable::distinct(const Callable& key_mapper, const Callable& comparer) {
+    return RxObservable::wrap(op::Operators::distinct(
+        mapper_cb<Variant, Variant>(key_mapper),
+        comparer_cb<Variant>(comparer)
+    )(this->_ptr));
+}
+
+// _distinctuntilchanged.h
+Ref<RxObservable> RxObservable::distinct_until_changed(const Callable& key_mapper, const Callable& comparer) {
+    return RxObservable::wrap(op::Operators::distinct_until_changed(
+        mapper_cb<Variant, Variant>(key_mapper),
+        comparer_cb<Variant>(comparer)
+    )(this->_ptr));
+}
+
+// _do.h
+Ref<RxObservable> RxObservable::do_action(const Callable& on_next, const Callable& on_error, const Callable& on_completed) {
+    return RxObservable::wrap(op::Operators::do_action(
+        on_next_cb(on_next),
+        on_error_cb(on_error),
+        on_completed_cb(on_completed)
+    )(this->_ptr));
+}
+Ref<RxObservable> RxObservable::do_observer(Ref<RxObserverBase> observer) {
+    return RxObservable::wrap(op::Operators::do_observer(
+        RxObserverBase::unwrap(observer)
+    )(this->_ptr));
+}
+Ref<RxObservable> RxObservable::do_after_next(const Callable& after_next) {
+    return RxObservable::wrap(op::Operators::do_after_next(
+        this->_ptr,
+        on_next_cb(after_next)
+    ));
+}
+Ref<RxObservable> RxObservable::do_on_subscribe(const Callable& on_subscribe) {
+    return RxObservable::wrap(op::Operators::do_on_subscribe(
+        this->_ptr,
+        rx::observable::op::do_action_cb(on_subscribe)
+    ));
+}
+Ref<RxObservable> RxObservable::do_on_dispose(const Callable& on_dispose) {
+    return RxObservable::wrap(op::Operators::do_on_dispose(
+        this->_ptr,
+        dispose_cb(on_dispose)
+    ));
+}
+Ref<RxObservable> RxObservable::do_on_terminate(const Callable& on_terminate) {
+    return RxObservable::wrap(op::Operators::do_on_terminate(
+        this->_ptr,
+        rx::observable::op::do_action_cb(on_terminate)
+    ));
+}
+Ref<RxObservable> RxObservable::do_finally(const Callable& finally_action) {
+    return RxObservable::wrap(op::Operators::do_finally(
+        rx::observable::op::do_action_cb(finally_action)
+    )(this->_ptr));
+}
 
 // _filter.h
 Ref<RxObservable> RxObservable::filter(const Callable& predicate) {
@@ -431,6 +524,21 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("contains", "value", "comparer"), &RxObservable::contains, DEFVAL(Callable()));
 
     ClassDB::bind_method(D_METHOD("count", "predicate"), &RxObservable::count, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("debounce", "duetime", "scheduler"), &RxObservable::debounce, DEFVAL(Ref<RxSchedulerBase>()));
+    ClassDB::bind_method(D_METHOD("throttle_with_mapper", "throttle_duration_mapper"), &RxObservable::throttle_with_mapper);
+
+    ClassDB::bind_method(D_METHOD("distinct", "key_mapper", "comparer"), &RxObservable::distinct, DEFVAL(Callable()), DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("distinct_until_changed", "key_mapper", "comparer"), &RxObservable::distinct_until_changed, DEFVAL(Callable()), DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("do_action", "on_next", "on_error", "on_completed"), &RxObservable::do_action, DEFVAL(Callable()), DEFVAL(Callable()), DEFVAL(Callable()));
+    ClassDB::bind_method(D_METHOD("do", "observer"), &RxObservable::do_observer);
+    ClassDB::bind_method(D_METHOD("do_after_next", "after_next"), &RxObservable::do_after_next);
+    ClassDB::bind_method(D_METHOD("do_on_subscribe", "on_subscribe"), &RxObservable::do_on_subscribe);
+    ClassDB::bind_method(D_METHOD("do_on_dispose", "on_dispose"), &RxObservable::do_on_dispose);
+    ClassDB::bind_method(D_METHOD("do_on_terminate", "on_terminate"), &RxObservable::do_on_terminate);
+    ClassDB::bind_method(D_METHOD("do_finally", "finally_action"), &RxObservable::do_finally);
 
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter);
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(Callable()));

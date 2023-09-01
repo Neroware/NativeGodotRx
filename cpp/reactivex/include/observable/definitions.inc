@@ -64,6 +64,23 @@ Ref<RxObservable> concat_with(const Variant **args, GDExtensionInt arg_count, GD
 Ref<RxObservable> contains(const Variant& value, const Callable& comparer = Callable());
 // _count.h
 Ref<RxObservable> count(const Callable& predicate = Callable());
+// _debounce.h
+Ref<RxObservable> debounce(const Variant& duetime, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
+Ref<RxObservable> throttle_with_mapper(const Callable& throttle_duration_mapper);
+// _defaultifempty.h
+Ref<RxObservable> default_if_empty(const Variant& default_value = VNULL);
+// _distinct.h
+Ref<RxObservable> distinct(const Callable& key_mapper = Callable(), const Callable& comparer = Callable());
+// _distinctuntilchanged.h
+Ref<RxObservable> distinct_until_changed(const Callable& key_mapper = Callable(), const Callable& comparer = Callable());
+// _do.h
+Ref<RxObservable> do_action(const Callable& on_next = Callable(), const Callable& on_error = Callable(), const Callable& on_completed = Callable());
+Ref<RxObservable> do_observer(Ref<RxObserverBase> observer);
+Ref<RxObservable> do_after_next(const Callable& after_next);
+Ref<RxObservable> do_on_subscribe(const Callable& on_subscribe);
+Ref<RxObservable> do_on_dispose(const Callable& on_dispose);
+Ref<RxObservable> do_on_terminate(const Callable& on_terminate);
+Ref<RxObservable> do_finally(const Callable& finally_action);
 // _filter.h
 Ref<RxObservable> filter(const Callable& predicate);
 Ref<RxObservable> filter_indexed(const Callable& predicate = Callable());

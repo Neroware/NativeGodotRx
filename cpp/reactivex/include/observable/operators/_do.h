@@ -12,6 +12,7 @@ namespace rx::observable::op {
 
 typedef std::function<void()> do_action_t;
 static do_action_t do_action_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return [cb]() { cb.callv(Array()); };
 }
 
@@ -196,7 +197,7 @@ static rx_observable_t do_after_terminate(const rx_observable_t& source, const d
 }
 
 
-static observable_op_t do_finally_(const rx_observable_t& source, const do_action_t& finally_action) {
+static observable_op_t do_finally_(const do_action_t& finally_action) {
 
     class OnDispose : public DisposableBase {
     public:

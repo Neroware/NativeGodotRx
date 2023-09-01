@@ -68,6 +68,7 @@ func _ready():
 		RxObservable.from([5, 6]),
 		RxObservable.just(7),
 	) \
+		.do_action(func(i): print("Before: ", i)) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

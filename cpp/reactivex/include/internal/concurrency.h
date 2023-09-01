@@ -121,6 +121,7 @@ static std::shared_ptr<StartableBase> default_thread_factory(const run_t& target
 }
 
 static run_t run_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return run_t([cb]() -> Variant { return cb.callv(Array()); });
 }
 

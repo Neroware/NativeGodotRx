@@ -124,7 +124,24 @@ template<typename... Args> inline static observable_op_t concat(const Args&... o
 // _contains.h
 inline static observable_op_t contains(const Variant& value, const comparer_t<Variant>& comparer = nullptr) { return contains_(value, comparer); }
 // _count.h
-inline static observable_op_t count(const predicate_t<Variant>& predicate = nullptr) { return count_(predicate); } 
+inline static observable_op_t count(const predicate_t<Variant>& predicate = nullptr) { return count_(predicate); }
+// _debounce.h
+inline static observable_op_t debounce(const time_delta_t& duetime, const scheduler_t& scheduler = nullptr) { return debounce_(duetime, scheduler); }
+inline static observable_op_t throttle_with_mapper(const mapper_t<rx_observable_t, Variant>& throttle_duration_mapper) { return throttle_with_mapper_(throttle_duration_mapper); }
+// _defaultifempty.h
+inline static observable_op_t default_if_empty(const Variant& default_value = VNULL) { return default_if_empty(default_value); }
+// _distinct.h
+inline static observable_op_t distinct(const mapper_t<Variant, Variant>& key_mapper = nullptr, const comparer_t<Variant>& comparer = nullptr) { return distinct_(key_mapper, comparer); }
+// _distinctuntilchanged.h
+inline static observable_op_t distinct_until_changed(const mapper_t<Variant, Variant>& key_mapper = nullptr, const comparer_t<Variant>& comparer = nullptr) { return distinct_until_changed_(key_mapper, comparer); }
+// _do.h
+inline static observable_op_t do_action(const on_next_t& on_next = nullptr, const on_error_t& on_error = nullptr, const on_completed_t& on_completed = nullptr) { return do_action_(on_next, on_error, on_completed); }
+inline static observable_op_t do_observer(const observer_t& observer) { return do_(observer); }
+inline static rx_observable_t do_after_next(const rx_observable_t& source, const on_next_t& after_next) { return rx::observable::op::do_after_next(source, after_next); }
+inline static rx_observable_t do_on_subscribe(const rx_observable_t& source, const do_action_t& on_subscribe) { return rx::observable::op::do_on_subscribe(source, on_subscribe); }
+inline static rx_observable_t do_on_dispose(const rx_observable_t& source, const dispose_t& on_dispose) { return rx::observable::op::do_on_dispose(source, on_dispose); }
+inline static rx_observable_t do_on_terminate(const rx_observable_t& source, const do_action_t& on_terminate) { return rx::observable::op::do_on_terminate(source, on_terminate); }
+inline static observable_op_t do_finally(const do_action_t& finally_action) { return do_finally_(finally_action); }
 // _filter.h
 inline static observable_op_t filter(const predicate_t<Variant>& predicate) { return filter_(predicate); }
 inline static observable_op_t filter_indexed(const predicate_indexed_t<Variant>& predicate = nullptr) { return filter_indexed_(predicate); }

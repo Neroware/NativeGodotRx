@@ -68,6 +68,7 @@ public:
 } // END namespace wrapper
 
 static dispose_t dispose_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return dispose_t([cb](){
         return cb.callv(Array());
     });
@@ -139,16 +140,19 @@ public:
 } // END namespace wrapper
 
 static on_next_t on_next_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return on_next_t([cb](const Variant& item){
         return cb.callv(Array::make(item));
     });
 }
 static on_error_t on_error_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return on_error_t([cb](const std::exception_ptr& e){
         return cb.callv(Array::make(rx::exception::RxError::wrap(e)));
     });
 }
 static on_completed_t on_completed_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return on_completed_t([cb](){
         return cb.callv(Array());
     });
@@ -194,6 +198,7 @@ public:
 } // END namespace wrappers
 
 static action_t action_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return action_t([cb](const std::shared_ptr<rx::abstract::SchedulerBase>& scheduler, const Variant& state = Variant()){
         auto res = cb.callv(Array::make(rx::wrappers::RxSchedulerBase::wrap(scheduler), state));
         if (auto casted = DYN_CAST_OR_NULL(res, rx::wrappers::RxDisposableBase)) {
@@ -204,6 +209,7 @@ static action_t action_cb(const Callable& cb) {
 }
 
 static periodic_action_t periodic_action_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return periodic_action_t([cb](const Variant& state) -> Variant {
         return cb.callv(Array::make(state));
     });
@@ -237,6 +243,7 @@ public:
 using namespace rx::wrappers;
 
 static subscription_t subscription_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
     return subscription_t([cb](const std::shared_ptr<ObserverBase>& observer, const std::shared_ptr<SchedulerBase>& scheduler) {
         Ref<RxDisposableBase> disp = cb.callv(Array::make(RxObserverBase::wrap(observer), RxSchedulerBase::wrap(scheduler)));
         return RxDisposableBase::unwrap(disp);
