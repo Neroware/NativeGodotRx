@@ -1,5 +1,7 @@
 #include "notification.h"
 
+#include "wrapper/notificationwrapper.h"
+
 #include "observer/observer.h"
 #include "scheduler/immediatescheduler.h"
 #include "observable/observable.h"

@@ -324,6 +324,11 @@ Ref<RxObservable> RxObservable::default_if_empty(const Variant& default_value) {
     )(this->_ptr));
 }
 
+// _dematerialize.h
+Ref<RxObservable> RxObservable::dematerialize() {
+    return RxObservable::wrap(op::Operators::dematerialize()(this->_ptr));
+}
+
 // _distinct.h
 Ref<RxObservable> RxObservable::distinct(const Callable& key_mapper, const Callable& comparer) {
     return RxObservable::wrap(op::Operators::distinct(
@@ -527,6 +532,10 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("debounce", "duetime", "scheduler"), &RxObservable::debounce, DEFVAL(Ref<RxSchedulerBase>()));
     ClassDB::bind_method(D_METHOD("throttle_with_mapper", "throttle_duration_mapper"), &RxObservable::throttle_with_mapper);
+
+    ClassDB::bind_method(D_METHOD("default_if_empty", "default_value"), &RxObservable::default_if_empty, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("dematerialize"), &RxObservable::dematerialize);
 
     ClassDB::bind_method(D_METHOD("distinct", "key_mapper", "comparer"), &RxObservable::distinct, DEFVAL(Callable()), DEFVAL(Callable()));
 

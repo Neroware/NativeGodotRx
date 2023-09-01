@@ -34,6 +34,7 @@
 #include "observable/operators/_count.h"
 #include "observable/operators/_debounce.h"
 #include "observable/operators/_defaultifempty.h"
+#include "observable/operators/_dematerialize.h"
 #include "observable/operators/_distinct.h"
 #include "observable/operators/_distinctuntilchanged.h"
 #include "observable/operators/_do.h"
@@ -129,7 +130,9 @@ inline static observable_op_t count(const predicate_t<Variant>& predicate = null
 inline static observable_op_t debounce(const time_delta_t& duetime, const scheduler_t& scheduler = nullptr) { return debounce_(duetime, scheduler); }
 inline static observable_op_t throttle_with_mapper(const mapper_t<rx_observable_t, Variant>& throttle_duration_mapper) { return throttle_with_mapper_(throttle_duration_mapper); }
 // _defaultifempty.h
-inline static observable_op_t default_if_empty(const Variant& default_value = VNULL) { return default_if_empty(default_value); }
+inline static observable_op_t default_if_empty(const Variant& default_value = VNULL) { return default_if_empty_(default_value); }
+// _dematerialize.h
+inline static observable_op_t dematerialize() { return dematerialize_(); }
 // _distinct.h
 inline static observable_op_t distinct(const mapper_t<Variant, Variant>& key_mapper = nullptr, const comparer_t<Variant>& comparer = nullptr) { return distinct_(key_mapper, comparer); }
 // _distinctuntilchanged.h

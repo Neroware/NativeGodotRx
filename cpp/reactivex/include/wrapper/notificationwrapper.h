@@ -5,6 +5,74 @@
 
 namespace rx::wrappers {
 
+class RxNotification : public RefCounted {
+    GDCLASS(RxNotification, RefCounted)
+
+private:
+    std::shared_ptr<notification_t> _ptr;
+public:
+    RxNotification() { throw NotImplementedException(); }
+    RxNotification(const std::shared_ptr<notification_t>& ptr) : _ptr(ptr) {}
+    ~RxNotification(){}
+
+    inline static Ref<RxNotification> wrap(const std::shared_ptr<notification_t>& ptr) {
+        return ptr ? memnew(RxNotification(ptr)) : Ref<RxNotification>();
+    }
+    inline static std::shared_ptr<notification_t> unwrap(Ref<RxNotification> ref) {
+        return ref.is_null() ? nullptr : ref->_ptr;
+    }
+    inline bool equals(Ref<RxNotification> other) const {
+        return *(this->_ptr) == *(other->_ptr);
+    }
+    inline String _to_string() const {
+        return this->_ptr->to_string();
+    }
+    inline static Ref<RxNotification> dyn_cast(const Variant& input) {
+        return dyn_wrapper_cast<notification_t, RxNotification>(input);
+    }
+    inline static Ref<RxNotification> dyn_cast_or_null(const Variant& input) {
+        return dyn_wrapper_cast_or_null<notification_t, RxNotification>(input);
+    } 
+
+    inline bool _get_has_value() {
+        return this->_ptr->has_value;
+    }
+    inline Variant _get_value() {
+        return this->_ptr->value;
+    }
+    inline String _get_kind() {
+        return this->_ptr->kind;
+    }
+
+    inline void accept(const Callable& on_next, const Callable& on_error = Callable(), const Callable& on_completed = Callable()) {
+        this->_ptr->accept(
+            on_next_cb(on_next),
+            on_error.is_null() ? DEFAULT_ON_ERROR : on_error_cb(on_error),
+            on_completed.is_null() ? DEFAULT_ON_COMPLETED : on_completed_cb(on_completed)
+        );
+    }
+    inline void accept_observer(Ref<RxObserverBase> observer) {
+        this->_ptr->accept(RxObserverBase::unwrap(observer));
+    }
+
+    inline Ref<RxObservableBase> to_observable(Ref<RxSchedulerBase> scheduler = VNULL) {
+        return RxObservableBase::wrap(this->_ptr->to_observable(RxSchedulerBase::unwrap(scheduler)));
+    }
+
+protected:
+    static inline void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxNotification::equals);
+        ClassDB::bind_method(D_METHOD("to_observable", "scheduler"), &RxNotification::to_observable, DEFVAL(Ref<RxSchedulerBase>()));
+        ClassDB::bind_method(D_METHOD("accept", "on_next", "on_error", "on_completed"), &RxNotification::accept, DEFVAL(Callable()), DEFVAL(Callable()));
+        ClassDB::bind_method(D_METHOD("accept_observer", "observer"), &RxNotification::accept_observer);
+        BIND_GET_PROPERTY(RxNotification, has_value, _get_has_value, BOOL);
+        BIND_GET_PROPERTY(RxNotification, value, _get_value, VARIANT_MAX);
+        BIND_GET_PROPERTY(RxNotification, kind, _get_kind, STRING);
+        RX_WRAPPER_CAST_BINDS(RxNotification)
+    }
+
+};
+
 class RxNotificationOnNext : public RxNotification {
     GDCLASS(RxNotificationOnNext, RxNotification)
     RX_WRAPPER(RxNotificationOnNext, notification_on_next_t, RxNotification, notification_t)

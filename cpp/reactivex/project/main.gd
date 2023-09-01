@@ -55,20 +55,24 @@ func _ready():
 #		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 #		.dispose_with(self)
 	
-	var els = RxEventLoopScheduler.get()
-	var els_disp : RxDisposableBase = RxDisposableBase.dyn_cast(els)
-	var els_obs : RxObservable = RxObservable.dyn_cast_or_null(els)
-	print(">>> ", els_disp)
-	var scheduler : RxScheduler = RxScheduler.dyn_cast_or_null(els)
-	print(">>> ", scheduler)
-	print(">>> ", RxDisposableBase.dyn_cast_or_null(scheduler))
-	scheduler.schedule(func(__ = null, ___ = null): print("!")).dispose_with(self)
+#	var els = RxEventLoopScheduler.get()
+#	var els_disp : RxDisposableBase = RxDisposableBase.dyn_cast(els)
+#	var els_obs : RxObservable = RxObservable.dyn_cast_or_null(els)
+#	print(">>> ", els_disp)
+#	var scheduler : RxScheduler = RxScheduler.dyn_cast_or_null(els)
+#	print(">>> ", scheduler)
+#	print(">>> ", RxDisposableBase.dyn_cast_or_null(scheduler))
+#	scheduler.schedule(func(__ = null, ___ = null): print("!")).dispose_with(self)
+#
+#	RxObservable.from([1, 2, 3, 4]).concat_with(
+#		RxObservable.from([5, 6]),
+#		RxObservable.just(7),
+#	) \
+#		.do_action(func(i): print("Before: ", i)) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
-	RxObservable.from([1, 2, 3, 4]).concat_with(
-		RxObservable.from([5, 6]),
-		RxObservable.just(7),
-	) \
-		.do_action(func(i): print("Before: ", i)) \
+	RxObservable.empty().default_if_empty(42) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

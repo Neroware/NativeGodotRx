@@ -69,6 +69,8 @@ Ref<RxObservable> debounce(const Variant& duetime, Ref<RxSchedulerBase> schedule
 Ref<RxObservable> throttle_with_mapper(const Callable& throttle_duration_mapper);
 // _defaultifempty.h
 Ref<RxObservable> default_if_empty(const Variant& default_value = VNULL);
+// _dematerialize.h
+Ref<RxObservable> dematerialize();
 // _distinct.h
 Ref<RxObservable> distinct(const Callable& key_mapper = Callable(), const Callable& comparer = Callable());
 // _distinctuntilchanged.h
