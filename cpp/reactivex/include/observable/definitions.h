@@ -38,13 +38,22 @@
 #include "observable/operators/_distinct.h"
 #include "observable/operators/_distinctuntilchanged.h"
 #include "observable/operators/_do.h"
+#include "observable/operators/_elementatordefault.h"
+#include "observable/operators/_exclusive.h"
+#include "observable/operators/_expand.h"
 #include "observable/operators/_filter.h"
+#include "observable/operators/_finallyaction.h"
+#include "observable/operators/_find.h"
+#include "observable/operators/_first.h"
+#include "observable/operators/_firstordefault.h"
+#include "observable/operators/_forkjoin.h"
 #include "observable/operators/_last.h"
 #include "observable/operators/_lastordefault.h"
 #include "observable/operators/_map.h"
 #include "observable/operators/_reduce.h"
 #include "observable/operators/_scan.h"
 #include "observable/operators/_some.h"
+#include "observable/operators/_zip.h"
 
 namespace rx::observable {
 

@@ -102,6 +102,20 @@ public:
     }
 };
 
+class ArgumentOutOfRangeException : public rx_exception
+{
+
+public:
+    ArgumentOutOfRangeException(){}
+
+    virtual const char* what() const noexcept override {
+        return "The provided argument is out of range!";
+    }
+    virtual const char* type() const noexcept override {
+        return "ArgumentOutOfRangeException";
+    }
+};
+
 } // END namespace exception
 
 typedef std::function<bool(const std::exception_ptr& e)> handler_t;
