@@ -13,7 +13,16 @@
 
 #include "wrapper/wrappercast.h"
 
-#define RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                                \
+#define RX_WRAPPER_EQUALITY(GodotType)                                              \
+    inline bool equals(Ref<GodotType> other) const {                                \
+        return this->_ptr.get() == other->_ptr.get();                               \
+    }
+#define RX_WRAPPER_TOSTRING(GodotType)                                              \
+    inline String _to_string() const {                                              \
+        return "[" + String(#GodotType) + ":" + UtilityFunctions::str(              \
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \
+    }
+#define _RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                               \
 private:                                                                            \
     std::shared_ptr<AbstractType> _ptr;                                             \
 public:                                                                             \
@@ -27,21 +36,13 @@ public:                                                                         
         return ref.is_null() ? nullptr : ref->_ptr;                                 \
     }                                                                               \
     std::shared_ptr<AbstractType> getptr() const { return this->_ptr; }             \
-    inline String _to_string() const {                                              \
-        return "[" + String(#GodotType) + ":" + UtilityFunctions::str(              \
-            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \
-    }                                                                               \
-    inline bool equals(Ref<GodotType> other) const {                                \
-        return this->_ptr.get() == other->_ptr.get();                               \
-    }                                                                               \
     inline static Ref<GodotType> dyn_cast(const Variant& input) {                   \
         return dyn_wrapper_cast<AbstractType, GodotType>(input);                    \
     }                                                                               \
     inline static Ref<GodotType> dyn_cast_or_null(const Variant& input) {           \
         return dyn_wrapper_cast_or_null<AbstractType, GodotType>(input);            \
     }                                                                               
-
-#define RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                        \
+#define _RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                       \
 private:                                                                            \
     std::shared_ptr<Type> _ptr;                                                     \
 public:                                                                             \
@@ -56,16 +57,22 @@ public:                                                                         
         return ref.is_null() ? nullptr : ref->_ptr;                                 \
     }                                                                               \
     std::shared_ptr<BaseType> getptr() const { return this->_ptr; }                 \
-    inline String _to_string() const {                                              \
-        return "[" + String(#GodotType) + ":" + UtilityFunctions::str(              \
-            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \
-    }                                                                               \
     inline static Ref<GodotType> dyn_cast(const Variant& input) {                   \
         return dyn_wrapper_cast<Type, GodotType>(input);                            \
     }                                                                               \
     inline static Ref<GodotType> dyn_cast_or_null(const Variant& input) {           \
         return dyn_wrapper_cast_or_null<Type, GodotType>(input);                    \
-    }                                                                               
+    }     
+
+
+#define RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                                \
+    _RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                                   \
+    RX_WRAPPER_EQUALITY(GodotType)                                                  \
+    RX_WRAPPER_TOSTRING(GodotType)                                                  
+
+#define RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                        \
+    _RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                           \
+    RX_WRAPPER_TOSTRING(GodotType)                                                  
 
 #define RX_WRAPPER_CAST_BINDS(Type) \
     ClassDB::bind_static_method(#Type, D_METHOD("dyn_cast", "input"), &Type::dyn_cast); \

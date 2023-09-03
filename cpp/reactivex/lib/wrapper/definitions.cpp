@@ -1,5 +1,8 @@
 #include "wrapper/observable.h"
 
+#include "observable/definitions.h"
+#include "wrapper/subject.h"
+
 namespace rx::wrappers {
 
 #define UNWRAP_VARIADICS(argv) TypedArray<RxObservable> argv; for (auto argi = 0ul; argi < arg_count; argi++) argv.push_back(*(args[argi])); 
@@ -468,6 +471,63 @@ Ref<RxObservable> RxObservable::filter_indexed(const Callable& predicate) {
     )(this->_ptr));
 }
 
+// _groupby.h
+Ref<RxObservable> RxObservable::group_by(const Callable& key_mapper, const Callable& element_mapper, const Callable& subject_mapper) {
+    RETURN_TRANSFORMED_OBS(group_by,
+        mapper_cb<Variant, Variant>(key_mapper),
+        mapper_cb<Variant, Variant>(element_mapper),
+        wrapped_mapper_cb<RxSubject, rx_subject_t>(subject_mapper)
+    );
+}
+
+// _groupbyuntil.h
+Ref<RxObservable> RxObservable::group_by_until(const Callable& key_mapper, const Callable& duration_mapper, const Callable& element_mapper, const Callable& subject_mapper) {
+
+    mapper_t<rx_observable_t, std::shared_ptr<GroupedObservable>> _duration_mapper = nullptr;
+    if (!duration_mapper.is_null()) {
+        _duration_mapper = [duration_mapper](const std::shared_ptr<GroupedObservable>& go) -> rx_observable_t {
+            return RxObservable::unwrap(duration_mapper.callv(Array::make(
+                RxGroupedObservable::wrap(go)
+            )));
+        };
+    }
+
+    RETURN_TRANSFORMED_OBS(group_by_until,
+        mapper_cb<Variant, Variant>(key_mapper),
+        _duration_mapper,
+        mapper_cb<Variant, Variant>(element_mapper),
+        wrapped_mapper_cb<RxSubject, rx_subject_t>(subject_mapper)
+    );
+}
+
+// _groupjoin.h
+Ref<RxObservable> RxObservable::group_join(Ref<RxObservable> right, const Callable& left_duration_mapper, const Callable& right_duration_mapper) {
+    RETURN_TRANSFORMED_OBS(group_join,
+        RxObservable::unwrap(right),
+        wrapped_mapper_cb<RxObservable, rx_observable_t, Variant>(left_duration_mapper),
+        wrapped_mapper_cb<RxObservable, rx_observable_t, Variant>(right_duration_mapper)
+    );
+}
+
+// _ignoreelements.h
+Ref<RxObservable> RxObservable::ignore_elements() {
+    RETURN_TRANSFORMED_OBS(ignore_elements,);
+}
+
+// _isempty.h
+Ref<RxObservable> RxObservable::is_empty() {
+    RETURN_TRANSFORMED_OBS(is_empty,);
+}
+
+// _join.h
+Ref<RxObservable> RxObservable::join(Ref<RxObservable> right, const Callable& left_duration_mapper, const Callable& right_duration_mapper) {
+    RETURN_TRANSFORMED_OBS(join,
+        RxObservable::unwrap(right),
+        wrapped_mapper_cb<RxObservable, rx_observable_t, Variant>(left_duration_mapper),
+        wrapped_mapper_cb<RxObservable, rx_observable_t, Variant>(right_duration_mapper)
+    );
+}
+
 // _last.h
 Ref<RxObservable> RxObservable::last(const Callable& predicate) {
     if (predicate.is_null()) {
@@ -514,6 +574,11 @@ Ref<RxObservable> RxObservable::map_indexed(const Callable& mapper) {
     )(this->_ptr));
 }
 
+// _materialize.h
+Ref<RxObservable> RxObservable::materialize() {
+    RETURN_TRANSFORMED_OBS(materialize,);
+}
+
 // _scan.h
 Ref<RxObservable> RxObservable::scan(const Callable& accumulator, const Variant& seed) {
     return RxObservable::wrap(op::Operators::scan(
@@ -529,6 +594,11 @@ Ref<RxObservable> RxObservable::some(const Callable& predicate) {
     return RxObservable::wrap(op::Operators::some(
         predicate_cb<Variant>(predicate)
     )(this->_ptr));
+}
+
+// _take.h
+Ref<RxObservable> RxObservable::take(uint64_t count) {
+    RETURN_TRANSFORMED_OBS(take, count);
 }
 
 // _zip.h
@@ -656,6 +726,18 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter);
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(Callable()));
 
+    ClassDB::bind_method(D_METHOD("group_by", "key_mapper", "element_mapper", "subject_mapper"), &RxObservable::group_by, DEFVAL(Callable()), DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("group_by_until", "key_mapper", "duration_mapper", "element_mapper", "subject_mapper"), &RxObservable::group_by_until, DEFVAL(Callable()), DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("group_join", "right", "left_duration_mapper", "right_duration_mapper"), &RxObservable::group_join);
+
+    ClassDB::bind_method(D_METHOD("ignore_elements"), &RxObservable::ignore_elements);
+
+    ClassDB::bind_method(D_METHOD("is_empty"), &RxObservable::is_empty);
+
+    ClassDB::bind_method(D_METHOD("join", "right", "left_duration_mapper", "right_duration_mapper"), &RxObservable::join);
+
     ClassDB::bind_method(D_METHOD("last", "predicate"), &RxObservable::last, DEFVAL(Callable())); 
 
     ClassDB::bind_method(D_METHOD("last_or_default", "default_value", "predicate"), &RxObservable::last_or_default, DEFVAL(Variant()), DEFVAL(Callable()));
@@ -665,9 +747,13 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map, DEFVAL(Callable()));
     ClassDB::bind_method(D_METHOD("map_indexed", "mapper"), &RxObservable::map_indexed, DEFVAL(Callable()));
 
+    ClassDB::bind_method(D_METHOD("materialize"), &RxObservable::materialize);
+
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet)));
 
     ClassDB::bind_method(D_METHOD("some", "predicate"), &RxObservable::some, DEFVAL(Callable())); 
+
+    ClassDB::bind_method(D_METHOD("take", "count"), &RxObservable::take);
 
     ClassDB::bind_method(D_METHOD("zip_withv", "sources"), &RxObservable::zip_withv);
     BIND_VARARG_METHOD(RxObservable, zip_with, OBJECT, "sources")

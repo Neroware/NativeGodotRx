@@ -34,6 +34,15 @@ mapper_t<KeyT, ArgsT...> mapper_cb(const godot::Callable& mapper) {
         return mapper.callv(Array::make(v...)); 
     };
 }
+template<class WrapperT, typename KeyT, typename... ArgsT>
+mapper_t<KeyT, ArgsT...> wrapped_mapper_cb(const godot::Callable& mapper) {
+    if (mapper.is_null()) {
+        return nullptr;
+    }
+    return [mapper](const ArgsT&... v) -> KeyT { 
+        return WrapperT::unwrap(mapper.callv(Array::make(v...))); 
+    };
+}
 
 template<typename... ArgsT>
 predicate_t<ArgsT...> predicate_cb(const godot::Callable& predicate) {

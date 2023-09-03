@@ -5,34 +5,18 @@
 
 namespace rx::wrappers {
 
+#define NOTIFICATION_NEXT(value) RxNotificationOnNext::wrap(notification_on_next_t::get(value))
+#define NOTIFICATION_ERROR(error) RxNotificationOnError::wrap(notification_on_error_t::get(error))
+#define NOTIFICATION_COMPLETED() RxNotificationOnCompleted::wrap(notification_on_completed_t::get())
+
 class RxNotification : public RefCounted {
     GDCLASS(RxNotification, RefCounted)
+    _RX_ABSTRACT_WRAPPER(RxNotification, notification_t)
+    RX_WRAPPER_EQUALITY(RxNotification)
 
-private:
-    std::shared_ptr<notification_t> _ptr;
-public:
-    RxNotification() { throw NotImplementedException(); }
-    RxNotification(const std::shared_ptr<notification_t>& ptr) : _ptr(ptr) {}
-    ~RxNotification(){}
-
-    inline static Ref<RxNotification> wrap(const std::shared_ptr<notification_t>& ptr) {
-        return ptr ? memnew(RxNotification(ptr)) : Ref<RxNotification>();
-    }
-    inline static std::shared_ptr<notification_t> unwrap(Ref<RxNotification> ref) {
-        return ref.is_null() ? nullptr : ref->_ptr;
-    }
-    inline bool equals(Ref<RxNotification> other) const {
-        return *(this->_ptr) == *(other->_ptr);
-    }
     inline String _to_string() const {
         return this->_ptr->to_string();
     }
-    inline static Ref<RxNotification> dyn_cast(const Variant& input) {
-        return dyn_wrapper_cast<notification_t, RxNotification>(input);
-    }
-    inline static Ref<RxNotification> dyn_cast_or_null(const Variant& input) {
-        return dyn_wrapper_cast_or_null<notification_t, RxNotification>(input);
-    } 
 
     inline bool _get_has_value() {
         return this->_ptr->has_value;
@@ -75,7 +59,11 @@ protected:
 
 class RxNotificationOnNext : public RxNotification {
     GDCLASS(RxNotificationOnNext, RxNotification)
-    RX_WRAPPER(RxNotificationOnNext, notification_on_next_t, RxNotification, notification_t)
+    _RX_WRAPPER(RxNotificationOnNext, notification_on_next_t, RxNotification, notification_t)
+
+    inline String _to_string() const {
+        return this->_ptr->to_string();
+    }
 
 protected:
     static inline void _bind_methods() {
@@ -91,7 +79,11 @@ public:
 
 class RxNotificationOnError : public RxNotification {
     GDCLASS(RxNotificationOnError, RxNotification)
-    RX_WRAPPER(RxNotificationOnError, notification_on_error_t, RxNotification, notification_t)
+    _RX_WRAPPER(RxNotificationOnError, notification_on_error_t, RxNotification, notification_t)
+
+    inline String _to_string() const {
+        return this->_ptr->to_string();
+    }
 
 protected:
     static inline void _bind_methods() {
@@ -112,7 +104,11 @@ public:
 
 class RxNotificationOnCompleted : public RxNotification {
     GDCLASS(RxNotificationOnCompleted, RxNotification)
-    RX_WRAPPER(RxNotificationOnCompleted, notification_on_completed_t, RxNotification, notification_t)
+    _RX_WRAPPER(RxNotificationOnCompleted, notification_on_completed_t, RxNotification, notification_t)
+
+    inline String _to_string() const {
+        return this->_ptr->to_string();
+    }
 
 protected:
     static inline void _bind_methods() {

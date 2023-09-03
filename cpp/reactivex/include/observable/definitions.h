@@ -47,12 +47,20 @@
 #include "observable/operators/_first.h"
 #include "observable/operators/_firstordefault.h"
 #include "observable/operators/_forkjoin.h"
+#include "observable/operators/_groupbyuntil.h"
+#include "observable/operators/_groupby.h"
+#include "observable/operators/_groupjoin.h"
+#include "observable/operators/_ignoreelements.h"
+#include "observable/operators/_isempty.h"
+#include "observable/operators/_join.h"
 #include "observable/operators/_last.h"
 #include "observable/operators/_lastordefault.h"
 #include "observable/operators/_map.h"
+#include "observable/operators/_materialize.h"
 #include "observable/operators/_reduce.h"
 #include "observable/operators/_scan.h"
 #include "observable/operators/_some.h"
+#include "observable/operators/_take.h"
 #include "observable/operators/_zip.h"
 
 namespace rx::observable {
@@ -174,6 +182,19 @@ template <typename... Args> inline static observable_op_t fork_join(const Args&.
 // _filter.h
 inline static observable_op_t filter(const predicate_t<Variant>& predicate) { return filter_(predicate); }
 inline static observable_op_t filter_indexed(const predicate_indexed_t<Variant>& predicate = nullptr) { return filter_indexed_(predicate); }
+// _groupby.h
+inline static observable_op_t group_by(const mapper_t<Variant, Variant>& key_mapper, const mapper_t<Variant, Variant>& element_mapper = nullptr,const mapper_t<rx_subject_t>& subject_mapper = nullptr) { return group_by_(key_mapper, element_mapper, subject_mapper); }
+// _groupbyuntil.h
+inline static observable_op_t group_by_until(const mapper_t<Variant, Variant>& key_mapper, const mapper_t<rx_observable_t, grouped_observable_t>& duration_mapper, const mapper_t<Variant, Variant>& element_mapper = nullptr, const mapper_t<rx_subject_t>& subject_mapper = nullptr
+) { return group_by_until_(key_mapper, duration_mapper, element_mapper, subject_mapper); }
+// _groupjoin.h
+inline static observable_op_t group_join(const rx_observable_t& right, const mapper_t<rx_observable_t, Variant>& left_duration_mapper, const mapper_t<rx_observable_t, Variant>& right_duration_mapper) { return group_join_(right, left_duration_mapper, right_duration_mapper); }
+// _ignoreelements.h
+inline static observable_op_t ignore_elements() { return ignore_elements_(); }
+// _isempty.h
+inline static observable_op_t is_empty() { return is_empty_(); }
+// _join.h
+inline static observable_op_t join(const rx_observable_t& right, const mapper_t<rx_observable_t, Variant>& left_duration_mapper, const mapper_t<rx_observable_t, Variant>& right_duration_mapper) { return join_(right, left_duration_mapper, right_duration_mapper); }
 // _last.h
 inline static observable_op_t last(const predicate_t<Variant>& predicate = nullptr) { return last_(predicate); }
 // _lastordefault.h
@@ -183,10 +204,14 @@ inline static observable_op_t reduce(const accumulator_t<Variant, Variant>& accu
 // _map.h
 inline static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nullptr) { return map_(mapper); }
 inline static observable_op_t map_indexed(const mapper_indexed_t<Variant, Variant>& mapper = nullptr) { return map_indexed_(mapper); }
+// _materalize.h
+inline static observable_op_t materialize() { return materialize_(); }
 // _scan.h
 inline static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return scan_(accumulator, seed); }
 // _some.h
 inline static observable_op_t some(const predicate_t<Variant>& predicate = nullptr) { return some_(predicate); }
+// _take.h
+inline static observable_op_t take(uint64_t count) { return take_(count); }
 // _zip.h
 template<typename IterableT> inline static observable_op_t zip(const IterableT& args) { return rx::observable::op::zip_(args); }
 template <typename... Args> inline static observable_op_t zip(const Args&... others) { return rx::observable::op::zip_(others...); }

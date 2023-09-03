@@ -15,6 +15,9 @@
 #include "abstract/iterator.h"
 #include "abstract/subject.h"
 
+#include "disposable/refcountdisposable.h"
+
+using namespace rx::disposable;
 using namespace godot;
 
 #define VNULL Variant()
@@ -57,6 +60,12 @@ protected:
     }
 };
 
+struct variant_compare {
+    bool operator()(const Variant& a, const Variant& b) const {
+        return UtilityFunctions::hash(a) < UtilityFunctions::hash(b);
+    }
+};
+
 #define NOT_SET(x) NotSet::is(x)
 #define IS_SET(x) !NotSet::is(x)
 
@@ -77,6 +86,11 @@ namespace observable {
 typedef std::shared_ptr<rx::observable::Observable> rx_observable_t;
 typedef std::list<rx_observable_t> observable_list_t;
 typedef std::vector<rx_observable_t> observable_vec_t;
+
+namespace subject {
+    class Subject;
+}
+typedef std::shared_ptr<rx::subject::Subject> rx_subject_t;
 
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {
@@ -124,6 +138,8 @@ static std::vector<T> insert_front(const T& single, const std::vector<T>& vec) {
     }
     return res;
 }
+
+rx_observable_t add_ref(const rx_observable_t& xs, const std::shared_ptr<RefCountDisposable>& r);
 
 } // END namespace rx
 

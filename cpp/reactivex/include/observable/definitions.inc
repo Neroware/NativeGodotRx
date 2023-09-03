@@ -103,6 +103,18 @@ Ref<RxObservable> fork_join_with(const Variant **args, GDExtensionInt arg_count,
 // _filter.h
 Ref<RxObservable> filter(const Callable& predicate);
 Ref<RxObservable> filter_indexed(const Callable& predicate = Callable());
+// _groupby.h
+Ref<RxObservable> group_by(const Callable& key_mapper, const Callable& element_mapper = Callable(), const Callable& subject_mapper = Callable());
+// _groupbyuntil.h
+Ref<RxObservable> group_by_until(const Callable& key_mapper, const Callable& duration_mapper, const Callable& element_mapper = Callable(), const Callable& subject_mapper = Callable());
+// _groupjoin.h
+Ref<RxObservable> group_join(Ref<RxObservable> right, const Callable& left_duration_mapper, const Callable& right_duration_mapper);
+// _ignoreelements.h
+Ref<RxObservable> ignore_elements();
+// _isempty.h
+Ref<RxObservable> is_empty();
+// _join.h
+Ref<RxObservable> join(Ref<RxObservable> right, const Callable& left_duration_mapper, const Callable& right_duration_mapper);
 // _last.h
 Ref<RxObservable> last(const Callable& predicate = Callable());
 // _lastordefault.h
@@ -112,10 +124,14 @@ Ref<RxObservable> reduce(const Callable& accumulator, const Variant& seed = NotS
 // _map.h
 Ref<RxObservable> map(const Callable& mapper = Callable());
 Ref<RxObservable> map_indexed(const Callable& mapper = Callable());
+// _materialize.h
+Ref<RxObservable> materialize();
 // _scan.h
 Ref<RxObservable> scan(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _some.h
 Ref<RxObservable> some(const Callable& predicate = Callable());
+// _take.h
+Ref<RxObservable> take(uint64_t count);
 // _zip.h
 Ref<RxObservable> zip_withv(const Variant& sources);
 Ref<RxObservable> zip_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);

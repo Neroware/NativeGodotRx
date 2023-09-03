@@ -3,7 +3,6 @@
 
 #include "wrapper/abstract.h"
 #include "wrapper/disposable.h"
-#include "observable/definitions.h"
 
 #include "observable/connectableobservable.h"
 #include "observable/groupedobservable.h"
