@@ -4,6 +4,8 @@
 #include "wrapper/abstract.h"
 #include "observable/definitions.h"
 
+#include "observable/connectableobservable.h"
+
 #include "basic.h"
 
 using namespace godot;
@@ -27,6 +29,35 @@ public:
 
 protected:
     static void _bind_methods();
+};
+
+class RxConnectableObservable : public RxObservable {
+    GDCLASS(RxConnectableObservable, RxObservable)
+    RX_WRAPPER(RxConnectableObservable, ConnectableObservable, RxObservable, Observable)
+
+public:
+    inline static Ref<RxConnectableObservable> get(Ref<RxObservableBase> source, Ref<RxSubjectBase> subject) {
+        return RxConnectableObservable::wrap(ConnectableObservable::get(
+            RxObservableBase::unwrap(source),
+            RxSubjectBase::unwrap(source)
+        ));
+    }
+    inline Ref<RxDisposableBase> connect(Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>()) {
+        return RxDisposableBase::wrap(this->_ptr->connect(
+            RxSchedulerBase::unwrap(scheduler)
+        ));
+    }
+    inline Ref<RxObservable> auto_connect(uint64_t subscriber_count = 1) {
+        return RxObservable::wrap(this->_ptr->auto_connect(subscriber_count));
+    }
+
+protected:
+    inline static void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxConnectableObservable)
+        ClassDB::bind_static_method("RxConnectableObservable", D_METHOD("get"), &RxConnectableObservable::get);
+        ClassDB::bind_method(D_METHOD("connected", "scheduler"), &RxConnectableObservable::connect, DEFVAL(Ref<RxSchedulerBase>()));
+        ClassDB::bind_method(D_METHOD("auto_connect", "subscriber_count"), &RxConnectableObservable::auto_connect, DEFVAL(1));
+    }
 };
 
 } // END namespace wrapper

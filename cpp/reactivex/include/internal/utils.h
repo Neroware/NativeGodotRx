@@ -13,6 +13,7 @@
 #include "abstract/scheduler.h"
 #include "abstract/iterable.h"
 #include "abstract/iterator.h"
+#include "abstract/subject.h"
 
 using namespace godot;
 
@@ -65,6 +66,7 @@ typedef std::shared_ptr<rx::abstract::ObserverBase> observer_t;
 typedef std::shared_ptr<rx::abstract::SchedulerBase> scheduler_t;
 typedef std::shared_ptr<rx::abstract::IteratorBase> iterator_t;
 typedef std::shared_ptr<rx::abstract::IterableBase> iterable_t;
+typedef std::shared_ptr<rx::abstract::SubjectBase> subject_t;
 
 typedef std::list<disposable_t> disposable_list_t;
 typedef std::vector<disposable_t> disposable_vec_t;

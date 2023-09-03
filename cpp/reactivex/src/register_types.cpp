@@ -89,6 +89,8 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxNewThreadScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSceneTreeTimeoutScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxTimeoutScheduler>();
+	// observable
+	ClassDB::register_abstract_class<rx::wrappers::RxConnectableObservable>();
 	// observer
 	ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduledObserver>();
