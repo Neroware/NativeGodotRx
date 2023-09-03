@@ -11,7 +11,7 @@ using namespace rx::exception;
 
 namespace rx::observable::op {
 
-static observable_op_t element_at_or_default_(uint64_t index, bool has_default = false, Variant default_value = nullptr) {
+static observable_op_t element_at_or_default_(uint64_t index, bool has_default = false, const Variant& default_value = VNULL) {
     if (index < 0) {
         throw ArgumentOutOfRangeException();
     }

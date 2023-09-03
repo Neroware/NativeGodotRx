@@ -83,6 +83,23 @@ Ref<RxObservable> do_on_subscribe(const Callable& on_subscribe);
 Ref<RxObservable> do_on_dispose(const Callable& on_dispose);
 Ref<RxObservable> do_on_terminate(const Callable& on_terminate);
 Ref<RxObservable> do_finally(const Callable& finally_action);
+// _elementatordefault.h
+Ref<RxObservable> element_at_or_default(uint64_t index, bool has_default = false, const Variant& default_value = VNULL);
+// _exclusive.h
+Ref<RxObservable> exclusive();
+// _expand.h
+Ref<RxObservable> expand(const Callable& mapper);
+// _finallyaction.h
+Ref<RxObservable> finally_action(const Callable& action);
+// _find.h
+Ref<RxObservable> find_value(const Callable& predicate, bool yield_index);
+// _first.h
+Ref<RxObservable> first(const Callable& predicate = Callable());
+// _firstordefault.h
+Ref<RxObservable> first_or_default(const Callable& predicate = Callable(), const Variant& default_value = VNULL);
+// _forkjoin.h
+Ref<RxObservable> fork_join_withv(const Variant& sources);
+Ref<RxObservable> fork_join_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 // _filter.h
 Ref<RxObservable> filter(const Callable& predicate);
 Ref<RxObservable> filter_indexed(const Callable& predicate = Callable());
@@ -94,7 +111,12 @@ Ref<RxObservable> last_or_default(const Variant& default_value = Variant(), cons
 Ref<RxObservable> reduce(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _map.h
 Ref<RxObservable> map(const Callable& mapper = Callable());
+Ref<RxObservable> map_indexed(const Callable& mapper = Callable());
 // _scan.h
 Ref<RxObservable> scan(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _some.h
 Ref<RxObservable> some(const Callable& predicate = Callable());
+// _zip.h
+Ref<RxObservable> zip_withv(const Variant& sources);
+Ref<RxObservable> zip_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+Ref<RxObservable> zip_with_iterable(const Variant& iterable);

@@ -154,6 +154,23 @@ inline static rx_observable_t do_on_subscribe(const rx_observable_t& source, con
 inline static rx_observable_t do_on_dispose(const rx_observable_t& source, const dispose_t& on_dispose) { return rx::observable::op::do_on_dispose(source, on_dispose); }
 inline static rx_observable_t do_on_terminate(const rx_observable_t& source, const do_action_t& on_terminate) { return rx::observable::op::do_on_terminate(source, on_terminate); }
 inline static observable_op_t do_finally(const do_action_t& finally_action) { return do_finally_(finally_action); }
+// _elementatordefault.h
+inline static observable_op_t element_at_or_default(uint64_t index, bool has_default = false, const Variant& default_value = VNULL) { return element_at_or_default_(index, has_default, default_value); }
+// _exclusive.h
+inline static observable_op_t exclusive() { return exclusive_(); }
+// _expand.h
+inline static observable_op_t expand(const mapper_t<rx_observable_t, Variant>& mapper) { return expand_(mapper); }
+// _finallyaction.h
+inline static observable_op_t finally_action(const std::function<void()>& action) { return finally_action_(action); }
+// _find.h
+inline static observable_op_t find_value(const predicate_t<Variant, uint64_t, rx_observable_t>& predicate, bool yield_index) { return find_value_(predicate, yield_index); }
+// _first.h
+inline static observable_op_t first(const predicate_t<Variant>& predicate = nullptr) { return first_(predicate); }
+// _firstordefault.h
+inline static observable_op_t first_or_default(const predicate_t<Variant>& predicate = nullptr, const Variant& default_value = VNULL) { return first_or_default_(predicate, default_value); }
+// _forkjoin.h
+template<typename IterableT> inline static observable_op_t fork_join(const IterableT& args) { return fork_join(args); }
+template <typename... Args> inline static observable_op_t fork_join(const Args&... others) { return fork_join_(others...); }
 // _filter.h
 inline static observable_op_t filter(const predicate_t<Variant>& predicate) { return filter_(predicate); }
 inline static observable_op_t filter_indexed(const predicate_indexed_t<Variant>& predicate = nullptr) { return filter_indexed_(predicate); }
@@ -165,10 +182,15 @@ inline static observable_op_t last_or_default(const Variant& default_value = VNU
 inline static observable_op_t reduce(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return reduce_(accumulator, seed); }
 // _map.h
 inline static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nullptr) { return map_(mapper); }
+inline static observable_op_t map_indexed(const mapper_indexed_t<Variant, Variant>& mapper = nullptr) { return map_indexed_(mapper); }
 // _scan.h
 inline static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return scan_(accumulator, seed); }
 // _some.h
 inline static observable_op_t some(const predicate_t<Variant>& predicate = nullptr) { return some_(predicate); }
+// _zip.h
+template<typename IterableT> inline static observable_op_t zip(const IterableT& args) { return rx::observable::op::zip_(args); }
+template <typename... Args> inline static observable_op_t zip(const Args&... others) { return rx::observable::op::zip_(others...); }
+template<typename IterableT> inline static observable_op_t zip_with_iterable(const IterableT& seq) { return zip_with_iterable_(seq); }
 
 }; // END struct Operators
 

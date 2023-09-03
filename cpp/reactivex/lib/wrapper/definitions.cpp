@@ -4,14 +4,15 @@ namespace rx::wrappers {
 
 #define UNWRAP_VARIADICS(argv) TypedArray<RxObservable> argv; for (auto argi = 0ul; argi < arg_count; argi++) argv.push_back(*(args[argi])); 
 #define UNWRAP_VARIADICS_AND_FORWARD(method) UNWRAP_VARIADICS(sources) return method(sources);
-#define VARIANT_ITERABLE(sources) rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
+#define UNWRAP_OBSERVABLES(sources) rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
+#define UNWRAP_ITERABLE(iterable) rx_iterable(RxIterableBase::unwrap(rx::iterator::to_iterable(iterable)))
 #define BIND_VARARG_METHOD(Cls, method_name, arg_type, arg_name) { \
         MethodInfo mi; \
 		mi.arguments.push_back(PropertyInfo(Variant::arg_type, #arg_name)); \
 		mi.name = #method_name; \
 		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, #method_name, &Cls::method_name, mi); \
     }
-
+#define RETURN_TRANSFORMED_OBS(operator, ...) return RxObservable::wrap(op::Operators::operator(__VA_ARGS__)(this->_ptr))
 
 static time_delta_t variant_to_timedelta(const Variant& time) {
     if (IS_NUMBER(time)) {
@@ -41,21 +42,21 @@ Ref<RxObservable> RxObservable::case_mapper(const Callable& mapper, const Dictio
 // catch.h
 Ref<RxObservable> RxObservable::catch_with_iterable(const Variant& sources) {
     return RxObservable::wrap(Observables::catch_with_iterable(
-        VARIANT_ITERABLE(sources)
+        UNWRAP_OBSERVABLES(sources)
     ));
 }
 
 // combinelatest.h
 Ref<RxObservable> RxObservable::combine_latest(const Variant& sources) {
     return RxObservable::wrap(Observables::combine_latest(
-        VARIANT_ITERABLE(sources)
+        UNWRAP_OBSERVABLES(sources)
     ));
 }
 
 // concat.h
 Ref<RxObservable> RxObservable::concat(const Variant& sources) {
     return RxObservable::wrap(Observables::concat_with_iterable(
-        VARIANT_ITERABLE(sources)
+        UNWRAP_OBSERVABLES(sources)
     ));
 }
 
@@ -72,7 +73,7 @@ Ref<RxObservable> RxObservable::empty(Ref<RxSchedulerBase> scheduler) {
 // forkjoin.h
 Ref<RxObservable> RxObservable::fork_join(const Variant& sources) {
     return RxObservable::wrap(Observables::fork_join(
-        VARIANT_ITERABLE(sources)
+        UNWRAP_OBSERVABLES(sources)
     ));
 }
 
@@ -204,13 +205,13 @@ Ref<RxObservable> RxObservable::using_resource(const Callable& resource_factory,
 
 // withlatestfrom.h
 Ref<RxObservable> RxObservable::with_latest_from(Ref<RxObservable> parent, const Variant& sources) {
-    return RxObservable::wrap(Observables::with_latest_from(RxObservable::unwrap(parent), VARIANT_ITERABLE(sources)));
+    return RxObservable::wrap(Observables::with_latest_from(RxObservable::unwrap(parent), UNWRAP_OBSERVABLES(sources)));
 }
 
 // zip.h
 Ref<RxObservable> RxObservable::zip(const Variant& sources) {
     return RxObservable::wrap(Observables::zip(
-        VARIANT_ITERABLE(sources)
+        UNWRAP_OBSERVABLES(sources)
     ));
 }
 
@@ -272,7 +273,7 @@ Ref<RxObservable> RxObservable::catch_with_handler(const Variant& handler) {
 // _combinelatest.h
 Ref<RxObservable> RxObservable::combine_latest_withv(const Variant& others) {
     return RxObservable::wrap(op::Operators::combine_latest(
-        VARIANT_ITERABLE(others)
+        UNWRAP_OBSERVABLES(others)
     )(this->_ptr));
 }
 Ref<RxObservable> RxObservable::combine_latest_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
@@ -283,7 +284,7 @@ Ref<RxObservable> RxObservable::combine_latest_with(const Variant **args, GDExte
 // _concat.h
 Ref<RxObservable> RxObservable::concat_withv(const Variant& sources) {
     return RxObservable::wrap(op::Operators::concat(
-        VARIANT_ITERABLE(sources)
+        UNWRAP_OBSERVABLES(sources)
     )(this->_ptr));
 }
 Ref<RxObservable> RxObservable::concat_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
@@ -388,6 +389,70 @@ Ref<RxObservable> RxObservable::do_finally(const Callable& finally_action) {
     )(this->_ptr));
 }
 
+// _elementatordefault.h
+Ref<RxObservable> RxObservable::element_at_or_default(uint64_t index, bool has_default, const Variant& default_value) {
+    return RxObservable::wrap(op::Operators::element_at_or_default(
+        index, has_default, default_value
+    )(this->_ptr));
+}
+
+// _exclusive.h
+Ref<RxObservable> RxObservable::exclusive() {
+    RETURN_TRANSFORMED_OBS(exclusive, );
+}
+
+// _expand.h
+Ref<RxObservable> RxObservable::expand(const Callable& mapper) {
+    RETURN_TRANSFORMED_OBS(expand,
+        [mapper](const Variant& input) -> rx_observable_t {
+            return RxObservable::unwrap(mapper.callv(Array::make(input)));
+        }
+    );
+}
+
+// _finallyaction.h
+Ref<RxObservable> RxObservable::finally_action(const Callable& action) {
+    RETURN_TRANSFORMED_OBS(finally_action, 
+        [action]() { action.callv(Array()); }
+    );
+}
+
+// _find.h
+Ref<RxObservable> RxObservable::find_value(const Callable& predicate, bool yield_index) {
+    RETURN_TRANSFORMED_OBS(find_value, 
+        [predicate](const Variant& v, uint64_t i, const rx_observable_t& o) -> bool {
+            return predicate.callv(Array::make(v, i, RxObservable::wrap(o)));
+        },
+        yield_index
+    );
+}
+
+// _first.h
+Ref<RxObservable> RxObservable::first(const Callable& predicate) {
+    RETURN_TRANSFORMED_OBS(first, 
+        predicate_cb<Variant>(predicate)
+    );
+}
+
+// _firstordefault
+Ref<RxObservable> RxObservable::first_or_default(const Callable& predicate, const Variant& default_value) {
+    RETURN_TRANSFORMED_OBS(first_or_default, 
+        predicate_cb<Variant>(predicate),
+        default_value
+    );
+}
+
+// _forkjoin.h
+Ref<RxObservable> RxObservable::fork_join_withv(const Variant& sources) {
+    RETURN_TRANSFORMED_OBS(fork_join, 
+        UNWRAP_OBSERVABLES(sources)
+    );
+}
+Ref<RxObservable> RxObservable::fork_join_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+    UNWRAP_VARIADICS_AND_FORWARD(fork_join_withv);
+}
+
+
 // _filter.h
 Ref<RxObservable> RxObservable::filter(const Callable& predicate) {
     return RxObservable::wrap(op::Operators::filter(
@@ -440,6 +505,14 @@ Ref<RxObservable> RxObservable::map(const Callable& mapper) {
         [mapper](const Variant& v) -> Variant { return mapper.callv(Array::make(v)); }
     )(this->_ptr));
 }
+Ref<RxObservable> RxObservable::map_indexed(const Callable& mapper) {
+    if (mapper.is_null()) {
+        return RxObservable::wrap(op::Operators::map_indexed()(this->_ptr));
+    }
+    return RxObservable::wrap(op::Operators::map_indexed(
+        [mapper](const Variant& v, uint64_t i) -> Variant { return mapper.callv(Array::make(v, i)); }
+    )(this->_ptr));
+}
 
 // _scan.h
 Ref<RxObservable> RxObservable::scan(const Callable& accumulator, const Variant& seed) {
@@ -458,6 +531,20 @@ Ref<RxObservable> RxObservable::some(const Callable& predicate) {
     )(this->_ptr));
 }
 
+// _zip.h
+Ref<RxObservable> RxObservable::zip_withv(const Variant& sources) {
+    RETURN_TRANSFORMED_OBS(zip, 
+        UNWRAP_OBSERVABLES(sources)
+    );
+}
+Ref<RxObservable> RxObservable::zip_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+    UNWRAP_VARIADICS_AND_FORWARD(zip_withv);
+}
+Ref<RxObservable> RxObservable::zip_with_iterable(const Variant& iterable) {
+    RETURN_TRANSFORMED_OBS(zip_with_iterable, 
+        UNWRAP_ITERABLE(iterable)
+    );
+}
 
 /* BINDINGS GO HERE */
 void RxObservable::_bind_methods() {
@@ -549,6 +636,23 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("do_on_terminate", "on_terminate"), &RxObservable::do_on_terminate);
     ClassDB::bind_method(D_METHOD("do_finally", "finally_action"), &RxObservable::do_finally);
 
+    ClassDB::bind_method(D_METHOD("element_at_or_default", "index", "has_default", "default_value"), &RxObservable::element_at_or_default, DEFVAL(false), DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("exclusive"), &RxObservable::exclusive);
+
+    ClassDB::bind_method(D_METHOD("expand", "mapper"), &RxObservable::expand);
+
+    ClassDB::bind_method(D_METHOD("finally_action", "action"), &RxObservable::finally_action);
+
+    ClassDB::bind_method(D_METHOD("find_value", "predicate", "yield_index"), &RxObservable::find_value);
+
+    ClassDB::bind_method(D_METHOD("first", "predicate"), &RxObservable::first, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("first_or_default", "predicate"), &RxObservable::first_or_default, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("fork_join_withv", "sources"), &RxObservable::fork_join_withv);
+    BIND_VARARG_METHOD(RxObservable, fork_join_with, OBJECT, sources)
+
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter);
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(Callable()));
 
@@ -559,10 +663,15 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("reduce", "accumulator", "seed"), &RxObservable::reduce, DEFVAL(Callable()), DEFVAL(memnew(NotSet)));
 
     ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map, DEFVAL(Callable()));
+    ClassDB::bind_method(D_METHOD("map_indexed", "mapper"), &RxObservable::map_indexed, DEFVAL(Callable()));
 
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet)));
 
     ClassDB::bind_method(D_METHOD("some", "predicate"), &RxObservable::some, DEFVAL(Callable())); 
+
+    ClassDB::bind_method(D_METHOD("zip_withv", "sources"), &RxObservable::zip_withv);
+    BIND_VARARG_METHOD(RxObservable, zip_with, OBJECT, "sources")
+    ClassDB::bind_method(D_METHOD("zip_with_iterable", "sources"), &RxObservable::zip_with_iterable);
 
 }
 

@@ -76,7 +76,9 @@ func _ready():
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
-	
+	RxObservable.from([1, 2, 3, 4]).zip_with_iterable(["a", "b", "c", "d", "f"]) \
+		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+		.dispose_with(self)
 #	get_tree().quit()
 	
 #	var example: Example = $Example
