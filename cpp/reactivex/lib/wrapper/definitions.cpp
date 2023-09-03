@@ -117,7 +117,7 @@ Ref<RxObservable> RxObservable::never() {
 Ref<RxObservable> RxObservable::on_error_resume_next(const Variant& sources, bool use_factory) {
     if (use_factory) {
         return RxObservable::wrap(Observables::on_error_resume_next(
-            rx_iterable<std::function<std::shared_ptr<Observable>(const std::exception_ptr&)>, Variant::Type::CALLABLE>(
+            rx_mapper_iterable<std::function<std::shared_ptr<Observable>(const std::exception_ptr&)>, Variant::Type::CALLABLE>(
                 RxIterableBase::unwrap(rx::iterator::to_iterable(sources)),
                 [](const Callable& cb) {
                     return [cb](const std::exception_ptr& e) -> std::shared_ptr<Observable> {

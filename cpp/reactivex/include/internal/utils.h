@@ -40,6 +40,8 @@ using namespace godot;
     ClassDB::bind_method(D_METHOD(#getter), &Class::getter); \
     ADD_PROPERTY(PropertyInfo(Variant::type, #name), "", #getter);
 
+#define RX_ITERABLE(Iterable, ...) rx::rx_iterable(std::make_shared<Iterable>(__VA_ARGS__))
+
 namespace rx {
 
 class NotSet : public RefCounted {

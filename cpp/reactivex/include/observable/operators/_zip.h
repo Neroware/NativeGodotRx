@@ -36,21 +36,23 @@ static observable_op_t zip_(const Args&... others) {
     return zip;
 }
 
-static observable_op_t zip_with_iterable_(const iterable_t& seq) {
+template<typename IterableT>
+static observable_op_t zip_with_iterable_(const IterableT& seq) {
     observable_op_t zip_with_iterable = OP(source) {
 
         auto first = source;
-        auto second = seq->iter();
+        auto second =  std::make_shared<typename IterableT::const_iterator>(seq.begin());
 
         subscription_t subscribe = SUBSCRIBE(observer, scheduler = nullptr) {
             on_next_t on_next = [=](const Variant& left) {
                 try {
-                    if (!second->has_next()) {
+                    if (!(*second != seq.end())) {
                         observer->on_completed();
                     } else {
-                        const Variant right = second->next();
+                        const Variant right = **second;
                         Array result = Array::make(left, right);
                         observer->on_next(result);
+                        ++(*second);
                     }
                 } catch (...) {
                     observer->on_error(std::current_exception());

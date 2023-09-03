@@ -3,6 +3,8 @@
 
 #include "observable/observable.h"
 
+#include "observable/operators/_zip.h"
+
 #include "internal/utils.h"
 #include "typing.h"
 
@@ -37,7 +39,14 @@ static observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr) 
     return map;
 }
 
-// TODO map_indexed
+static observable_op_t map_indexed_(const mapper_indexed_t<Variant, Variant>& mapper = nullptr) {
+    auto _mapper = mapper ? mapper : basic::identity<const Variant&, uint64_t>;
+
+    return pipe::compose(
+        zip_with_iterable_(RX_ITERABLE(rx::infinite_iterable)),
+        map_([_mapper](const Array& tup) -> Variant { return _mapper(tup[0], tup[1]); }  )
+    );
+}
 
 } // END namespace rx::observable::op
 

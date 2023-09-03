@@ -5,6 +5,7 @@
 #include <godot_cpp/variant/dictionary.hpp>
 
 #include "wrapper/abstract.h"
+#include "typing.h"
 #include "cast.h"
 
 using namespace godot;
@@ -83,6 +84,70 @@ struct dictionary_iterable : public IterableBase {
     }
 }; // END dictionary_iterable
 
+struct infinite_iterable : public IterableBase {
+
+    Variant value;
+
+    struct infinite_iterator : public IteratorBase {
+
+        Variant value;
+        uint64_t counter = 0;
+
+        infinite_iterator(const Variant& value_)
+            : value(value_) {}
+        
+        inline Variant next() override {
+            return value ? value : Variant(counter++);
+        }
+
+        inline bool has_next() override {
+            return true;
+        }
+
+    }; // END infinite_iterator
+
+    infinite_iterable(const Variant& value_ = VNULL)
+        : value(value_) {}
+    
+    inline std::shared_ptr<IteratorBase> iter() override {
+        return std::make_shared<infinite_iterator>(this->value);
+    }
+
+}; // END infinite_iterable
+
+struct while_iterable : public IterableBase {
+
+    iterable_t it;
+    predicate_t<> pred;
+
+    struct while_iterator : public IteratorBase {
+
+        iterator_t it;
+        predicate_t<> pred;
+        Variant end;
+
+        while_iterator(const iterable_t& it_, const predicate_t<>& pred_)
+            : it(it_->iter()), pred(pred_), end(memnew(ItEnd)) {}
+        
+        inline Variant next() override {
+            return pred() ? it->next() : end;
+        }
+
+        inline bool has_next() override {
+            return pred() && it->has_next();
+        }
+
+    }; // END while_iterator
+
+    while_iterable(const iterable_t& it_, const predicate_t<>& pred_)
+        : it(it_), pred(pred_) {}
+    
+    inline std::shared_ptr<IteratorBase> iter() override {
+        return std::make_shared<while_iterator>(this->it, pred);
+    }
+
+}; // END while_iterable
+
 template<class WrapperT, class BaseT>
 struct dictionary_mapping {
     Dictionary dict;
@@ -108,7 +173,66 @@ struct dictionary_mapping {
  * for GDScript-style iterations. Only use this for wrapping between GodotAPI and Rx!
  * 
  * WARNING: Incremented iterator values work on the same IteratorBase instance!
-*/
+ */
+struct rx_iterable {
+
+    std::shared_ptr<IterableBase> it;
+
+    rx_iterable(const std::shared_ptr<IterableBase>& it_)
+        : it(it_) {}
+    
+    struct const_iterator {
+        using difference_type = std::ptrdiff_t;
+        using value_type = Variant;
+        using reference = value_type;
+        using pointer = value_type*;
+        using iterator_category = std::input_iterator_tag;
+
+        std::shared_ptr<IteratorBase> it;
+        bool is_end;
+        Variant current;
+
+        explicit const_iterator(const std::shared_ptr<IterableBase>& it_, bool is_end_ = false)
+            :   it(is_end_ ? nullptr : it_->iter()), 
+                is_end(is_end_ || !it->has_next()), 
+                current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
+        
+        bool operator!=(const const_iterator& other) const {
+            return is_end ^ other.is_end;
+        }
+        const Variant operator*() const {
+            return current;
+        }
+        const_iterator& operator++() {
+            if (is_end) {
+                return *this;
+            }
+            is_end = !it->has_next();
+            current = it->next();
+            return *this;
+        }
+        const_iterator operator++(int) {
+            const_iterator retval = *this; 
+            ++(*this); 
+            return retval;
+        }
+    };
+    const_iterator begin() const {
+        return const_iterator(this->it);
+    }
+    const_iterator end() const {
+        return const_iterator(this->it, true);
+    }
+    
+}; // END struct rx_iterable
+
+/**
+ * Utility type to wrap around IterableBase to enable C++-style iterations
+ * for GDScript-style iterations. This also unwraps a Godot instance
+ * of type WrapperT transforming it to a BaseT compatible with the API
+ * 
+ * WARNING: Incremented iterator values work on the same IteratorBase instance!
+ */
 template<class WrapperT, class BaseT>
 struct rx_wrapper_iterable {
 
@@ -165,13 +289,21 @@ struct rx_wrapper_iterable {
 
 }; // END struct rx_wrapper_iterable
 
+/**
+ * Utility type to wrap around IterableBase to enable C++-style iterations
+ * for GDScript-style iterations. This also checks for a required Variant-Type
+ * and casts the Godot instance accordingly when dereferenced. Additionally,
+ * it applies a mapper function onto said Godot instance.
+ * 
+ * WARNING: Incremented iterator values work on the same IteratorBase instance!
+ */
 template<class T, Variant::Type type_id>
-struct rx_iterable {
+struct rx_mapper_iterable {
 
     std::shared_ptr<IterableBase> it;
     std::function<T(const Variant&)> mapper;
 
-    rx_iterable(const std::shared_ptr<IterableBase>& it_, const std::function<T(const Variant&)>& mapper_)
+    rx_mapper_iterable(const std::shared_ptr<IterableBase>& it_, const std::function<T(const Variant&)>& mapper_)
         : it(it_), mapper(mapper_) {}
     
     struct const_iterator {
@@ -222,7 +354,7 @@ struct rx_iterable {
         return const_iterator(mapper, this->it, true);
     }
     
-}; // END struct rx_iterable
+}; // END struct rx_mapper_iterable
 
 namespace iterator {
 
