@@ -77,7 +77,11 @@ static observable_op_t merge_all_() {
 
 template<typename IterableT>
 static rx_observable_t _merge(const IterableT& sources) {
-    return from_iterable_(sources)->pipe(merge_all_());
+    std::vector<Ref<RxObservable>> _sources;
+    for (const auto& source : sources) {
+        _sources.push_back(RxObservable::wrap(source));
+    }
+    return from_iterable_(_sources)->pipe(merge_all_());
 }
 
 template <typename IterableT>
@@ -132,7 +136,8 @@ static observable_op_t merge_with_(const IterableT& sources, int64_t max_concurr
                 ));
             };
 
-            on_next_t on_next = [=](const rx_observable_t inner_source) {
+            on_next_t on_next = [=](Ref<RxObservable> inner_source_) {
+                auto inner_source = RxObservable::unwrap(inner_source_);
                 if (*active_count < max_concurrent) {
                     (*active_count)++;
                     subscribe_inner(inner_source, subscribe_inner);
@@ -160,6 +165,12 @@ static observable_op_t merge_with_(const IterableT& sources, int64_t max_concurr
     };
 
     return merge_with;
+}
+
+template <typename... Args>
+static observable_op_t merge_with_(const Args&... sources_, int64_t max_concurrent = -1) {
+    observable_vec_t sources = {sources_...};
+    return merge_with_(sources, max_concurrent);
 }
 
 } // END namespace rx::observable::op

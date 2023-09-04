@@ -15,7 +15,7 @@ static rx_observable_t merge_(const IterableT& sources) {
 }
 template<typename... Args>
 static rx_observable_t merge_(const Args&... sources) {
-    observable_list_t _sources = {sources...};
+    observable_vec_t _sources = {sources...};
     return op::_merge(_sources);
 }
 

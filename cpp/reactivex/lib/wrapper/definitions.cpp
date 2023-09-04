@@ -7,6 +7,8 @@ namespace rx::wrappers {
 
 #define UNWRAP_VARIADICS(argv) TypedArray<RxObservable> argv; for (auto argi = 0ul; argi < arg_count; argi++) argv.push_back(*(args[argi])); 
 #define UNWRAP_VARIADICS_AND_FORWARD(method) UNWRAP_VARIADICS(sources) return method(sources);
+#define UNWRAP_N_VARIADICS(N) TypedArray<RxObservable> argv; for (auto argi = 0ul; argi < N; argi++) argv.push_back(*(args[argi])); 
+#define UNWRAP_VARIADICS_AND_FORWARD(method) UNWRAP_VARIADICS(sources) return method(sources);
 #define UNWRAP_OBSERVABLES(sources) rx_wrapper_iterable<RxObservable, Observable>(RxIterableBase::unwrap(rx::iterator::to_iterable(sources)))
 #define UNWRAP_ITERABLE(iterable) rx_iterable(RxIterableBase::unwrap(rx::iterator::to_iterable(iterable)))
 #define BIND_VARARG_METHOD(Cls, method_name, arg_type, arg_name) { \
@@ -107,6 +109,13 @@ Ref<RxObservable> RxObservable::if_then(const Callable& condition, Ref<RxObserva
         RxObservable::unwrap(then_source),
         RxObservable::unwrap(else_source)
     ));
+}
+
+// merge.h
+Ref<RxObservable> RxObservable::merge(const Variant& sources) {
+    return RxObservable::wrap(
+        Observables::merge(UNWRAP_OBSERVABLES(sources))
+    );
 }
 
 // never.h
@@ -546,6 +555,114 @@ Ref<RxObservable> RxObservable::last_or_default(const Variant& default_value, co
     )(this->_ptr));
 }
 
+// _max.h
+Ref<RxObservable> RxObservable::max(const Callable& comparer) {
+    RETURN_TRANSFORMED_OBS(max,
+        comparer_cb<Variant>(comparer)
+    );
+}
+
+// _maxby.h
+Ref<RxObservable> RxObservable::max_by(const Callable& key_mapper, const Callable& comparer) {
+    RETURN_TRANSFORMED_OBS(max_by,
+        mapper_cb<Variant, Variant>(key_mapper),
+        comparer_cb<Variant>(comparer)
+    );
+}
+
+// _merge.h
+Ref<RxObservable> RxObservable::merge_all() {
+    RETURN_TRANSFORMED_OBS(merge_all, );
+}
+Ref<RxObservable> RxObservable::merge_withv(const Variant& sources, int64_t max_concurrent) {
+    RETURN_TRANSFORMED_OBS(merge_with,
+        UNWRAP_OBSERVABLES(sources),
+        max_concurrent
+    );
+}
+Ref<RxObservable> RxObservable::merge_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+    GDExtensionInt n = arg_count - 1;
+    UNWRAP_N_VARIADICS(n)
+    int64_t max_concurrent = *(args[n]);
+    return merge_withv(argv, max_concurrent);
+}
+
+// _min.h
+Ref<RxObservable> RxObservable::min(const Callable& comparer) {
+    RETURN_TRANSFORMED_OBS(min,
+        comparer_cb<Variant>(comparer)
+    );
+}
+
+// _minby.h
+Ref<RxObservable> RxObservable::min_by(const Callable& key_mapper, const Callable& comparer) {
+    RETURN_TRANSFORMED_OBS(min_by,
+        mapper_cb<Variant, Variant>(key_mapper),
+        comparer_cb<Variant>(comparer)
+    );
+}
+
+// _multicast
+Ref<RxConnectableObservable> RxObservable::multicast(Ref<RxSubject> subject) {
+    RETURN_TRANSFORMED_OBS(multicast,
+        RxSubject::unwrap(subject)
+    );
+}
+Ref<RxObservable> RxObservable::multicast_with_factory(const Callable& subject_factory, const Callable& mapper) {
+    mapper_t<rx_observable_t, rx_observable_t> _mapper = nullptr;
+    if (!mapper.is_null()) {
+        _mapper = [mapper](const rx_observable_t& o) -> rx_observable_t {
+            return RxObservable::unwrap(
+                mapper.callv(Array::make(RxObservable::wrap(o)))
+            );
+        };
+    }
+    RETURN_TRANSFORMED_OBS(multicast,
+        [subject_factory](const scheduler_t& s) -> rx_subject_t {
+            return RxSubject::unwrap(
+                subject_factory.callv(Array::make(RxSchedulerBase::wrap(s)))
+            );
+        },
+        _mapper
+    );
+}
+
+// _observeon.h
+Ref<RxObservable> RxObservable::observe_on(Ref<RxSchedulerBase> scheduler) {
+    RETURN_TRANSFORMED_OBS(observe_on,
+        RxSchedulerBase::unwrap(scheduler)
+    );
+}
+
+// _onerrorresumenext.h
+Ref<RxObservable> RxObservable::on_error_resume_next_with(Ref<RxObservable> second) {
+    RETURN_TRANSFORMED_OBS(on_error_resume_next_with,
+        RxObservable::unwrap(second)
+    );
+}
+
+// _pairwise.h
+Ref<RxObservable> RxObservable::pairwise() {
+    RETURN_TRANSFORMED_OBS(pairwise, );
+}
+
+// _publish.h
+Ref<RxConnectableObservable> RxObservable::publish() {
+    RETURN_TRANSFORMED_OBS(publish, );
+}
+Ref<RxObservable> RxObservable::publish_with_mapper(const Callable& mapper) {
+    RETURN_TRANSFORMED_OBS(publish, 
+        [mapper](const rx_observable_t& o) -> rx_observable_t {
+            return RxObservable::unwrap(
+                mapper.callv(Array::make(RxObservable::wrap(o)))
+            );
+        }
+    );
+}
+Ref<RxObservable> RxObservable::share() {
+    RETURN_TRANSFORMED_OBS(share, );
+}
+
 // _reduce.h
 Ref<RxObservable> RxObservable::reduce(const Callable& accumulator, const Variant& seed) {
     return RxObservable::wrap(op::Operators::reduce(
@@ -639,6 +756,8 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate);
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(Ref<RxObservable>()));
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("merge", "sources"), &RxObservable::merge);
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never);
 
@@ -746,6 +865,31 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("materialize"), &RxObservable::materialize);
 
+    ClassDB::bind_method(D_METHOD("max", "comparer"), &RxObservable::max, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("max_by", "key_mapper", "comparer"), &RxObservable::max_by, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("merge_all"), &RxObservable::merge_all);
+    ClassDB::bind_method(D_METHOD("merge_withv", "sources", "max_concurrent"), &RxObservable::merge_withv, DEFVAL(-1));
+    BIND_VARARG_METHOD(RxObservable, merge_with, VARIANT_MAX, sources);
+
+    ClassDB::bind_method(D_METHOD("min", "comparer"), &RxObservable::min, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("min_by", "key_mapper", "comparer"), &RxObservable::min_by, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("multicast", "subject"), &RxObservable::multicast);
+    ClassDB::bind_method(D_METHOD("multicast_with_factory", "subject_factory", "mapper"), &RxObservable::multicast_with_factory, DEFVAL(Callable()));
+
+    ClassDB::bind_method(D_METHOD("observe_on", "scheduler"), &RxObservable::observe_on);
+
+    ClassDB::bind_method(D_METHOD("on_error_resume_next_with", "second"), &RxObservable::on_error_resume_next_with);
+
+    ClassDB::bind_method(D_METHOD("pairwise"), &RxObservable::pairwise);
+
+    ClassDB::bind_method(D_METHOD("publish"), &RxObservable::publish);
+    ClassDB::bind_method(D_METHOD("share"), &RxObservable::share);
+    ClassDB::bind_method(D_METHOD("publish_with_mapper", "mapper"), &RxObservable::publish_with_mapper);
+
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet)));
 
     ClassDB::bind_method(D_METHOD("some", "predicate"), &RxObservable::some, DEFVAL(Callable())); 
@@ -757,5 +901,11 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("zip_with_iterable", "sources"), &RxObservable::zip_with_iterable);
 
 }
+
+
+Ref<RxObservable> RxConnectableObservable::ref_count() {
+    RETURN_TRANSFORMED_OBS(ref_count, );
+}
+
 
 } // END namespace rx::wrappers

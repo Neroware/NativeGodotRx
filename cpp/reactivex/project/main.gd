@@ -72,19 +72,16 @@ func _ready():
 #		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 #		.dispose_with(self)
 	
-	RxObservable.empty().default_if_empty(42) \
+	RxObservable.merge([
+		RxObservable.periodic_timer(0.5),
+		RxObservable.periodic_timer(1.0),
+	]) \
+		.pairwise() \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
-	RxObservable.from([1, 2, 3, 4]).zip_with_iterable(["a", "b", "c", "d", "f"]) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
-	
-	RxObservable.from([1, 2, 3, 4]).take(2) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
-	
-	RxObservable.from([1, 2, 3, 4]).take(2).materialize().dematerialize() \
+	RxObservable.from([1, 42, 3, 4]) \
+		.max_by(func(x): return x % 4) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

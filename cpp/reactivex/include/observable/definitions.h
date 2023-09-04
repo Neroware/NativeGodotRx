@@ -105,6 +105,9 @@ template<typename IterableT> inline static std::shared_ptr<Observable> from_iter
 inline static std::shared_ptr<Observable> generate(const Variant& initial_state, const predicate_t<Variant>& condition, const mapper_t<Variant, Variant>& iterate) { return generate_(initial_state, condition, iterate); }
 // ifthen.h
 inline static std::shared_ptr<Observable> if_then(const predicate_t<>& condition, const std::shared_ptr<Observable>& then_source, const std::shared_ptr<Observable>& else_source = nullptr) { return if_then_(condition, then_source, else_source); }
+// merge.h
+template<typename IterableT> inline static rx_observable_t merge(const IterableT& sources) { return merge_(sources); }
+template<typename... Args> static rx_observable_t merge(const Args&... sources) { return merge_(sources...); }
 // never.h
 inline static std::shared_ptr<Observable> never() { return never_(); }
 // onerrorresumenext.h
@@ -219,6 +222,30 @@ inline static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nul
 inline static observable_op_t map_indexed(const mapper_indexed_t<Variant, Variant>& mapper = nullptr) { return map_indexed_(mapper); }
 // _materalize.h
 inline static observable_op_t materialize() { return materialize_(); }
+// _max.h
+inline static observable_op_t max(const comparer_t<Variant>& comparer = nullptr) { return max_(comparer); }
+// _maxby.h
+inline static observable_op_t max_by(const mapper_t<Variant, Variant>& key_mapper, const sub_comparer_t<Variant>& comparer = nullptr) { return max_by_(key_mapper, comparer); }
+// _merge.h
+inline static observable_op_t merge_all() { return merge_all_(); }
+template <typename IterableT> inline static observable_op_t merge_with(const IterableT& sources, int64_t max_concurrent = -1) { return merge_with_(sources, max_concurrent); }
+template <typename... Args> inline static observable_op_t merge_with(const Args&... sources, int64_t max_concurrent = -1) { return merge_with_(sources..., max_concurrent); }
+// _min.h
+static observable_op_t min(const comparer_t<Variant>& comparer = nullptr) { return min_(comparer); }
+// _minby.h
+inline static observable_op_t min_by(const mapper_t<Variant, Variant>& key_mapper, const sub_comparer_t<Variant>& comparer = nullptr) { return min_by_(key_mapper, comparer); }
+// _multicast.h
+inline static observable_op_t multicast(const rx_subject_t& subject) { return multicast_(subject); }
+inline static observable_op_t multicast(const rx_subject_factory_t& subject_factory, const mapper_t<rx_observable_t, rx_observable_t>& mapper = nullptr) { return multicast_(subject_factory, mapper); }
+// _observeon.h
+inline static observable_op_t observe_on(const scheduler_t& scheduler) { return observe_on_(scheduler); }
+// _onerrorresumenext.h
+inline static observable_op_t on_error_resume_next_with(const rx_observable_t& second) { return on_error_resume_next_with_(second); }
+// _pairwise.h
+inline static observable_op_t pairwise() { return pairwise_(); }
+// _publish.h
+inline static observable_op_t publish(const mapper_t<rx_observable_t, rx_observable_t>& mapper = nullptr) { return publish_(mapper); }
+static observable_op_t share() { return share_(); }
 // _scan.h
 inline static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return scan_(accumulator, seed); }
 // _some.h
@@ -229,6 +256,11 @@ inline static observable_op_t take(uint64_t count) { return take_(count); }
 template<typename IterableT> inline static observable_op_t zip(const IterableT& args) { return rx::observable::op::zip_(args); }
 template <typename... Args> inline static observable_op_t zip(const Args&... others) { return rx::observable::op::zip_(others...); }
 template<typename IterableT> inline static observable_op_t zip_with_iterable(const IterableT& seq) { return zip_with_iterable_(seq); }
+
+// connectable
+
+// _refcount.h
+inline static observable_op_t ref_count() { return ref_count_(); }
 
 }; // END struct Operators
 

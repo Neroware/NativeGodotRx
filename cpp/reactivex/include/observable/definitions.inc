@@ -19,6 +19,8 @@ static Ref<RxObservable> from(const Variant& iterable, Ref<RxSchedulerBase> sche
 static Ref<RxObservable> generate(const Variant& initial_state, const Callable& condition, const Callable& iterate);
 // ifthen.h
 static Ref<RxObservable> if_then(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source);
+// merge.h
+static Ref<RxObservable> merge(const Variant& sources);
 // never.h
 static Ref<RxObservable> never();
 // onerrorresumenext.h
@@ -126,6 +128,31 @@ Ref<RxObservable> map(const Callable& mapper = Callable());
 Ref<RxObservable> map_indexed(const Callable& mapper = Callable());
 // _materialize.h
 Ref<RxObservable> materialize();
+// _max.h
+Ref<RxObservable> max(const Callable& comparer = Callable());
+// _maxby.h
+Ref<RxObservable> max_by(const Callable& key_mapper, const Callable& comparer = Callable());
+// _merge.h
+Ref<RxObservable> merge_all();
+Ref<RxObservable> merge_withv(const Variant& sources, int64_t max_concurrent = -1);
+Ref<RxObservable> merge_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+// _min.h
+Ref<RxObservable> min(const Callable& comparer = Callable());
+// _minby.h
+Ref<RxObservable> min_by(const Callable& key_mapper, const Callable& comparer = Callable());
+// _multicast.h
+Ref<RxConnectableObservable> multicast(Ref<RxSubject> subject);
+Ref<RxObservable> multicast_with_factory(const Callable& subject_factory, const Callable& mapper = Callable());
+// _observeon.h
+Ref<RxObservable> observe_on(Ref<RxSchedulerBase> scheduler);
+// _onerrorresumenext.h
+Ref<RxObservable> on_error_resume_next_with(Ref<RxObservable> second);
+// _pairwise.h
+Ref<RxObservable> pairwise();
+// _publish.h
+Ref<RxConnectableObservable> publish();
+Ref<RxObservable> publish_with_mapper(const Callable& mapper);
+Ref<RxObservable> share();
 // _scan.h
 Ref<RxObservable> scan(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _some.h

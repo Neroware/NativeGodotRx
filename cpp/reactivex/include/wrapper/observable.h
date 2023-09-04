@@ -3,6 +3,7 @@
 
 #include "wrapper/abstract.h"
 #include "wrapper/disposable.h"
+#include "wrapper/subject.h"
 
 #include "observable/connectableobservable.h"
 #include "observable/groupedobservable.h"
@@ -20,6 +21,9 @@ static subscription_t subscription_cb(const Callable& cb);
 static observable_factory_t observable_factory_cb(const Callable& cb);
 
 namespace wrappers {
+
+class RxConnectableObservable;
+class RxGroupedObservable;
 
 class RxObservable : public RxObservableBase {
     GDCLASS(RxObservable, RxObservableBase)
@@ -51,6 +55,8 @@ public:
     inline Ref<RxObservable> auto_connect(uint64_t subscriber_count = 1) {
         return RxObservable::wrap(this->_ptr->auto_connect(subscriber_count));
     }
+    // connectable/_refcount.h
+    Ref<RxObservable> ref_count();
 
 protected:
     inline static void _bind_methods() {
@@ -58,6 +64,7 @@ protected:
         ClassDB::bind_static_method("RxConnectableObservable", D_METHOD("get", "source", "subject"), &RxConnectableObservable::get);
         ClassDB::bind_method(D_METHOD("connected", "scheduler"), &RxConnectableObservable::connect, DEFVAL(Ref<RxSchedulerBase>()));
         ClassDB::bind_method(D_METHOD("auto_connect", "subscriber_count"), &RxConnectableObservable::auto_connect, DEFVAL(1));
+        ClassDB::bind_method(D_METHOD("ref_count"), &RxConnectableObservable::ref_count);
     }
 };
 
