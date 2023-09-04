@@ -83,15 +83,12 @@ Ref<RxObservable> RxObservable::fork_join(const Variant& sources) {
 // fromiterable.h
 Ref<RxObservable> RxObservable::from_iterable(const Variant& iterable, Ref<RxSchedulerBase> scheduler) {
     return RxObservable::wrap(Observables::from_iterable(
-        RxIterableBase::unwrap(rx::iterator::to_iterable(iterable)),
+        UNWRAP_ITERABLE(iterable),
         RxSchedulerBase::unwrap(scheduler)
     ));
 }
 Ref<RxObservable> RxObservable::from(const Variant& iterable, Ref<RxSchedulerBase> scheduler) {
-    return RxObservable::wrap(Observables::from_iterable(
-        RxIterableBase::unwrap(rx::iterator::to_iterable(iterable)),
-        RxSchedulerBase::unwrap(scheduler)
-    ));
+    return from_iterable(iterable, scheduler);
 }
 
 // generate.h

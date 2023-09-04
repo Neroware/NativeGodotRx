@@ -11,10 +11,10 @@ using namespace rx::disposable;
 
 namespace rx::observable {
 
-template<typename T>
+template<typename IterableT>
 static std::shared_ptr<Observable> with_latest_from_(
     const std::shared_ptr<Observable>& parent,
-    const T& sources_
+    const IterableT& sources_
 ) {
     observable_vec_t sources(sources_.begin(), sources_.end());
 

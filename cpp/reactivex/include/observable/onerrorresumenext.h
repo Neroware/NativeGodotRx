@@ -16,11 +16,11 @@ static std::shared_ptr<Observable> _get_obs(const std::function<std::shared_ptr<
     return source(RxError::unwrap(state)); 
 }
 
-template<typename T>
-static std::shared_ptr<Observable> on_error_resume_next_(const T& sources) {
+template<typename IterableT>
+static std::shared_ptr<Observable> on_error_resume_next_(const IterableT& sources) {
 
     auto _end = sources.end();
-    auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
+    auto _it = std::make_shared<typename IterableT::const_iterator>(sources.begin());
 
     subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
         

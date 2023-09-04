@@ -13,6 +13,7 @@
 #include "observable/fromiterable.h"
 #include "observable/generate.h"
 #include "observable/ifthen.h"
+#include "observable/merge.h"
 #include "observable/never.h"
 #include "observable/onerrorresumenext.h"
 #include "observable/range.h"
@@ -57,11 +58,22 @@
 #include "observable/operators/_lastordefault.h"
 #include "observable/operators/_map.h"
 #include "observable/operators/_materialize.h"
+#include "observable/operators/_max.h"
+#include "observable/operators/_maxby.h"
+#include "observable/operators/_merge.h"
+#include "observable/operators/_min.h"
+#include "observable/operators/_minby.h"
+#include "observable/operators/_multicast.h"
+#include "observable/operators/_observeon.h"
+#include "observable/operators/_onerrorresumenext.h"
+#include "observable/operators/_pairwise.h"
 #include "observable/operators/_reduce.h"
 #include "observable/operators/_scan.h"
 #include "observable/operators/_some.h"
 #include "observable/operators/_take.h"
 #include "observable/operators/_zip.h"
+
+#include "observable/operators/refcount/_refcount.h"
 
 namespace rx::observable {
 
@@ -70,13 +82,13 @@ struct Observables {
 // case.h
 template<typename KeyT, typename MappingT> inline static std::shared_ptr<Observable> case_mapper(const mapper_t<KeyT>& mapper, const MappingT& sources, const std::shared_ptr<Observable>& default_source = nullptr) { return case_(mapper, sources, default_source); }
 // catch.h
-template<typename T> inline static std::shared_ptr<Observable> catch_with_iterable(const T& sources) { return catch_with_iterable(sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> catch_with_iterable(const IterableT& sources) { return catch_with_iterable(sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> catch_with_variadic(const Args&... sources) { return catch_with_variadic_(sources...); }
 // combinelatest.h
-template<typename T> inline static std::shared_ptr<Observable> combine_latest(const T& sources) { return combine_latest_(sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> combine_latest(const IterableT& sources) { return combine_latest_(sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> combine_latest(const Args&... sources) { return combine_latest_(sources...); }
 // concat.h
-template<typename T> inline static std::shared_ptr<Observable> concat_with_iterable(const T& sources) { return concat_with_iterable_(sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> concat_with_iterable(const IterableT& sources) { return concat_with_iterable_(sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> concat_with_variadic(const Args&... sources) { return concat_with_variadic_(sources...); }
 template<typename... Args> inline static std::shared_ptr<Observable> concat(const Args&... sources) { return concat_with_variadic_(sources...); }
 // defer.h
@@ -84,10 +96,10 @@ inline static std::shared_ptr<Observable> defer(const observable_factory_t& fact
 // empty.h
 inline static std::shared_ptr<Observable> empty(const std::shared_ptr<SchedulerBase>& scheduler = nullptr) { return empty_(scheduler); }
 // forkjoin.h
-template<typename T> inline static std::shared_ptr<Observable> fork_join(const T& sources) { return fork_join_(sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> fork_join(const IterableT& sources) { return fork_join_(sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> fork_join(const Args&... sources) { return fork_join_(sources...); }
 // fromiterable.h
-inline static std::shared_ptr<Observable> from_iterable(const std::shared_ptr<IterableBase>& iterable, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) { return from_iterable_(iterable, scheduler); }
+template<typename IterableT> inline static std::shared_ptr<Observable> from_iterable(const IterableT& iterable, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) { return from_iterable_(iterable, scheduler); }
 // generate.h
 inline static std::shared_ptr<Observable> generate(const Variant& initial_state, const predicate_t<Variant>& condition, const mapper_t<Variant, Variant>& iterate) { return generate_(initial_state, condition, iterate); }
 // ifthen.h
@@ -95,7 +107,7 @@ inline static std::shared_ptr<Observable> if_then(const predicate_t<>& condition
 // never.h
 inline static std::shared_ptr<Observable> never() { return never_(); }
 // onerrorresumenext.h
-template<typename T> inline static std::shared_ptr<Observable> on_error_resume_next(const T& sources) { return on_error_resume_next_(sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> on_error_resume_next(const IterableT& sources) { return on_error_resume_next_(sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> on_error_resume_next(const Args&... sources) { return on_error_resume_next_(sources...); }
 // range.h
 inline static std::shared_ptr<Observable> range(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1, const std::shared_ptr<SchedulerBase>& scheduler = nullptr) { return range_(start, stop, step, scheduler); }
@@ -110,10 +122,10 @@ template<typename timeT> inline static std::shared_ptr<Observable> periodic_time
 // using.h
 static std::shared_ptr<Observable> using_resource(const std::function<disposable_t()>& resource_factory, const std::function<std::shared_ptr<Observable>(const disposable_t&)>& observable_factory) { return using_(resource_factory, observable_factory); }
 // withlatestfrom.h
-template<typename T> inline static std::shared_ptr<Observable> with_latest_from(const std::shared_ptr<Observable>& parent, const T& sources) { return with_latest_from_(parent, sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> with_latest_from(const std::shared_ptr<Observable>& parent, const IterableT& sources) { return with_latest_from_(parent, sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> with_latest_from(const std::shared_ptr<Observable>& parent, const Args&... sources) { return with_latest_from_(parent, sources...); }
 // zip.h
-template<typename T> inline static std::shared_ptr<Observable> zip(const T& sources) { return zip_(sources); }
+template<typename IterableT> inline static std::shared_ptr<Observable> zip(const IterableT& sources) { return zip_(sources); }
 template<typename... Args> inline static std::shared_ptr<Observable> zip(const Args&... sources) { return zip_(sources...); }
 
 }; // END struct Observables
@@ -134,10 +146,10 @@ inline static observable_op_t average(const mapper_t<double, Variant>& key_mappe
 inline static observable_op_t catch_with_handler(const std::shared_ptr<Observable>& handler) { return catch_(handler); }
 inline static observable_op_t catch_with_handler(const handler_t& handler) { return catch_(handler); }
 // _combinelatest.h
-template <typename T> inline static observable_op_t combine_latest(const T& others) { return rx::observable::op::combine_latest_(others); }
+template <typename IterableT> inline static observable_op_t combine_latest(const IterableT& others) { return rx::observable::op::combine_latest_(others); }
 template <typename... Args> inline static observable_op_t combine_latest(const Args&... others) { return rx::observable::op::combine_latest_(others...); }
 // _concat.h
-template<typename T> inline static observable_op_t concat(const T& sources) { return rx::observable::op::concat_(sources); }
+template<typename IterableT> inline static observable_op_t concat(const IterableT& sources) { return rx::observable::op::concat_(sources); }
 template<typename... Args> inline static observable_op_t concat(const Args&... others) { return rx::observable::op::concat_(others...); }
 // _contains.h
 inline static observable_op_t contains(const Variant& value, const comparer_t<Variant>& comparer = nullptr) { return contains_(value, comparer); }

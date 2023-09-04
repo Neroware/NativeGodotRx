@@ -16,8 +16,8 @@ using namespace rx::scheduler;
 
 namespace rx::observable {
 
-template<typename T>
-static std::shared_ptr<Observable> combine_latest_(const T& sources_) {
+template<typename IterableT>
+static std::shared_ptr<Observable> combine_latest_(const IterableT& sources_) {
     observable_vec_t sources(sources_.begin(), sources_.end());
 
     std::shared_ptr<Observable> parent = sources[0];

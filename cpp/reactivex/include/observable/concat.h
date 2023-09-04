@@ -12,14 +12,14 @@ using namespace rx::scheduler;
 
 namespace rx::observable {
 
-template<typename T>
-static std::shared_ptr<Observable> concat_with_iterable_(const T& sources) {
+template<typename IterableT>
+static std::shared_ptr<Observable> concat_with_iterable_(const IterableT& sources) {
 
     subscription_t subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
         auto _scheduler = scheduler_ ? scheduler_ : CurrentThreadScheduler::singleton();
 
         auto _end = sources.end();
-        auto _it = std::make_shared<typename T::const_iterator>(sources.begin());
+        auto _it = std::make_shared<typename IterableT::const_iterator>(sources.begin());
 
         auto subscription = std::make_shared<SerialDisposable>();
         auto cancelable = std::make_shared<SerialDisposable>();

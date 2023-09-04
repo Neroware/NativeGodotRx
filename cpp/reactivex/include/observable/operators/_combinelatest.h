@@ -6,8 +6,8 @@
 
 namespace rx::observable::op {
 
-template <typename T>
-static observable_op_t combine_latest_(const T& others_) {
+template <typename IterableT>
+static observable_op_t combine_latest_(const IterableT& others_) {
     observable_vec_t others(others_.begin(), others_.end());
 
     observable_op_t combine_latest = OP(source) {

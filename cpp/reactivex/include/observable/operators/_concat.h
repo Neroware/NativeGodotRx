@@ -8,8 +8,8 @@
 
 namespace rx::observable::op {
 
-template<typename T>
-static observable_op_t concat_(const T& sources_) {
+template<typename IterableT>
+static observable_op_t concat_(const IterableT& sources_) {
     observable_vec_t sources(sources_.begin(), sources_.end());
 
     observable_op_t concat = OP(source) {

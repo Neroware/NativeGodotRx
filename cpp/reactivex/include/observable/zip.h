@@ -11,8 +11,8 @@ using namespace rx::disposable;
 
 namespace rx::observable {
 
-template<typename T>
-static std::shared_ptr<Observable> zip_(const T& sources_) {
+template<typename IterableT>
+static std::shared_ptr<Observable> zip_(const IterableT& sources_) {
     observable_vec_t sources(sources_.begin(), sources_.end());
 
     subscription_t subscribe = SUBSCRIBE(observer, scheduler = nullptr) {
