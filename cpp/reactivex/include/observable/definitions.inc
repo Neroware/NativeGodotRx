@@ -121,8 +121,6 @@ Ref<RxObservable> join(Ref<RxObservable> right, const Callable& left_duration_ma
 Ref<RxObservable> last(const Callable& predicate = Callable());
 // _lastordefault.h
 Ref<RxObservable> last_or_default(const Variant& default_value = Variant(), const Callable& predicate = Callable());
-// _reduce.h
-Ref<RxObservable> reduce(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _map.h
 Ref<RxObservable> map(const Callable& mapper = Callable());
 Ref<RxObservable> map_indexed(const Callable& mapper = Callable());
@@ -153,6 +151,8 @@ Ref<RxObservable> pairwise();
 Ref<RxConnectableObservable> publish();
 Ref<RxObservable> publish_with_mapper(const Callable& mapper);
 Ref<RxObservable> share();
+// _reduce.h
+Ref<RxObservable> reduce(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _scan.h
 Ref<RxObservable> scan(const Callable& accumulator, const Variant& seed = NotSet::value());
 // _some.h

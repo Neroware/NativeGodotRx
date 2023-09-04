@@ -90,6 +90,7 @@ typedef std::shared_ptr<rx::observable::Observable> rx_observable_t;
 typedef std::list<rx_observable_t> observable_list_t;
 typedef std::vector<rx_observable_t> observable_vec_t;
 typedef std::shared_ptr<rx::observable::ConnectableObservable> connectable_observable_t;
+typedef std::function<observable_vec_t(const rx_observable_t&)> partition_op_t;
 
 namespace subject {
     class Subject;

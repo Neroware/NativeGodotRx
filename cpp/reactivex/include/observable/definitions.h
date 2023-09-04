@@ -67,11 +67,16 @@
 #include "observable/operators/_observeon.h"
 #include "observable/operators/_onerrorresumenext.h"
 #include "observable/operators/_pairwise.h"
+#include "observable/operators/_partition.h"
+#include "observable/operators/_pluck.h"
 #include "observable/operators/_publish.h"
+#include "observable/operators/_publishvalue.h"
 #include "observable/operators/_reduce.h"
 #include "observable/operators/_scan.h"
 #include "observable/operators/_some.h"
 #include "observable/operators/_take.h"
+#include "observable/operators/_timestamp.h"
+#include "observable/operators/_withlatestfrom.h"
 #include "observable/operators/_zip.h"
 
 #include "observable/operators/connectable/_refcount.h"
@@ -215,8 +220,6 @@ inline static observable_op_t join(const rx_observable_t& right, const mapper_t<
 inline static observable_op_t last(const predicate_t<Variant>& predicate = nullptr) { return last_(predicate); }
 // _lastordefault.h
 inline static observable_op_t last_or_default(const Variant& default_value = VNULL, const predicate_t<Variant>& predicate = nullptr) { return last_or_default_(default_value, predicate); }
-// _reduce.h
-inline static observable_op_t reduce(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return reduce_(accumulator, seed); }
 // _map.h
 inline static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nullptr) { return map_(mapper); }
 inline static observable_op_t map_indexed(const mapper_indexed_t<Variant, Variant>& mapper = nullptr) { return map_indexed_(mapper); }
@@ -243,15 +246,30 @@ inline static observable_op_t observe_on(const scheduler_t& scheduler) { return 
 inline static observable_op_t on_error_resume_next_with(const rx_observable_t& second) { return on_error_resume_next_with_(second); }
 // _pairwise.h
 inline static observable_op_t pairwise() { return pairwise_(); }
+// _partition.h
+inline static partition_op_t partition(const predicate_t<Variant>& predicate) { return partition_(predicate); }
+inline static partition_op_t partition_indexed(const predicate_indexed_t<Variant>& predicate) { return partition_indexed_(predicate); }
+// _pluck.h
+inline static observable_op_t pluck(const Variant& key) { return pluck_(key); }
+inline static observable_op_t pluck_attr(const String& prop) { return pluck_attr_(prop); }
 // _publish.h
 inline static observable_op_t publish(const mapper_t<rx_observable_t, rx_observable_t>& mapper = nullptr) { return publish_(mapper); }
-static observable_op_t share() { return share_(); }
+inline static observable_op_t share() { return share_(); }
+// _publishvalue.h
+inline static observable_op_t publish_value(const Variant& initial_value, const mapper_t<rx_observable_t, rx_observable_t>& mapper = nullptr) { return publish_value_(initial_value, mapper); }
+// _reduce.h
+static observable_op_t reduce(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return reduce_(accumulator, seed); }
 // _scan.h
 inline static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return scan_(accumulator, seed); }
 // _some.h
 inline static observable_op_t some(const predicate_t<Variant>& predicate = nullptr) { return some_(predicate); }
+// _timestamp.h
+static observable_op_t timestamp(const scheduler_t& scheduler = nullptr) { return timestamp_(scheduler); }
 // _take.h
 inline static observable_op_t take(uint64_t count) { return take_(count); }
+// _withlatestfrom.h
+template<typename IterableT> inline static observable_op_t with_latest_from(const IterableT& sources) { return with_latest_from_(sources); }
+template <typename... Args> inline static observable_op_t with_latest_from(const Args&... others) { return with_latest_from_(others...); }
 // _zip.h
 template<typename IterableT> inline static observable_op_t zip(const IterableT& args) { return rx::observable::op::zip_(args); }
 template <typename... Args> inline static observable_op_t zip(const Args&... others) { return rx::observable::op::zip_(others...); }

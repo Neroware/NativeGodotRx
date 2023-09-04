@@ -555,6 +555,29 @@ Ref<RxObservable> RxObservable::last_or_default(const Variant& default_value, co
     )(this->_ptr));
 }
 
+// _map.h
+Ref<RxObservable> RxObservable::map(const Callable& mapper) {
+    if (mapper.is_null()) {
+        return RxObservable::wrap(op::Operators::map()(this->_ptr));
+    }
+    return RxObservable::wrap(op::Operators::map(
+        [mapper](const Variant& v) -> Variant { return mapper.callv(Array::make(v)); }
+    )(this->_ptr));
+}
+Ref<RxObservable> RxObservable::map_indexed(const Callable& mapper) {
+    if (mapper.is_null()) {
+        return RxObservable::wrap(op::Operators::map_indexed()(this->_ptr));
+    }
+    return RxObservable::wrap(op::Operators::map_indexed(
+        [mapper](const Variant& v, uint64_t i) -> Variant { return mapper.callv(Array::make(v, i)); }
+    )(this->_ptr));
+}
+
+// _materialize.h
+Ref<RxObservable> RxObservable::materialize() {
+    RETURN_TRANSFORMED_OBS(materialize,);
+}
+
 // _max.h
 Ref<RxObservable> RxObservable::max(const Callable& comparer) {
     RETURN_TRANSFORMED_OBS(max,
@@ -668,29 +691,6 @@ Ref<RxObservable> RxObservable::reduce(const Callable& accumulator, const Varian
     return RxObservable::wrap(op::Operators::reduce(
         accumulator_cb<Variant, Variant>(accumulator), seed
     )(this->_ptr));
-}
-
-// _map.h
-Ref<RxObservable> RxObservable::map(const Callable& mapper) {
-    if (mapper.is_null()) {
-        return RxObservable::wrap(op::Operators::map()(this->_ptr));
-    }
-    return RxObservable::wrap(op::Operators::map(
-        [mapper](const Variant& v) -> Variant { return mapper.callv(Array::make(v)); }
-    )(this->_ptr));
-}
-Ref<RxObservable> RxObservable::map_indexed(const Callable& mapper) {
-    if (mapper.is_null()) {
-        return RxObservable::wrap(op::Operators::map_indexed()(this->_ptr));
-    }
-    return RxObservable::wrap(op::Operators::map_indexed(
-        [mapper](const Variant& v, uint64_t i) -> Variant { return mapper.callv(Array::make(v, i)); }
-    )(this->_ptr));
-}
-
-// _materialize.h
-Ref<RxObservable> RxObservable::materialize() {
-    RETURN_TRANSFORMED_OBS(materialize,);
 }
 
 // _scan.h
@@ -858,8 +858,6 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("last_or_default", "default_value", "predicate"), &RxObservable::last_or_default, DEFVAL(Variant()), DEFVAL(Callable()));
 
-    ClassDB::bind_method(D_METHOD("reduce", "accumulator", "seed"), &RxObservable::reduce, DEFVAL(Callable()), DEFVAL(memnew(NotSet)));
-
     ClassDB::bind_method(D_METHOD("map", "mapper"), &RxObservable::map, DEFVAL(Callable()));
     ClassDB::bind_method(D_METHOD("map_indexed", "mapper"), &RxObservable::map_indexed, DEFVAL(Callable()));
 
@@ -889,6 +887,8 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("publish"), &RxObservable::publish);
     ClassDB::bind_method(D_METHOD("share"), &RxObservable::share);
     ClassDB::bind_method(D_METHOD("publish_with_mapper", "mapper"), &RxObservable::publish_with_mapper);
+
+    ClassDB::bind_method(D_METHOD("reduce", "accumulator", "seed"), &RxObservable::reduce, DEFVAL(Callable()), DEFVAL(memnew(NotSet)));
 
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet)));
 
