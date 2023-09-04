@@ -17,8 +17,7 @@ namespace rx::observable::op {
 typedef std::function<rx_subject_t(const scheduler_t&)> rx_subject_factory_t;
 
 static observable_op_t multicast_(
-    const rx_subject_t& subject,
-    const mapper_t<rx_observable_t, rx_observable_t>& mapper = nullptr
+    const rx_subject_t& subject
 ) {
     observable_op_t multicast = OP(source) {
         if (!subject) {

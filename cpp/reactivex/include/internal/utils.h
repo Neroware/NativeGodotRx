@@ -46,6 +46,9 @@ using namespace godot;
 
 #define RX_ITERABLE(Iterable, ...) rx::rx_iterable(std::make_shared<Iterable>(__VA_ARGS__))
 
+#define NOT_SET(x) NotSet::is(x)
+#define IS_SET(x) !NotSet::is(x)
+
 namespace rx {
 
 class NotSet : public RefCounted {
@@ -66,8 +69,7 @@ struct variant_compare {
     }
 };
 
-#define NOT_SET(x) NotSet::is(x)
-#define IS_SET(x) !NotSet::is(x)
+/* Typedefs */
 
 typedef std::shared_ptr<rx::abstract::DisposableBase> disposable_t;
 typedef std::shared_ptr<rx::abstract::ObservableBase> observable_t;
@@ -82,15 +84,20 @@ typedef std::vector<disposable_t> disposable_vec_t;
 
 namespace observable {
     class Observable;
+    class ConnectableObservable;
 }
 typedef std::shared_ptr<rx::observable::Observable> rx_observable_t;
 typedef std::list<rx_observable_t> observable_list_t;
 typedef std::vector<rx_observable_t> observable_vec_t;
+typedef std::shared_ptr<rx::observable::ConnectableObservable> connectable_observable_t;
 
 namespace subject {
     class Subject;
 }
 typedef std::shared_ptr<rx::subject::Subject> rx_subject_t;
+
+
+/* Utility helper functions */
 
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {

@@ -67,13 +67,14 @@
 #include "observable/operators/_observeon.h"
 #include "observable/operators/_onerrorresumenext.h"
 #include "observable/operators/_pairwise.h"
+#include "observable/operators/_publish.h"
 #include "observable/operators/_reduce.h"
 #include "observable/operators/_scan.h"
 #include "observable/operators/_some.h"
 #include "observable/operators/_take.h"
 #include "observable/operators/_zip.h"
 
-#include "observable/operators/refcount/_refcount.h"
+#include "observable/operators/connectable/_refcount.h"
 
 namespace rx::observable {
 

@@ -4,14 +4,17 @@
 #include "observable/observable.h"
 #include "observable/connectableobservable.h"
 
+#include "internal/utils.h"
+
 namespace rx::observable::op {
 
-typedef std::shared_ptr<rx::observable::ConnectableObservable> connectable_observable_t;
-typedef std::function<rx_observable_t(const connectable_observable_t&)> connectable_observable_op_t;
+static observable_op_t ref_count_() {
 
-static connectable_observable_op_t ref_count_() {
-
-    connectable_observable_op_t ref_count = [=](const connectable_observable_t& source) -> rx_observable_t {
+    observable_op_t ref_count = [=](const rx_observable_t& source_) -> rx_observable_t {
+        auto source = std::dynamic_pointer_cast<ConnectableObservable>(source_);
+        if (!source){ 
+            throw BadArgumentException("ref-count operator expected ConnectableObservable"); 
+        }
 
         auto connectable_subscription = std::make_shared<disposable_t>(nullptr);
         auto count = std::make_shared<uint64_t>(0);
