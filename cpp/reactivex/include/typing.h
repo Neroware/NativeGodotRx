@@ -36,6 +36,10 @@ namespace observable {
 namespace subject {
     class Subject;
 }
+class Notification;
+class NotificationOnNext;
+class NotificationOnError;
+class NotificationOnCompleted;
 
 #define RX_BASEPTR_DECLARE(type, ptr_type) \
     struct ptr_type : public std::shared_ptr<type> { \
@@ -55,6 +59,11 @@ RX_BASEPTR_DECLARE(rx::abstract::SchedulerBase, scheduler_t)
 RX_BASEPTR_DECLARE(rx::abstract::StartableBase, startable_t)
 RX_BASEPTR_DECLARE(rx::abstract::SubjectBase, subject_t)
 
+RX_BASEPTR_DECLARE(Notification, notification_t)
+RX_BASEPTR_DECLARE(NotificationOnNext, notification_on_next_t)
+RX_BASEPTR_DECLARE(NotificationOnError, notification_on_error_t)
+RX_BASEPTR_DECLARE(NotificationOnCompleted, notification_on_completed_t)
+
 RX_BASEPTR_DECLARE(rx::observable::Observable, rx_observable_t)
 RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t)
 
@@ -71,6 +80,11 @@ namespace wrappers {
     class RxSchedulerBase;
     class RxStartableBase;
     class RxSubjectBase;
+
+    class RxNotification;
+    class RxNotificationOnNext;
+    class RxNotificationOnError;
+    class RxNotificationOnCompleted;
 
     class RxSubject;
     class RxObservable;
@@ -93,6 +107,11 @@ RX_WRAPPERREF_DECLARE(rx::wrappers::RxPeriodicSchedulerBase, periodic_scheduler_
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxSchedulerBase, scheduler_ref_t, scheduler_t)
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxStartableBase, startable_ref_t, startable_t)
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxSubjectBase, subject_ref_t, subject_t)
+
+RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotification, notification_ref_t, notification_t)
+RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotificationOnNext, notification_on_next_ref_t, notification_on_next_t)
+RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotificationOnError, notification_on_error_ref_t, notification_on_error_t)
+RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotificationOnCompleted, notification_on_completed_ref_t, notification_on_completed_t)
 
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxSubject, rx_subject_ref_t, rx_subject_t)
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxObservable, rx_observable_ref_t, rx_observable_t)
@@ -119,6 +138,7 @@ typedef std::function<godot::Variant()> run_t;
 typedef std::function<startable_t(const run_t&)> thread_factory_t;
 
 typedef std::function<bool(const error_t& e)> handler_t;
+typedef std::function<void(const notification_t&)> notification_handler_t;
 
 template<typename KeyT, typename... ArgsT>
 using mapper_t = std::function<KeyT(const ArgsT&...)>;

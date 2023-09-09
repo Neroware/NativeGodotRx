@@ -69,6 +69,8 @@ static auto periodic_action_cb = from_cb<Variant, const godot::Variant&>;
 static auto dispose_cb = from_void_cb<>;
 static auto run_cb = from_cb<Variant>;
 
+static auto notification_handler_cb = from_cb<notification_t, const notification_t&>;
+
 class NotSet : public RefCounted {
     GDCLASS(NotSet, RefCounted)
 public:
