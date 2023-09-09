@@ -1,11 +1,7 @@
 #ifndef RX_ABSTRACT_STARTABLE_H
 #define RX_ABSTRACT_STARTABLE_H
 
-#include <godot_cpp/variant/variant.hpp>
-#include "exception/exception.h"
-
-#include <functional>
-#include <memory>
+#include "typing.h"
 
 using namespace godot;
 using namespace rx::exception;
@@ -22,9 +18,6 @@ public:
 };
 
 } // END namespace abstract
-
-typedef std::function<Variant()> run_t;
-typedef std::function<std::shared_ptr<abstract::StartableBase>(const run_t&)> thread_factory_t;
 
 } // END namespace rx
 

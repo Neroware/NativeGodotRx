@@ -1,19 +1,14 @@
 #ifndef RX_ABSTRACT_DISPOSABLE_H
 #define RX_ABSTRACT_DISPOSABLE_H
 
-#include <functional>
+#include "typing.h"
 
-namespace rx {
-namespace abstract {
+namespace rx::abstract {
 
 class DisposableBase {
 public:
     virtual void dispose() = 0;
 };
-
-}
-
-typedef std::function<void()> dispose_t;
 
 }
 

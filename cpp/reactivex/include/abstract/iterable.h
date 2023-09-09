@@ -1,16 +1,14 @@
 #ifndef RX_ABSTRACT_ITERABLE_H
 #define RX_ABSTRACT_ITERABLE_H
 
-#include "abstract/iterator.h"
-
-#include <memory>
+#include "typing.h"
 
 namespace rx::abstract {
 
 class IterableBase {
 
 public:
-    virtual std::shared_ptr<IteratorBase> iter() = 0;
+    virtual iterator_t iter() = 0;
     
 };
 

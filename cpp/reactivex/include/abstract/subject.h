@@ -3,10 +3,9 @@
 
 #include "abstract/observer.h"
 #include "abstract/observable.h"
-#include "exception/exception.h"
+#include "typing.h"
 
 using namespace godot;
-using namespace rx::exception;
 
 namespace rx::abstract {
 

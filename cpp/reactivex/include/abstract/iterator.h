@@ -1,7 +1,7 @@
 #ifndef RX_ABSTRACT_ITERATOR_H
 #define RX_ABSTRACT_ITERATOR_H
 
-#include <godot_cpp/variant/variant.hpp>
+#include "typing.h"
 
 using namespace godot;
 
@@ -14,6 +14,6 @@ public:
     virtual bool has_next() = 0;
 };
 
-}; // END namespace abstract
+}; // END namespace rx::abstract
 
 #endif // RX_ABSTRACT_ITERATOR_H

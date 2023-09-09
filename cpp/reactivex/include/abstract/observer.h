@@ -1,21 +1,13 @@
 #ifndef RX_ABSTRACT_OBSERVER_H
 #define RX_ABSTRACT_OBSERVER_H
 
-#include <godot_cpp/variant/variant.hpp>
+#include "typing.h"
 #include "exception/exception.h"
-
-#include <functional>
 
 using namespace godot;
 using namespace rx::exception;
 
-namespace rx {
-
-typedef std::function<void(const Variant&)> on_next_t;
-typedef std::function<void(const std::exception_ptr&)> on_error_t;
-typedef std::function<void()> on_completed_t;
-
-namespace abstract {
+namespace rx::abstract {
 
 class ObserverBase {
 
@@ -23,7 +15,7 @@ public:
     virtual void on_next(const Variant& i) {
         throw NotImplementedException();
     }
-    virtual void on_error(const std::exception_ptr& e) {
+    virtual void on_error(const error_t& e) {
         throw NotImplementedException();
     }
     virtual void on_completed() {
@@ -31,7 +23,6 @@ public:
     }
 };
 
-} // END namespace abstract
-} // END namespace rx
+} // END namespace rx::abstract
 
 #endif // RX_ABSTRACT_OBSERVER_H

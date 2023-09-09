@@ -10,7 +10,7 @@ namespace exception {
 
 class rx_exception : public std::exception
 {
-private:
+protected:
     std::string _what;
     std::string _type;
 
@@ -28,98 +28,53 @@ public:
 class NotImplementedException : public rx_exception
 {
 public:
-    virtual const char* what() const noexcept override {
-        return "Function not implemented!"; 
-    }
-    virtual const char* type() const noexcept override {
-        return "NotImplementedError";
-    }
+    NotImplementedException(const std::string& what_ = "Function not implemented") 
+        : rx_exception(what_, "NotImplementedError") {}
 };
 
 class DisposedException : public rx_exception
 {
 public:
-    virtual const char* what() const noexcept override {
-        return "Tried to access disposed element!"; 
-    }
-    virtual const char* type() const noexcept override {
-        return "DisposedError";
-    }
+    DisposedException(const std::string& what_ = "Tried to access disposed element") 
+        : rx_exception(what_, "DisposedError") {}
 };
 
 class WouldBlockException : public rx_exception
 {
 public:
-    virtual const char* what() const noexcept override {
-        return "Tried to schedule blocking work!"; 
-    }
-    virtual const char* type() const noexcept override {
-        return "WouldBlockError";
-    }
+    WouldBlockException(const std::string& what_ = "Tried to schedule blocking work") 
+        : rx_exception(what_, "WouldBlockError") {}
 };
 
 class BadArgumentException : public rx_exception
 {
-private:
-    std::string _what;
-
 public:
-    BadArgumentException(const std::string& what_) : _what(what_) {}
-
-    virtual const char* what() const noexcept override {
-        return _what.c_str();
-    }
-    virtual const char* type() const noexcept override {
-        return "BadArgumentError";
-    }
+    BadArgumentException(const std::string& what_) 
+        : rx_exception(what_, "BadArgumentError") {}
 };
 
 class BadCastException : public rx_exception
 {
-
 public:
-    BadCastException(){}
-
-    virtual const char* what() const noexcept override {
-        return "Could not perform cast!";
-    }
-    virtual const char* type() const noexcept override {
-        return "BadCastException";
-    }
+    BadCastException(const std::string& what_ = "Could not perform cast") 
+        : rx_exception(what_, "BadCastError") {}
 };
 
 class SequenceContainsNoElementsException : public rx_exception
 {
-
 public:
-    SequenceContainsNoElementsException(){}
-
-    virtual const char* what() const noexcept override {
-        return "The provided sequence does not contain an element!";
-    }
-    virtual const char* type() const noexcept override {
-        return "SequenceContainsNoElementsException";
-    }
+    SequenceContainsNoElementsException(const std::string& what_ = "The provided sequence does not contain an element") 
+        : rx_exception(what_, "SequenceContainsNoElementsError") {}
 };
 
 class ArgumentOutOfRangeException : public rx_exception
 {
-
 public:
-    ArgumentOutOfRangeException(){}
-
-    virtual const char* what() const noexcept override {
-        return "The provided argument is out of range!";
-    }
-    virtual const char* type() const noexcept override {
-        return "ArgumentOutOfRangeException";
-    }
+    ArgumentOutOfRangeException(const std::string& what_ = "The provided argument is out of range") 
+        : rx_exception(what_, "ArgumentOutOfRangeError") {}
 };
 
 } // END namespace exception
-
-typedef std::function<bool(const std::exception_ptr& e)> handler_t;
-
 } // END namepsace rx
 
 #endif // RX_EXCEPTION_EXCEPTION_H
