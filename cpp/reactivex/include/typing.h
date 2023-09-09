@@ -97,6 +97,11 @@ RX_WRAPPERREF_DECLARE(rx::wrappers::RxSubjectBase, subject_ref_t, subject_t)
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxSubject, rx_subject_ref_t, rx_subject_t)
 RX_WRAPPERREF_DECLARE(rx::wrappers::RxObservable, rx_observable_ref_t, rx_observable_t)
 
+/* Containers */
+
+typedef std::list<rx_observable_t> observable_list_t;
+typedef std::vector<rx_observable_t> observable_vec_t;
+
 /* Functionals */
 
 typedef std::function<void()> dispose_t;

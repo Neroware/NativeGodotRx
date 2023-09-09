@@ -72,23 +72,27 @@ func _ready():
 #		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 #		.dispose_with(self)
 	
-	RxObservable.merge([
-		RxObservable.periodic_timer(0.5),
-		RxObservable.periodic_timer(1.0),
-	]) \
-		.pairwise() \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+	var arr_it = GDRx.to_iterable([1, 2, 3, 4, 5]).iter()
+	while arr_it.has_next():
+		print(">>> ", arr_it.next())
 	
-	RxObservable.from([1, 42, 3, 4]) \
-		.max_by(func(x): return x % 4) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
-	
-	RxObservable.from([1, 2, 3, 4]) \
-		.reduce(func(aggr, v): return aggr + v) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+#	RxObservable.merge([
+#		RxObservable.periodic_timer(0.5),
+#		RxObservable.periodic_timer(1.0),
+#	]) \
+#		.pairwise() \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+#	
+#	RxObservable.from([1, 42, 3, 4]) \
+#		.max_by(func(x): return x % 4) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+#	
+#	RxObservable.from([1, 2, 3, 4]) \
+#		.reduce(func(aggr, v): return aggr + v) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
 #	get_tree().quit()
 	

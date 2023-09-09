@@ -3,9 +3,6 @@
 
 #include "typing.h"
 
-using namespace godot;
-using namespace rx::exception;
-
 namespace rx {
 namespace abstract {
 

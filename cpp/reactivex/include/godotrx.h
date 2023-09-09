@@ -8,13 +8,13 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
-/* #include "internal/concurrency.h"
+#include "internal/concurrency.h"
 #include "internal/iterator.h"
 #include "internal/thread.h"
 #include "internal/weakkeydictionary.h"
 #include "internal/utils.h"
 
-#include "notification.h"
+/*#include "notification.h"
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
@@ -35,9 +35,9 @@ class __GDRxSingleton__ : public RefCounted {
 
 public:
     /* Thread manager singleton */
-    // const std::shared_ptr<ThreadManager> THREAD_MANAGER = std::make_shared<ThreadManager>();
+    const std::shared_ptr<ThreadManager> THREAD_MANAGER = std::make_shared<ThreadManager>();
     /* Main thread dummy */
-    // const Ref<RxThread> MAIN_THREAD = memnew(RxMainThread);
+    const Ref<RxThread> MAIN_THREAD = memnew(RxMainThread);
 
     /* Scheduler singletons */
     /* weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
@@ -47,18 +47,18 @@ public:
     std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_; */
 
     /* Not Set */
-    // const Ref<NotSet> NOT_SET = memnew(NotSet);
+    const Ref<NotSet> NOT_SET = memnew(NotSet);
 
 private:
     static __GDRxSingleton__* p_instance;
 
 protected:
 	static inline void _bind_methods() {
-        /* ClassDB::bind_method(D_METHOD("iter", "it"), &__GDRxSingleton__::iter);
+        ClassDB::bind_method(D_METHOD("iter", "it"), &__GDRxSingleton__::iter);
         ClassDB::bind_method(D_METHOD("to_iterable", "it"), &__GDRxSingleton__::to_iterable);
         ClassDB::bind_method(D_METHOD("foreach", "it", "action"), &__GDRxSingleton__::foreach);
         ClassDB::bind_method(D_METHOD("enumerate", "it", "action"), &__GDRxSingleton__::enumerate);
-        ClassDB::bind_method(D_METHOD("from_notifier", "handler"), &__GDRxSingleton__::from_notifier); */
+        /* ClassDB::bind_method(D_METHOD("from_notifier", "handler"), &__GDRxSingleton__::from_notifier); */
     }
 
 public:
@@ -74,11 +74,11 @@ public:
         }
 
         // Insert Main Thread
-        /* {
+        {
             std::unique_lock<std::shared_mutex> writeLock(this->THREAD_MANAGER->thread_registry.first);
             auto main_thread_id = std::this_thread::get_id();
             this->THREAD_MANAGER->thread_registry.second[main_thread_id] = MAIN_THREAD;
-        } */
+        }
 
         // Scheduler Singletons
         /* {
@@ -90,7 +90,7 @@ public:
 
     ~__GDRxSingleton__(){}
 
-    /* inline Ref<RxIteratorBase> iter(const Variant& iterable) {
+    inline Ref<RxIteratorBase> iter(const Variant& iterable) {
         return rx::iterator::iter(iterable);
     }
     inline Ref<RxIterableBase> to_iterable(const Variant& iterable) {
@@ -102,7 +102,7 @@ public:
     inline void enumerate(const Variant& it, const Callable& what) {
         this->iter(it)->enumerate(what);
     }
-    inline Ref<RxObserverBase> from_notifier(const Callable& handler) {
+    /*inline Ref<RxObserverBase> from_notifier(const Callable& handler) {
         return RxObserverBase::wrap(rx::from_notifier(notification_handler_cb(handler)));
     } */
 };

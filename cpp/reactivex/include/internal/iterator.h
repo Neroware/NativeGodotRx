@@ -51,7 +51,7 @@ struct array_iterable : public IterableBase {
     array_iterable(const Array& array_) 
         : array(array_) {}
 
-    inline std::shared_ptr<IteratorBase> iter() override {
+    inline iterator_t iter() override {
         return std::make_shared<array_iterator>(array);
     }
 }; // END array_iterable
@@ -79,7 +79,7 @@ struct dictionary_iterable : public IterableBase {
     dictionary_iterable(const Dictionary& dict_) 
         : dict(dict_) {}
 
-    inline std::shared_ptr<IteratorBase> iter() override {
+    inline iterator_t iter() override {
         return std::make_shared<dictionary_iterator>(dict);
     }
 }; // END dictionary_iterable
@@ -109,7 +109,7 @@ struct infinite_iterable : public IterableBase {
     infinite_iterable(const Variant& value_ = VNULL)
         : value(value_) {}
     
-    inline std::shared_ptr<IteratorBase> iter() override {
+    inline iterator_t iter() override {
         return std::make_shared<infinite_iterator>(this->value);
     }
 
@@ -142,219 +142,117 @@ struct while_iterable : public IterableBase {
     while_iterable(const iterable_t& it_, const predicate_t<>& pred_)
         : it(it_), pred(pred_) {}
     
-    inline std::shared_ptr<IteratorBase> iter() override {
+    inline iterator_t iter() override {
         return std::make_shared<while_iterator>(this->it, pred);
     }
 
 }; // END while_iterable
 
-template<class WrapperT, class BaseT>
-struct dictionary_mapping {
-    Dictionary dict;
-
-    dictionary_mapping(const Dictionary& dict_) 
-        : dict(dict_) {}
-
-    inline std::shared_ptr<BaseT> operator[](const Variant& key) const {
-        if (auto wrapper = DYN_CAST(dict[key], WrapperT)) {
-            return WrapperT::unwrap(wrapper);
+template <typename T>
+class rx_list {
+private:
+    std::list<T> _list;
+public:
+    rx_list() {}
+    rx_list(const std::list<T>& other)
+        : _list(other) {}
+    rx_list(const iterable_t& other) {
+        auto _it = other->iter();
+        while(_it->has_next()){ 
+            _list.push_back(_it->next());
         }
-        throw BadArgumentException("Iterable contained element of wrong type!");
     }
+    template<typename IterableT>
+    rx_list(const IterableT& other)
+        : _list(other.begin(), other.end()) {}
+    ~rx_list(){}
 
-    inline bool contains(const Variant& key) const {
-        return dict.has(key);
+    void push_back(const T& value) {
+        _list.push_back(value);
     }
-
-}; // END dictionary_mapping
-
-/**
- * Utility type to wrap around IterableBase to enable C++-style iterations
- * for GDScript-style iterations. Only use this for wrapping between GodotAPI and Rx!
- * 
- * WARNING: Incremented iterator values work on the same IteratorBase instance!
- */
-struct rx_iterable {
-
-    std::shared_ptr<IterableBase> it;
-
-    rx_iterable(const std::shared_ptr<IterableBase>& it_)
-        : it(it_) {}
-    
-    struct const_iterator {
-        using difference_type = std::ptrdiff_t;
-        using value_type = Variant;
-        using reference = value_type;
-        using pointer = value_type*;
-        using iterator_category = std::input_iterator_tag;
-
-        std::shared_ptr<IteratorBase> it;
-        bool is_end;
-        Variant current;
-
-        explicit const_iterator(const std::shared_ptr<IterableBase>& it_, bool is_end_ = false)
-            :   it(is_end_ ? nullptr : it_->iter()), 
-                is_end(is_end_ || !it->has_next()), 
-                current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
-        
-        bool operator!=(const const_iterator& other) const {
-            return is_end ^ other.is_end;
+    void pop_back() {
+        if (!_list.empty()) {
+            _list.pop_back();
         }
-        const Variant operator*() const {
-            return current;
-        }
-        const_iterator& operator++() {
-            if (is_end) {
-                return *this;
-            }
-            is_end = !it->has_next();
-            current = it->next();
-            return *this;
-        }
-        const_iterator operator++(int) {
-            const_iterator retval = *this; 
-            ++(*this); 
-            return retval;
-        }
-    };
-    const_iterator begin() const {
-        return const_iterator(this->it);
     }
-    const_iterator end() const {
-        return const_iterator(this->it, true);
+    bool empty() const {
+        return _list.empty();
     }
-    
-}; // END struct rx_iterable
-
-/**
- * Utility type to wrap around IterableBase to enable C++-style iterations
- * for GDScript-style iterations. This also unwraps a Godot instance
- * of type WrapperT transforming it to a BaseT compatible with the API
- * 
- * WARNING: Incremented iterator values work on the same IteratorBase instance!
- */
-template<class WrapperT, class BaseT>
-struct rx_wrapper_iterable {
-
-    std::shared_ptr<IterableBase> it;
-
-    rx_wrapper_iterable(const std::shared_ptr<IterableBase>& it_)
-        : it(it_) {}
-    
-    struct const_iterator {
-        using difference_type = std::ptrdiff_t;
-        using value_type = std::shared_ptr<BaseT>;
-        using reference = value_type;
-        using pointer = value_type*;
-        using iterator_category = std::input_iterator_tag;
-
-        std::shared_ptr<IteratorBase> it;
-        bool is_end;
-        Variant current;
-
-        explicit const_iterator(const std::shared_ptr<IterableBase>& it_, bool is_end_ = false)
-            :   it(is_end_ ? nullptr : it_->iter()), 
-                is_end(is_end_ || !it->has_next()), 
-                current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
-        
-        bool operator!=(const const_iterator& other) const {
-            return is_end ^ other.is_end;
-        }
-        const std::shared_ptr<BaseT> operator*() const {
-            if (auto wrapper = DYN_CAST(current, WrapperT)) {
-                return WrapperT::unwrap(wrapper);
-            }
-            throw BadArgumentException("Iterable contained element of wrong type!");
-        }
-        const_iterator& operator++() {
-            if (is_end) {
-                return *this;
-            }
-            is_end = !it->has_next();
-            current = it->next();
-            return *this;
-        }
-        const_iterator operator++(int) {
-            const_iterator retval = *this; 
-            ++(*this); 
-            return retval;
-        }
-    };
-    const_iterator begin() const {
-        return const_iterator(this->it);
+    size_t size() const {
+        return _list.size();
     }
-    const_iterator end() const {
-        return const_iterator(this->it, true);
+    void clear() {
+        _list.clear();
     }
-
-}; // END struct rx_wrapper_iterable
-
-/**
- * Utility type to wrap around IterableBase to enable C++-style iterations
- * for GDScript-style iterations. This also checks for a required Variant-Type
- * and casts the Godot instance accordingly when dereferenced. Additionally,
- * it applies a mapper function onto said Godot instance.
- * 
- * WARNING: Incremented iterator values work on the same IteratorBase instance!
- */
-template<class T, Variant::Type type_id>
-struct rx_mapper_iterable {
-
-    std::shared_ptr<IterableBase> it;
-    std::function<T(const Variant&)> mapper;
-
-    rx_mapper_iterable(const std::shared_ptr<IterableBase>& it_, const std::function<T(const Variant&)>& mapper_)
-        : it(it_), mapper(mapper_) {}
-    
-    struct const_iterator {
-        using difference_type = std::ptrdiff_t;
-        using value_type = T;
-        using reference = value_type;
-        using pointer = value_type*;
-        using iterator_category = std::input_iterator_tag;
-
-        std::function<T(const Variant&)> mapper;
-        std::shared_ptr<IteratorBase> it;
-        bool is_end;
-        Variant current;
-
-        explicit const_iterator(const std::function<T(const Variant&)>& mapper_, const std::shared_ptr<IterableBase>& it_, bool is_end_ = false)
-            :   mapper(mapper_),
-                it(is_end_ ? nullptr : it_->iter()), 
-                is_end(is_end_ || !it->has_next()), 
-                current(is_end ? Variant(Ref<ItEnd>(memnew(ItEnd))) : it->next()) {}
-        
-        bool operator!=(const const_iterator& other) const {
-            return is_end ^ other.is_end;
-        }
-        const T operator*() const {
-            if (current.get_type() == type_id) {
-                return mapper(current);
-            }
-            throw BadArgumentException("Iterable contained element of wrong type!");
-        }
-        const_iterator& operator++() {
-            if (is_end) {
-                return *this;
-            }
-            is_end = !it->has_next();
-            current = it->next();
-            return *this;
-        }
-        const_iterator operator++(int) {
-            const_iterator retval = *this; 
-            ++(*this); 
-            return retval;
-        }
-    };
-    const_iterator begin() const {
-        return const_iterator(mapper, this->it);
+    typename std::list<T>::iterator begin() {
+        return _list.begin();
     }
-    const_iterator end() const {
-        return const_iterator(mapper, this->it, true);
+    typename std::list<T>::iterator end() {
+        return _list.end();
     }
-    
-}; // END struct rx_mapper_iterable
+    typename std::list<T>::const_iterator begin() const {
+        return _list.begin();
+    }
+    typename std::list<T>::const_iterator end() const {
+        return _list.end();
+    }
+}; // END class rx_list
+
+template <typename T>
+class rx_vector {
+private:
+    std::vector<T> _vector;
+public:
+    rx_vector() {}
+    rx_vector(const std::vector<T>& other)
+        : _vector(other) {}
+    rx_vector(const iterable_t& other) {
+        auto _it = other->iter();
+        while(_it->has_next()){ 
+            _vector.push_back(_it->next());
+        }
+    }
+    template<typename IterableT>
+    rx_vector(const IterableT& other)
+        : _vector(other.begin(), other.end()) {}
+    ~rx_vector() {}
+
+    void push_back(const T& value) {
+        _vector.push_back(value);
+    }
+    void pop_back() {
+        if (!_vector.empty()) {
+            _vector.pop_back();
+        }
+    }
+    bool empty() const {
+        return _vector.empty();
+    }
+    size_t size() const {
+        return _vector.size();
+    }
+    void clear() {
+        _vector.clear();
+    }
+    T& operator[](size_t index) {
+        return _vector[index];
+    }
+    const T& operator[](size_t index) const {
+        return _vector[index];
+    }
+    typename std::vector<T>::iterator begin() {
+        return _vector.begin();
+    }
+    typename std::vector<T>::iterator end() {
+        return _vector.end();
+    }
+    typename std::vector<T>::const_iterator begin() const {
+        return _vector.begin();
+    }
+    typename std::vector<T>::const_iterator end() const {
+        return _vector.end();
+    }
+}; // END class rx_vector
 
 namespace iterator {
 

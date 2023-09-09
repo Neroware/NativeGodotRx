@@ -116,13 +116,8 @@ public:
     
 }; // END class StartableThread
 
-static std::shared_ptr<StartableBase> default_thread_factory(const run_t& target) {
+static startable_t default_thread_factory(const run_t& target) {
     return std::make_shared<StartableThread>(target, Thread::PRIORITY_NORMAL);
-}
-
-static run_t run_cb(const Callable& cb) {
-    if (cb.is_null()) return nullptr;
-    return run_t([cb]() -> Variant { return cb.callv(Array()); });
 }
 
 } // END namespace rx
