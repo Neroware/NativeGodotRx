@@ -120,6 +120,8 @@ RX_WRAPPERREF_DECLARE(rx::wrappers::RxObservable, rx_observable_ref_t, rx_observ
 
 typedef std::list<rx_observable_t> observable_list_t;
 typedef std::vector<rx_observable_t> observable_vec_t;
+typedef std::list<disposable_t> disposable_list_t;
+typedef std::vector<disposable_t> disposable_vec_t;
 
 /* Functionals */
 
