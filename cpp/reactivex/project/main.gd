@@ -76,6 +76,19 @@ func _ready():
 	while arr_it.has_next():
 		print(">>> ", arr_it.next())
 	
+	var disp1 = RxDisposable.get(func(): print("1"))
+	var disp2 = RxCompositeDisposable.get([
+		RxDisposable.get(func(): print("C1")),
+		RxDisposable.get(func(): print("C2"))
+	])
+	var disp3 = RxSingleAssignmentDisposable.get()
+	disp3.disposable = RxDisposable.get(func(): print("SA1"))
+	
+	var cd : RxCompositeDisposable = RxCompositeDisposable.get([
+		disp1, disp2, disp3
+	])
+	cd.dispose_with(self)
+	
 #	RxObservable.merge([
 #		RxObservable.periodic_timer(0.5),
 #		RxObservable.periodic_timer(1.0),

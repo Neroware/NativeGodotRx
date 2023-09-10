@@ -14,19 +14,19 @@
 #include "internal/weakkeydictionary.h"
 #include "internal/utils.h"
 
-/*#include "notification.h"
+/*#include "notification.h" */
 
 #include "scheduler/currentthreadscheduler.h"
 #include "scheduler/immediatescheduler.h"
 #include "scheduler/timeoutscheduler.h"
-#include "scheduler/scenetreetimeoutscheduler.h" */
+#include "scheduler/scenetreetimeoutscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX __GDRxSingleton__::singleton()
 // #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
 
 using namespace godot;
-// using namespace rx::scheduler;
+using namespace rx::scheduler;
 
 namespace rx {
 
@@ -40,11 +40,11 @@ public:
     const Ref<RxThread> MAIN_THREAD = memnew(RxMainThread);
 
     /* Scheduler singletons */
-    /* weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
+    weakkey_dictionary<variant_key_t, weakkey_dictionary<variant_key_t, std::shared_ptr<CurrentThreadScheduler>>>CurrentThreadScheduler_global_;
     const std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_ = _CurrentThreadScheduler_Local::get();
     const std::shared_ptr<ImmediateScheduler> ImmediateScheduler_ = ImmediateScheduler::get();
     const std::shared_ptr<TimeoutScheduler> TimeoutScheduler_ = TimeoutScheduler::get();
-    std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_; */
+    std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_;
 
     /* Not Set */
     const Ref<NotSet> NOT_SET = memnew(NotSet);
@@ -70,7 +70,7 @@ public:
         // Singleton values
         {
             __GDRxSingleton__::p_instance = this;
-            // CurrentThreadScheduler::cls = std::make_shared<variant_key_t>("CurrentThreadScheduler");
+            CurrentThreadScheduler::cls = std::make_shared<variant_key_t>("CurrentThreadScheduler");
         }
 
         // Insert Main Thread
@@ -81,11 +81,11 @@ public:
         }
 
         // Scheduler Singletons
-        /* {
+        {
             for (auto i = 0; i < 8; i++) {
                 this->SceneTreeTimeoutScheduler_[i] = SceneTreeTimeoutScheduler::get(i & 0b100, i & 0b10, i & 0b1);
             }
-        } */
+        }
     }
 
     ~__GDRxSingleton__(){}
