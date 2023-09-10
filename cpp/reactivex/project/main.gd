@@ -87,7 +87,10 @@ func _ready():
 	var cd : RxCompositeDisposable = RxCompositeDisposable.get([
 		disp1, disp2, disp3
 	])
-	cd.dispose_with(self)
+	
+	var nts = RxNewThreadScheduler.get()
+	var main_thread = RxThread.get_current_thread()
+	nts.schedule(func(__ = null, ___ = null): cd.dispose() ; print(">> ", RxThread.get_current_thread() == main_thread)).dispose_with(self)
 	
 #	RxObservable.merge([
 #		RxObservable.periodic_timer(0.5),

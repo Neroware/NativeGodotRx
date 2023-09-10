@@ -19,7 +19,7 @@ public:
 protected:
     Notification(){}
 public:
-    inline std::shared_ptr<Notification> getptr() { return shared_from_this(); }
+    inline notification_t getptr() { return shared_from_this(); }
     ~Notification(){}
 
     virtual void accept(const on_next_t& on_next, const on_error_t& on_error = DEFAULT_ON_ERROR, const on_completed_t& on_completed = DEFAULT_ON_COMPLETED) const = 0;
@@ -41,8 +41,8 @@ protected:
         this->kind = "N";
     }
 public:
-    inline static std::shared_ptr<NotificationOnNext> get(const Variant& value = Variant()) { return std::shared_ptr<NotificationOnNext>(new NotificationOnNext(value)); }
-    inline std::shared_ptr<NotificationOnNext> getptr() { return std::static_pointer_cast<NotificationOnNext>(Notification::getptr()); }
+    inline static notification_on_next_t get(const Variant& value = Variant()) { return std::shared_ptr<NotificationOnNext>(new NotificationOnNext(value)); }
+    inline notification_on_next_t getptr() { return std::static_pointer_cast<NotificationOnNext>(Notification::getptr()); }
     ~NotificationOnNext() {}
 
     void accept(const on_next_t& on_next, const on_error_t& on_error = DEFAULT_ON_ERROR, const on_completed_t& on_completed = DEFAULT_ON_COMPLETED) const override;
@@ -60,10 +60,10 @@ protected:
     NotificationOnError(const std::string& error) : exception(std::make_exception_ptr(rx_exception(error))) { this->kind = "E"; }
     NotificationOnError() : exception(std::make_exception_ptr(rx_exception())) { this->kind = "E"; }
 public:
-    inline static std::shared_ptr<NotificationOnError> get(const std::exception_ptr& e) { return std::shared_ptr<NotificationOnError>(new NotificationOnError(e)); }
-    inline static std::shared_ptr<NotificationOnError> get(const std::string& e) { return std::shared_ptr<NotificationOnError>(new NotificationOnError(e)); }
-    inline static std::shared_ptr<NotificationOnError> get() { return std::shared_ptr<NotificationOnError>(new NotificationOnError()); }
-    inline std::shared_ptr<NotificationOnError> getptr() { return std::static_pointer_cast<NotificationOnError>(Notification::getptr()); }
+    inline static notification_on_error_t get(const std::exception_ptr& e) { return std::shared_ptr<NotificationOnError>(new NotificationOnError(e)); }
+    inline static notification_on_error_t get(const std::string& e) { return std::shared_ptr<NotificationOnError>(new NotificationOnError(e)); }
+    inline static notification_on_error_t get() { return std::shared_ptr<NotificationOnError>(new NotificationOnError()); }
+    inline notification_on_error_t getptr() { return std::static_pointer_cast<NotificationOnError>(Notification::getptr()); }
     ~NotificationOnError() {}
 
     void accept(const on_next_t& on_next, const on_error_t& on_error = DEFAULT_ON_ERROR, const on_completed_t& on_completed = DEFAULT_ON_COMPLETED) const override;
@@ -76,8 +76,8 @@ class NotificationOnCompleted : public Notification {
 protected:
     NotificationOnCompleted() { this->kind = "C"; }
 public:
-    inline static std::shared_ptr<NotificationOnCompleted> get() { return std::shared_ptr<NotificationOnCompleted>(new NotificationOnCompleted()); }
-    inline std::shared_ptr<NotificationOnCompleted> getptr() { return std::static_pointer_cast<NotificationOnCompleted>(Notification::getptr()); }
+    inline static notification_on_completed_t get() { return std::shared_ptr<NotificationOnCompleted>(new NotificationOnCompleted()); }
+    inline notification_on_completed_t getptr() { return std::static_pointer_cast<NotificationOnCompleted>(Notification::getptr()); }
     ~NotificationOnCompleted() {}
 
     void accept(const on_next_t& on_next, const on_error_t& on_error = DEFAULT_ON_ERROR, const on_completed_t& on_completed = DEFAULT_ON_COMPLETED) const override;

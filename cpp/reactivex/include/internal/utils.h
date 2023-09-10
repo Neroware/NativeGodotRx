@@ -68,8 +68,14 @@ static auto scheduled_action_cb = from_cb<disposable_t, const scheduler_t&, cons
 static auto periodic_action_cb = from_cb<Variant, const godot::Variant&>;
 static auto dispose_cb = from_void_cb<>;
 static auto run_cb = from_cb<Variant>;
-
 static auto notification_handler_cb = from_cb<notification_t, const notification_t&>;
+static auto notifier_cb = from_void_cb<const notification_t&>;
+static handler_t handler_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
+    return [cb](const error_t& error) -> bool {
+        return cb.callv(Array::make(RxError::wrap(error)));
+    };
+}
 
 class NotSet : public RefCounted {
     GDCLASS(NotSet, RefCounted)

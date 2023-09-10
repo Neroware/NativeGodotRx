@@ -142,6 +142,11 @@ typedef std::function<startable_t(const run_t&)> thread_factory_t;
 typedef std::function<bool(const error_t& e)> handler_t;
 typedef std::function<void(const notification_t&)> notification_handler_t;
 
+typedef std::function<rx_observable_t(const scheduler_t&)> observable_factory_t;
+typedef std::function<rx_observable_t(const rx_observable_t&)> observable_op_t;
+
+typedef std::function<void(const notification_t&)> notifier_t;
+
 template<typename KeyT, typename... ArgsT>
 using mapper_t = std::function<KeyT(const ArgsT&...)>;
 

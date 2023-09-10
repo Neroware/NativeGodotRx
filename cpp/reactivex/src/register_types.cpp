@@ -24,7 +24,7 @@
 #include "internal/utils.h"
 // wrappers
 #include "wrapper/abstract.h"
-// #include "wrapper/scheduler.h"
+#include "wrapper/scheduler.h"
 #include "wrapper/disposable.h"
 // #include "wrapper/observer.h"
 // #include "wrapper/observable.h"
@@ -33,7 +33,7 @@
 // disposable
 #include "disposable/autodisposer.h"
 // scheduler
-// #include "scheduler/scenetreetimeoutscheduler.h"
+#include "scheduler/scenetreetimeoutscheduler.h"
 
 using namespace godot;
 
@@ -65,7 +65,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxSchedulerBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxPeriodicSchedulerBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxStartableBase>();
-	// ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
+	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObserverBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObservableBase>();
 	// ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
@@ -82,7 +82,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduledDisposable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxCompositeDisposable>();
 	// scheduler
-	/* ClassDB::register_abstract_class<rx::scheduler::RxSceneTreeTimeout>();
+	ClassDB::register_abstract_class<rx::scheduler::RxSceneTreeTimeout>();
 	ClassDB::register_abstract_class<rx::wrappers::RxCatchScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxTrampolineScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxCurrentThreadScheduler>();
@@ -90,7 +90,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxImmediateScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxNewThreadScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSceneTreeTimeoutScheduler>();
-	ClassDB::register_abstract_class<rx::wrappers::RxTimeoutScheduler>(); */
+	ClassDB::register_abstract_class<rx::wrappers::RxTimeoutScheduler>();
 	// observable
 	/* ClassDB::register_abstract_class<rx::wrappers::RxConnectableObservable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxGroupedObservable>(); */

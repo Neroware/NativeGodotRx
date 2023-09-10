@@ -2,22 +2,22 @@
 
 #include "wrapper/notificationwrapper.h"
 
-/* #include "observer/observer.h"
+#include "observer/observer.h"
 #include "scheduler/immediatescheduler.h"
-#include "observable/observable.h" */
+#include "observable/observable.h"
 
-/* using namespace rx::scheduler;
-using namespace rx::observable; */
+using namespace rx::scheduler;
+using namespace rx::observable;
 
 namespace rx {
 
 observable_t Notification::to_observable(const scheduler_t& scheduler) {
     
-    /* auto _scheduler = scheduler ? scheduler : ImmediateScheduler::singleton();
+    auto _scheduler = scheduler ? scheduler : ImmediateScheduler::singleton();
     auto self = getptr();
 
     subscription_t  subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
-        action_t action = [=](const std::shared_ptr<rx::abstract::SchedulerBase>& __, const godot::Variant& ___) -> std::shared_ptr<DisposableBase> {
+        scheduled_action_t action = [=](const scheduler_t& __, const godot::Variant& ___) -> disposable_t {
             self->accept(observer);
             if (self->kind == "N") {
                 observer->on_completed();
@@ -29,8 +29,7 @@ observable_t Notification::to_observable(const scheduler_t& scheduler) {
         return __scheduler->schedule(action);
     };
 
-    return Observable::get(subscribe); */
-    return nullptr; // TODO
+    return Observable::get(subscribe);
 }
 
 void NotificationOnNext::accept(const on_next_t& on_next, const on_error_t& on_error, const on_completed_t& on_completed) const {
@@ -77,8 +76,7 @@ observer_t to_notifier(const notification_handler_t& handler) {
     on_completed_t _on_completed = [=]() {
         handler(NotificationOnCompleted::get());
     };
-    return nullptr; // TODO
-    // return rx::observer::Observer::get(_on_next, _on_error, _on_completed);
+    return rx::observer::Observer::get(_on_next, _on_error, _on_completed);
 }
 
 } // END namespace rx
