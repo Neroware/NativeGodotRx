@@ -1,0 +1,66 @@
+#ifndef RX_SUBJECT_SUBJECT_H
+#define RX_SUBJECT_SUBJECT_H
+
+#include "abstract/subject.h"
+#include "observable/observable.h"
+#include "observer/observer.h"
+
+#include "internal/rlock.h"
+
+#include "exception/exception.h"
+
+#include <list>
+
+using namespace rx::observer;
+using namespace rx::observable;
+
+namespace rx::subject {
+
+class Subject : public Observable, public Observer, public SubjectBase {
+
+public:
+    bool is_disposed = false;
+    std::list<observer_t> observers;
+    error_t exception;
+    RLock lock;
+
+protected:
+    Subject(){}
+public:
+    ~Subject(){}
+    inline static rx_subject_t get() { return std::shared_ptr<Subject>(new Subject()); }
+    inline rx_subject_t getptr() { return std::static_pointer_cast<Subject>(Observer::getptr()); }
+
+    void check_disposed();
+    void dispose() override;
+
+    void on_next(const Variant& i) override;
+    void on_error(const error_t& e) override;
+    void on_completed() override;
+
+    inline disposable_t subscribe(
+        const on_next_t& on_next = DEFAULT_ON_NEXT,
+        const on_error_t& on_error = DEFAULT_ON_ERROR,
+        const on_completed_t& on_completed = DEFAULT_ON_COMPLETED,
+        const scheduler_t& scheduler = nullptr
+    ) { return Observable::subscribe(on_next, on_error, on_completed, scheduler); }
+    inline disposable_t subscribe(
+        const observer_t& observer, 
+        const scheduler_t& scheduler = nullptr
+    ) { return Observable::subscribe(observer, scheduler); };
+
+private:
+    void _on_next_core(const Variant& item) override;
+    void _on_error_core(const error_t& error) override;
+    void _on_completed_core() override;
+
+    disposable_t _subscribe_core(
+        const observer_t& observer, 
+        const scheduler_t& scheduler = nullptr
+    ) override;
+
+}; // END class Subject
+
+} // END namespace rx::subject
+
+#endif // RX_SUBJECT_SUBJECT_H
