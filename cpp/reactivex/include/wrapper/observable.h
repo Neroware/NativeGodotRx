@@ -26,7 +26,7 @@ class RxObservable : public RxObservableBase {
     RX_WRAPPER(RxObservable, Observable, RxObservableBase, ObservableBase)
 
 public:
-// #include "observable/definitions.inc"
+#include "observable/definitions.inc"
 
 protected:
     static void _bind_methods();

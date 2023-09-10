@@ -256,7 +256,7 @@ public:
 
 namespace iterator {
 
-static iterable_ref_t to_iterable(const Variant& it) {
+static Ref<RxIterableBase> to_iterable(const Variant& it) {
     if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
         return iterable;
     }
@@ -269,7 +269,7 @@ static iterable_ref_t to_iterable(const Variant& it) {
     return to_iterable(Array::make(it));
 }
 
-static iterable_ref_t iter(const Variant& it) {
+static Ref<RxIterableBase> iter(const Variant& it) {
     if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
         return iterable->iter();
     }

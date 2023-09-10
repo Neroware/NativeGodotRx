@@ -41,31 +41,6 @@ class NotificationOnNext;
 class NotificationOnError;
 class NotificationOnCompleted;
 
-#define RX_BASEPTR_DECLARE(type, ptr_type) \
-    struct ptr_type : public std::shared_ptr<type> { \
-        using std::shared_ptr<type>::shared_ptr; \
-        ptr_type(const std::shared_ptr<type>& other) noexcept; \
-        ptr_type(const godot::Variant&); \
-        operator godot::Variant(); \
-    };
-RX_BASEPTR_DECLARE(rx::abstract::DisposableBase, disposable_t)
-RX_BASEPTR_DECLARE(rx::abstract::IterableBase, iterable_t)
-RX_BASEPTR_DECLARE(rx::abstract::IteratorBase, iterator_t)
-RX_BASEPTR_DECLARE(rx::abstract::LockBase, lock_t)
-RX_BASEPTR_DECLARE(rx::abstract::ObservableBase, observable_t)
-RX_BASEPTR_DECLARE(rx::abstract::ObserverBase, observer_t)
-RX_BASEPTR_DECLARE(rx::abstract::PeriodicSchedulerBase, periodic_scheduler_t)
-RX_BASEPTR_DECLARE(rx::abstract::SchedulerBase, scheduler_t)
-RX_BASEPTR_DECLARE(rx::abstract::StartableBase, startable_t)
-RX_BASEPTR_DECLARE(rx::abstract::SubjectBase, subject_t)
-
-RX_BASEPTR_DECLARE(Notification, notification_t)
-RX_BASEPTR_DECLARE(NotificationOnNext, notification_on_next_t)
-RX_BASEPTR_DECLARE(NotificationOnError, notification_on_error_t)
-RX_BASEPTR_DECLARE(NotificationOnCompleted, notification_on_completed_t)
-
-RX_BASEPTR_DECLARE(rx::observable::Observable, rx_observable_t)
-RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t)
 
 /* GodotRx Wrapper Types */
 
@@ -90,31 +65,33 @@ namespace wrappers {
     class RxObservable;
 };
 
-#define RX_WRAPPERREF_DECLARE(type, ref_type, ptr_type) \
-    struct ref_type : public godot::Ref<type> { \
-        using godot::Ref<type>::Ref; \
-        ref_type(Ref<type> other); \
-        ref_type(const ptr_type& other); \
-        operator ptr_type(); \
+#define RX_BASEPTR_DECLARE(type, ptr_type, wrapper) \
+    struct ptr_type : public std::shared_ptr<type> { \
+        using std::shared_ptr<type>::shared_ptr; \
+        ptr_type(const std::shared_ptr<type>& other) noexcept; \
+        ptr_type(godot::Ref<wrapper> other); \
+        ptr_type(const godot::Variant&); \
+        operator godot::Ref<wrapper>(); \
+        operator godot::Variant(); \
     };
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxDisposableBase, disposable_ref_t, disposable_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxIterableBase, iterable_ref_t, iterable_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxIteratorBase, iterator_ref_t, iterator_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxLockBase, lock_ref_t, lock_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxObservableBase, observable_ref_t, observable_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxObserverBase, observer_ref_t, observer_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxPeriodicSchedulerBase, periodic_scheduler_ref_t, periodic_scheduler_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxSchedulerBase, scheduler_ref_t, scheduler_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxStartableBase, startable_ref_t, startable_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxSubjectBase, subject_ref_t, subject_t)
+RX_BASEPTR_DECLARE(rx::abstract::DisposableBase, disposable_t, rx::wrappers::RxDisposableBase)
+RX_BASEPTR_DECLARE(rx::abstract::IterableBase, iterable_t, rx::wrappers::RxIterableBase)
+RX_BASEPTR_DECLARE(rx::abstract::IteratorBase, iterator_t, rx::wrappers::RxIteratorBase)
+RX_BASEPTR_DECLARE(rx::abstract::LockBase, lock_t, rx::wrappers::RxLockBase)
+RX_BASEPTR_DECLARE(rx::abstract::ObservableBase, observable_t, rx::wrappers::RxObservableBase)
+RX_BASEPTR_DECLARE(rx::abstract::ObserverBase, observer_t, rx::wrappers::RxObserverBase)
+RX_BASEPTR_DECLARE(rx::abstract::PeriodicSchedulerBase, periodic_scheduler_t, rx::wrappers::RxPeriodicSchedulerBase)
+RX_BASEPTR_DECLARE(rx::abstract::SchedulerBase, scheduler_t, rx::wrappers::RxSchedulerBase)
+RX_BASEPTR_DECLARE(rx::abstract::StartableBase, startable_t, rx::wrappers::RxStartableBase)
+RX_BASEPTR_DECLARE(rx::abstract::SubjectBase, subject_t, rx::wrappers::RxSubjectBase)
 
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotification, notification_ref_t, notification_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotificationOnNext, notification_on_next_ref_t, notification_on_next_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotificationOnError, notification_on_error_ref_t, notification_on_error_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxNotificationOnCompleted, notification_on_completed_ref_t, notification_on_completed_t)
+RX_BASEPTR_DECLARE(Notification, notification_t, rx::wrappers::RxNotification)
+RX_BASEPTR_DECLARE(NotificationOnNext, notification_on_next_t, rx::wrappers::RxNotificationOnNext)
+RX_BASEPTR_DECLARE(NotificationOnError, notification_on_error_t, rx::wrappers::RxNotificationOnError)
+RX_BASEPTR_DECLARE(NotificationOnCompleted, notification_on_completed_t, rx::wrappers::RxNotificationOnCompleted)
 
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxSubject, rx_subject_ref_t, rx_subject_t)
-RX_WRAPPERREF_DECLARE(rx::wrappers::RxObservable, rx_observable_ref_t, rx_observable_t)
+RX_BASEPTR_DECLARE(rx::observable::Observable, rx_observable_t, rx::wrappers::RxObservable)
+RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t, rx::wrappers::RxSubject)
 
 /* Containers */
 
