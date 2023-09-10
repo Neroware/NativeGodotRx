@@ -66,7 +66,7 @@ String NotificationOnCompleted::to_string() const {
     return "OnCompleted()";
 }
 
-observer_t to_notifier(const notification_handler_t& handler) {
+observer_t from_notifier(const notification_handler_t& handler) {
     on_next_t _on_next = [=](const Variant& value) {
         handler(NotificationOnNext::get(value));
     };

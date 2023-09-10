@@ -88,7 +88,7 @@ func _ready():
 		disp1, disp2, disp3
 	])
 	
-	var nts = RxNewThreadScheduler.get()
+	var nts = RxCurrentThreadScheduler.singleton()
 	var main_thread = RxThread.get_current_thread()
 	nts.schedule(func(__ = null, ___ = null): cd.dispose() ; print(">> ", RxThread.get_current_thread() == main_thread)).dispose_with(self)
 	

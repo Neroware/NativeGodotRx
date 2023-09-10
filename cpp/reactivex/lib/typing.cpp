@@ -3,6 +3,8 @@
 #include "abstract/disposable.h"
 
 #include "wrapper/abstract.h"
+#include "wrapper/observable.h"
+#include "wrapper/subject.h"
 #include "wrapper/notificationwrapper.h"
 
 using namespace rx::abstract;
@@ -36,6 +38,9 @@ RX_BASEPTR_IMPL(notification_on_next_t, NotificationOnNext, RxNotificationOnNext
 RX_BASEPTR_IMPL(notification_on_error_t, NotificationOnError, RxNotificationOnError)
 RX_BASEPTR_IMPL(notification_on_completed_t, NotificationOnCompleted, RxNotificationOnCompleted)
 
+RX_BASEPTR_IMPL(rx_observable_t, Observable, RxObservable)
+RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
+
 // #define RX_WRAPPERREF_IMPL
 
 #define RX_WRAPPERREF_IMPL(ref_type, ptr_type, Wrapper) \
@@ -62,5 +67,8 @@ RX_WRAPPERREF_IMPL(notification_ref_t, notification_t, RxNotification)
 RX_WRAPPERREF_IMPL(notification_on_next_ref_t, notification_on_next_t, RxNotificationOnNext)
 RX_WRAPPERREF_IMPL(notification_on_error_ref_t, notification_on_error_t, RxNotificationOnError)
 RX_WRAPPERREF_IMPL(notification_on_completed_ref_t, notification_on_completed_t, RxNotificationOnCompleted)
+
+RX_WRAPPERREF_IMPL(rx_subject_ref_t, rx_subject_t, RxSubject)
+RX_WRAPPERREF_IMPL(rx_observable_ref_t, rx_observable_t, RxObservable)
 
 } // END namespace rx

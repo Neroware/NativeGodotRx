@@ -76,6 +76,7 @@ static handler_t handler_cb(const Callable& cb) {
         return cb.callv(Array::make(RxError::wrap(error)));
     };
 }
+static auto observable_factory_cb = from_cb<rx_observable_t, scheduler_t>;
 
 class NotSet : public RefCounted {
     GDCLASS(NotSet, RefCounted)

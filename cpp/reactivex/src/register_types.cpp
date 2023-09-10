@@ -26,9 +26,9 @@
 #include "wrapper/abstract.h"
 #include "wrapper/scheduler.h"
 #include "wrapper/disposable.h"
-// #include "wrapper/observer.h"
-// #include "wrapper/observable.h"
-// #include "wrapper/subject.h"
+#include "wrapper/observer.h"
+#include "wrapper/observable.h"
+#include "wrapper/subject.h"
 #include "wrapper/notificationwrapper.h"
 // disposable
 #include "disposable/autodisposer.h"
@@ -68,7 +68,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObserverBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObservableBase>();
-	// ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSubjectBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxNotification>();
 	// disposable
@@ -92,18 +92,18 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxSceneTreeTimeoutScheduler>();
 	ClassDB::register_abstract_class<rx::wrappers::RxTimeoutScheduler>();
 	// observable
-	/* ClassDB::register_abstract_class<rx::wrappers::RxConnectableObservable>();
-	ClassDB::register_abstract_class<rx::wrappers::RxGroupedObservable>(); */
+	ClassDB::register_abstract_class<rx::wrappers::RxConnectableObservable>();
+	ClassDB::register_abstract_class<rx::wrappers::RxGroupedObservable>();
 	// observer
-	/* ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
+	ClassDB::register_abstract_class<rx::wrappers::RxObserver>();
 	ClassDB::register_abstract_class<rx::wrappers::RxScheduledObserver>();
 	ClassDB::register_abstract_class<rx::wrappers::RxObserveOnObserver>();
-	ClassDB::register_abstract_class<rx::wrappers::RxAutoDetachObserver>(); */
+	ClassDB::register_abstract_class<rx::wrappers::RxAutoDetachObserver>();
 	// subject
-	/* ClassDB::register_abstract_class<rx::wrappers::RxSubject>();
+	ClassDB::register_abstract_class<rx::wrappers::RxSubject>();
 	ClassDB::register_abstract_class<rx::wrappers::RxReplaySubject>();
 	ClassDB::register_abstract_class<rx::wrappers::RxBehaviorSubject>();
-	ClassDB::register_abstract_class<rx::wrappers::RxAsyncSubject>(); */
+	ClassDB::register_abstract_class<rx::wrappers::RxAsyncSubject>();
 	// notification
 	ClassDB::register_abstract_class<rx::wrappers::RxNotificationOnNext>();
 	ClassDB::register_abstract_class<rx::wrappers::RxNotificationOnError>();
