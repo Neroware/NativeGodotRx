@@ -125,17 +125,93 @@ static rx_observable_t with_latest_from(const rx_observable_t& parent, const rx_
 static rx_observable_t zip(const rx_observable_list_t& sources) { return obs::zip_(sources); }
 static rx_observable_t zip(const rx_observable_t& sources...) { return obs::zip_(sources); }
 
-} // END namespace observable
-
 namespace op {
 
-struct operators {
+struct ops {
+    // _all.h
+    static observable_op_t all_(const predicate_t<Variant>& predicate);
+    // _amb.h
+    static observable_op_t amb_(const rx_observable_t& right_source);
+    // _asobservable.h
+    static observable_op_t as_observable_();
+    // _average.h
+    static observable_op_t average_(const mapper_t<double, Variant>& key_mapper = nullptr);
+    // _catch.h
+    static observable_op_t catch_(const rx_observable_t& handler);
+    static observable_op_t catch_(const std::function<rx_observable_t(const error_t&, const rx_observable_t&)>& handler);
+    // _combinelatest.h
+    static observable_op_t combine_latest_(const rx_observable_list_t& others);
+    static observable_op_t combine_latest_(const rx_observable_t& others...);
+    // _filter.h
+    static observable_op_t filter_(const predicate_t<Variant>& predicate);
+    static observable_op_t filter_indexed_(const predicate_indexed_t<Variant>& predicate = nullptr);
+    // _last.h
+    static observable_op_t last_(const predicate_t<Variant>& predicate = nullptr);
+    // _lastordefault.h
+    static rx_observable_t last_or_default_async_(const rx_observable_t& source, bool has_default = false, const Variant& default_value = VNULL);
+    static observable_op_t last_or_default_(const Variant& default_value = VNULL, const predicate_t<Variant>& predicate = nullptr);
+    // _map.h
+    static observable_op_t map_(const mapper_t<Variant, Variant>& mapper = nullptr);
+    static observable_op_t map_indexed_(const mapper_indexed_t<Variant, Variant>& mapper = nullptr);
+    // _materialize.h
+    static observable_op_t materialize_();
+    // _merge.h
+    static observable_op_t merge_(const rx_observable_list_t& sources, int64_t max_concurrent = -1);
+    static observable_op_t merge_(int64_t max_concurrent, const rx_observable_t& sources...);
+    static observable_op_t merge_all_();
+    // _scan.h
+    static observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value());
+    // _some.h
+    static observable_op_t some_(const predicate_t<Variant>& predicate = nullptr);
+    // _zip.h
+    static observable_op_t zip_(const rx_observable_list_t& sources);
+    static observable_op_t zip_(const rx_observable_t& others...);
+    static observable_op_t zip_with_iterable_(const iterable_t& seq);
 
+}; // END struct ops
 
-}; // END struct operators
+// _all.h
+static observable_op_t all(const predicate_t<Variant>& predicate) { return ops::all_(predicate); }
+// _amb.h
+static observable_op_t amb(const rx_observable_t& right_source) { return ops::amb_(right_source); }
+// _asobservable.h
+static observable_op_t as_observable() { return ops::as_observable_(); }
+// _average.h
+static observable_op_t average(const mapper_t<double, Variant>& key_mapper = nullptr) { return ops::average_(key_mapper); }
+// _catch.h
+static observable_op_t catch_with(const rx_observable_t& handler) { return ops::catch_(handler); }
+static observable_op_t catch_with(const std::function<rx_observable_t(const error_t&, const rx_observable_t&)>& handler) { return ops::catch_(handler); }
+// _combinelatest.h
+static observable_op_t combine_latest(const rx_observable_list_t& others) { return ops::combine_latest_(others); }
+static observable_op_t combine_latest(const rx_observable_t& others...) { return ops::combine_latest_(others); }
+// _filter.h
+static observable_op_t filter(const predicate_t<Variant>& predicate) { return ops::filter_(predicate); }
+static observable_op_t filter_indexed(const predicate_indexed_t<Variant>& predicate = nullptr) { return ops::filter_indexed_(predicate); }
+// _last.h
+static observable_op_t last(const predicate_t<Variant>& predicate = nullptr) { return ops::last_(predicate); }
+// _lastordefault.h
+static rx_observable_t last_or_default_async(const rx_observable_t& source, bool has_default = false, const Variant& default_value = VNULL) { return ops::last_or_default_async_(source, has_default, default_value); }
+static observable_op_t last_or_default(const Variant& default_value = VNULL, const predicate_t<Variant>& predicate = nullptr) { return ops::last_or_default_(default_value, predicate); }
+// _map.h
+static observable_op_t map(const mapper_t<Variant, Variant>& mapper = nullptr) { return ops::map_(mapper); }
+static observable_op_t map_indexed(const mapper_indexed_t<Variant, Variant>& mapper = nullptr) { return ops::map_indexed_(mapper); }
+// _materialize.h
+static observable_op_t materialize() { return ops::materialize_(); }
+// _merge.h
+static observable_op_t merge(const rx_observable_list_t& sources, int64_t max_concurrent = -1) { return ops::merge_(sources, max_concurrent); }
+static observable_op_t merge(int64_t max_concurrent, const rx_observable_t& sources...) { return ops::merge_(max_concurrent, sources); }
+static observable_op_t merge_all() { return ops::merge_all_(); }
+// _scan.h
+static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return ops::scan_(accumulator, seed); }
+// _some.h
+static observable_op_t some(const predicate_t<Variant>& predicate = nullptr) { return ops::some_(predicate); }
+// _zip.h
+static observable_op_t zip(const rx_observable_list_t& sources) { return ops::zip_(sources); }
+static observable_op_t zip(const rx_observable_t& others...) { return ops::zip_(others); }
+static observable_op_t zip_with_iterable(const iterable_t& seq) { return ops::zip_with_iterable_(seq); }
 
 } // END namespace op
-
+} // END namespace observable
 } // END namespace rx::observable
 
 #endif // RX_OBSERVABLE_DEFINITIONS_H

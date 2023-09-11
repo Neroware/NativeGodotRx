@@ -20,10 +20,10 @@ namespace rx {
         : std::shared_ptr<base_type>(Wrapper::unwrap(other)) {} \
     ptr_type::ptr_type(const Variant& other) \
         : std::shared_ptr<base_type>(Wrapper::unwrap(other)) {} \
-    ptr_type::operator Ref<Wrapper>() { \
+    ptr_type::operator Ref<Wrapper>() const { \
         return Wrapper::wrap(*this); \
     } \
-    ptr_type::operator Variant() { \
+    ptr_type::operator Variant() const { \
         return Wrapper::wrap(*this); \
     }
 

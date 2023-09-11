@@ -4,13 +4,11 @@ var custom_signal_emitted = null
 
 func _ready():
 	
-	RxObservable.fork_join([
-		RxObservable.timer(1.0),
-		RxObservable.just(42),
-		RxObservable.from([1, 2, 3, 4])
-	]) \
-	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	.dispose_with(self)
+	var main_thread = RxThread.get_current_thread()
+	
+	RxObservable.just(42, RxCurrentThreadScheduler.singleton()) \
+		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+		.dispose_with(self)
 	
 #	get_tree().quit()
 	

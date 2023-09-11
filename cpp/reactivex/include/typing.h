@@ -72,8 +72,8 @@ namespace wrappers {
         ptr_type(const std::shared_ptr<type>& other) noexcept; \
         ptr_type(godot::Ref<wrapper> other); \
         ptr_type(const godot::Variant&); \
-        operator godot::Ref<wrapper>(); \
-        operator godot::Variant(); \
+        operator godot::Ref<wrapper>() const; \
+        operator godot::Variant() const; \
     };
 RX_BASEPTR_DECLARE(rx::abstract::DisposableBase, disposable_t, rx::wrappers::RxDisposableBase)
 RX_BASEPTR_DECLARE(rx::abstract::IterableBase, iterable_t, rx::wrappers::RxIterableBase)

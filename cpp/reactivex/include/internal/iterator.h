@@ -156,6 +156,8 @@ public:
     // Constructors
     RxList() 
         : list_ptr(std::make_shared<std::list<T>>()) {}
+    RxList(const std::initializer_list<T>& init_lst) 
+        : list_ptr(std::make_shared<std::list<T>>(init_lst)) {}
     RxList(const std::list<T>& other)
         : list_ptr(std::make_shared<std::list<T>>(other)) {}
     RxList(const iterable_t& other)
