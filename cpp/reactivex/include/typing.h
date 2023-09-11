@@ -130,6 +130,8 @@ typedef std::function<rx_observable_t(const rx_observable_t&)> observable_op_t;
 
 typedef std::function<void(const notification_t&)> notifier_t;
 
+typedef std::function<rx_observable_t(const godot::Variant&)> stated_observable_factory_t;
+
 template<typename KeyT, typename... ArgsT>
 using mapper_t = std::function<KeyT(const ArgsT&...)>;
 

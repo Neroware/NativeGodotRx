@@ -1,6 +1,3 @@
-#ifndef RX_OBSERVABLE_CASE_H
-#define RX_OBSERVABLE_CASE_H
-
 #include "observable/definitions.h"
 
 namespace rx::observable {
@@ -30,5 +27,3 @@ rx_observable_t obs::case_(
 }
 
 } // END namespace rx::observable
-
-#endif // RX_OBSERVABLE_CASE_H
