@@ -3,42 +3,45 @@ static Ref<RxObservable> case_mapper(const Callable& mapper, const Dictionary& s
 // catch.h
 static Ref<RxObservable> catch_with_iterable(const Variant& sources);
 // combinelatest.h
-// static Ref<RxObservable> combine_latest(const Variant& sources);
+static Ref<RxObservable> combine_latest(const Variant& sources);
 // concat.h
-// static Ref<RxObservable> concat(const Variant& sources);
+static Ref<RxObservable> concat(const Variant& sources);
 // defer.h
 static Ref<RxObservable> defer(const Callable& factory);
 // empty.h
 static Ref<RxObservable> empty(Ref<RxSchedulerBase> scheduler = VNULL);
 // forkjoin.h
-// static Ref<RxObservable> fork_join(const Variant& sources);
+static Ref<RxObservable> fork_join(const Variant& sources);
 // fromiterable.h
-// static Ref<RxObservable> from_iterable(const Variant& iterable, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
-// static Ref<RxObservable> from(const Variant& iterable, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
+static Ref<RxObservable> from_iterable(const Variant& iterable, Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> from(const Variant& iterable, Ref<RxSchedulerBase> scheduler = VNULL);
 // generate.h
-// static Ref<RxObservable> generate(const Variant& initial_state, const Callable& condition, const Callable& iterate);
+static Ref<RxObservable> generate(const Variant& initial_state, const Callable& condition, const Callable& iterate);
 // ifthen.h
-// static Ref<RxObservable> if_then(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source);
+static Ref<RxObservable> if_then(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source);
 // merge.h
-// static Ref<RxObservable> merge(const Variant& sources);
+static Ref<RxObservable> merge(const Variant& sources);
 // never.h
-// static Ref<RxObservable> never();
+static Ref<RxObservable> never();
 // onerrorresumenext.h
-// static Ref<RxObservable> on_error_resume_next(const Variant& sources, bool use_factory = false);
+static Ref<RxObservable> on_error_resume_next(const Variant& sources, bool use_factory = false);
 // range.h
-// static Ref<RxObservable> range(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1);
+static Ref<RxObservable> range(int64_t start, int64_t stop = INT64_MAX, int64_t step = 1);
 // returnvalue.h
-// static Ref<RxObservable> return_value(const Variant& value, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
-// static Ref<RxObservable> just(const Variant& value, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
+static Ref<RxObservable> return_value(const Variant& value, Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> just(const Variant& value, Ref<RxSchedulerBase> scheduler = VNULL);
 // throw.h
-static Ref<RxObservable> throw_message(const String& what, const String& type = "RxError", Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
-static Ref<RxObservable> throw_error(Ref<RxError> error, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
+static Ref<RxObservable> throw_message(const String& what, const String& type = "RxError", Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> throw_error(Ref<RxError> error, Ref<RxSchedulerBase> scheduler = VNULL);
 // timer.h
-// static Ref<RxObservable> timer(const Variant& duetime, const Variant& period = Variant(), Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
-// static Ref<RxObservable> periodic_timer(const Variant& period, Ref<RxSchedulerBase> scheduler = Ref<RxSchedulerBase>());
+static Ref<RxObservable> timer_abs(Ref<AbsoluteTime> duetime, Ref<RelativeTime> period = VNULL, Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> timer_rel(Ref<RelativeTime> duetime, Ref<RelativeTime> period = VNULL, Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> timer(double duetime, double period = -1.0, Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> periodic_timer_rel(Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler = VNULL);
+static Ref<RxObservable> periodic_timer(double period, Ref<RxSchedulerBase> scheduler = VNULL);
 // using.h
-// static Ref<RxObservable> using_resource(const Callable& resource_factory, const Callable& observable_factory);
+static Ref<RxObservable> using_resource(const Callable& resource_factory, const Callable& observable_factory);
 // withlatestfrom.h
-// static Ref<RxObservable> with_latest_from(Ref<RxObservable> parent, const Variant& sources);
+static Ref<RxObservable> with_latest_from(Ref<RxObservable> parent, const Variant& sources);
 // zip.h
-// static Ref<RxObservable> zip(const Variant& sources);
+static Ref<RxObservable> zip(const Variant& sources);

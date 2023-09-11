@@ -9,7 +9,7 @@ using namespace rx::scheduler;
 
 namespace rx::observable {
 
-rx_observable_t fork_join_(const rx_observable_list_t& sources_) {
+rx_observable_t obs::fork_join_(const rx_observable_list_t& sources_) {
     observable_vec_t sources(sources_.begin(), sources_.end());
     rx_observable_t parent = sources[0];
 

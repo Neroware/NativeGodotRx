@@ -76,7 +76,8 @@ static handler_t handler_cb(const Callable& cb) {
         return cb.callv(Array::make(RxError::wrap(error)));
     };
 }
-static auto observable_factory_cb = from_cb<rx_observable_t, scheduler_t>;
+static auto observable_factory_cb = from_cb<rx_observable_t, const scheduler_t&>;
+static auto stated_observable_factory_cb = from_cb<rx_observable_t, const Variant&>;
 
 class NotSet : public RefCounted {
     GDCLASS(NotSet, RefCounted)
@@ -97,6 +98,15 @@ struct variant_compare {
 };
 
 /* Utility helper functions */
+
+template <typename CallableT>
+static RxList<CallableT> convert_all_cb(const RxList<Callable>& xs, const std::function<CallableT(const godot::Callable&)>& converter) {
+    RxList<CallableT> result;
+    for (const Callable& cb : xs) {
+        result.push_back(converter(cb));
+    }
+    return result;
+}
 
 template<typename T>
 static bool all(const std::shared_ptr<T[]>& arr, int n) {
