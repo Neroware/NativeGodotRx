@@ -44,6 +44,8 @@ RX_BASEPTR_IMPL(notification_on_error_t, NotificationOnError, RxNotificationOnEr
 RX_BASEPTR_IMPL(notification_on_completed_t, NotificationOnCompleted, RxNotificationOnCompleted)
 
 RX_BASEPTR_IMPL(rx_observable_t, Observable, RxObservable)
+RX_BASEPTR_IMPL(rx_connectable_observable_t, ConnectableObservable, RxConnectableObservable)
+
 RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
 
 // #define RX_WRAPPERREF_IMPL

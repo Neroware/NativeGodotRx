@@ -32,6 +32,7 @@ namespace abstract {
 }
 namespace observable {
     class Observable;
+    class ConnectableObservable;
 }
 namespace subject {
     class Subject;
@@ -63,6 +64,7 @@ namespace wrappers {
 
     class RxSubject;
     class RxObservable;
+    class RxConnectableObservable;
 };
 
 #define RX_BASEPTR_DECLARE(type, ptr_type, wrapper) \
@@ -91,6 +93,7 @@ RX_BASEPTR_DECLARE(NotificationOnError, notification_on_error_t, rx::wrappers::R
 RX_BASEPTR_DECLARE(NotificationOnCompleted, notification_on_completed_t, rx::wrappers::RxNotificationOnCompleted)
 
 RX_BASEPTR_DECLARE(rx::observable::Observable, rx_observable_t, rx::wrappers::RxObservable)
+RX_BASEPTR_DECLARE(rx::observable::ConnectableObservable, rx_connectable_observable_t, rx::wrappers::RxConnectableObservable)
 RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t, rx::wrappers::RxSubject)
 
 /* Containers */

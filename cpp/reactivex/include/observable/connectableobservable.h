@@ -21,8 +21,8 @@ protected:
         : source(source_), subscription(nullptr), subject(subject_) {}
 public:
     ~ConnectableObservable(){}
-    inline static std::shared_ptr<ConnectableObservable> get(const observable_t& source_, const subject_t& subject_) { return std::shared_ptr<ConnectableObservable>(new ConnectableObservable(source_, subject_)); }
-    inline std::shared_ptr<ConnectableObservable> getptr() { return std::static_pointer_cast<ConnectableObservable>(Observable::getptr()); }
+    inline static rx_connectable_observable_t get(const observable_t& source_, const subject_t& subject_) { return std::shared_ptr<ConnectableObservable>(new ConnectableObservable(source_, subject_)); }
+    inline rx_connectable_observable_t getptr() { return std::static_pointer_cast<ConnectableObservable>(Observable::getptr()); }
 
 private:
     virtual disposable_t _subscribe_core(const observer_t& observer, const scheduler_t& scheduler = nullptr) override;
