@@ -1,7 +1,7 @@
 // case.h
 static Ref<RxObservable> case_mapper(const Callable& mapper, const Dictionary& sources, Ref<RxObservable> default_source = VNULL);
 // catch.h
-// static Ref<RxObservable> catch_with_iterable(const Variant& sources);
+static Ref<RxObservable> catch_with_iterable(const Variant& sources);
 // combinelatest.h
 // static Ref<RxObservable> combine_latest(const Variant& sources);
 // concat.h

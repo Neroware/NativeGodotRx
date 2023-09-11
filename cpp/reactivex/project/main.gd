@@ -4,9 +4,17 @@ var custom_signal_emitted = null
 
 func _ready():
 
-	RxObservable.defer(func(__ = null): return RxObservable.raise("Intentional error!")) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+#	RxObservable.defer(func(__ = null): return RxObservable.raise("Intentional error!")) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+	
+	RxObservable.catch([
+		RxObservable.raise("Err 1"),
+		RxObservable.raise("Err 2"),
+		RxObservable.raise("Err 3")
+	]) \
+	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	.dispose_with(self)
 	
 #	get_tree().quit()
 	

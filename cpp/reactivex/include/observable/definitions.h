@@ -10,7 +10,9 @@ namespace rx {
 namespace observable {
 
 struct obs {
-
+    // catch.h
+    static rx_observable_t catch_with_iterable_(const rx_observable_list_t& sources);
+    static rx_observable_t catch_with_iterable_(const rx_observable_t& sources...);
     // case.h
     static rx_observable_t case_(const mapper_t<Variant>& mapper, const default_mapping<Variant, rx_observable_t>& sources, const rx_observable_t& default_source = nullptr);
     // defer.h
@@ -22,6 +24,9 @@ struct obs {
 
 }; // END struct obs
 
+// catch.h
+static rx_observable_t catch_with_iterable(const rx_observable_list_t& sources) { return obs::catch_with_iterable_(sources); }
+static rx_observable_t catch_with_iterable(const rx_observable_t& sources...) { return obs::catch_with_iterable_(sources); }
 // case.h
 static rx_observable_t case_mapper(const mapper_t<Variant>& mapper, const default_mapping<Variant, rx_observable_t>& sources, const rx_observable_t& default_source = nullptr) { return obs::case_(mapper, sources, default_source); }
 // defer.h

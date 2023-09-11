@@ -149,110 +149,180 @@ struct while_iterable : public IterableBase {
 }; // END while_iterable
 
 template <typename T>
-class rx_list {
+class RxList {
 private:
-    std::list<T> _list;
+    std::shared_ptr<std::list<T>> list_ptr;
 public:
-    rx_list() {}
-    rx_list(const std::list<T>& other)
-        : _list(other) {}
-    rx_list(const iterable_t& other) {
-        auto _it = other->iter();
-        while(_it->has_next()){ 
-            _list.push_back(_it->next());
-        }
+    // Constructors
+    RxList() 
+        : list_ptr(std::make_shared<std::list<T>>()) {}
+    RxList(const std::list<T>& other)
+        : list_ptr(std::make_shared<std::list<T>>(other)) {}
+    RxList(const iterable_t& other)
+        : list_ptr(std::make_shared<std::list<T>>()) {
+            auto _it = other->iter();
+            while(_it->has_next()){ 
+                list_ptr->push_back(_it->next());
+            }
     }
     template<typename IterableT>
-    rx_list(const IterableT& other)
-        : _list(other.begin(), other.end()) {}
-    ~rx_list(){}
+    RxList(const IterableT& other)
+        : list_ptr(std::make_shared<std::list<T>>(other.begin(), other.end())) {}
+    /* template<typename... Args>
+    RxList(const Args&... args)
+        : _list({args...}) {} */
 
-    void push_back(const T& value) {
-        _list.push_back(value);
+    // Element access
+    T& front() {
+        return list_ptr->front();
     }
-    void pop_back() {
-        if (!_list.empty()) {
-            _list.pop_back();
-        }
+    const T& front() const {
+        return list_ptr->front();
     }
+    T& back() {
+        return list_ptr->back();
+    }
+    const T& back() const {
+        return list_ptr->back();
+    }
+
+    // Capacity
     bool empty() const {
-        return _list.empty();
+        return list_ptr->empty();
     }
     size_t size() const {
-        return _list.size();
+        return list_ptr->size();
     }
+
+    // Modifiers
     void clear() {
-        _list.clear();
+        list_ptr->clear();
     }
-    typename std::list<T>::iterator begin() {
-        return _list.begin();
+    void insert(typename std::list<T>::iterator pos, const T& value) {
+        list_ptr->insert(pos, value);
     }
-    typename std::list<T>::iterator end() {
-        return _list.end();
+    void insert(typename std::list<T>::iterator pos, T&& value) {
+        list_ptr->insert(pos, std::move(value));
     }
-    typename std::list<T>::const_iterator begin() const {
-        return _list.begin();
+    typename std::list<T>::iterator erase(typename std::list<T>::iterator pos) {
+        return list_ptr->erase(pos);
     }
-    typename std::list<T>::const_iterator end() const {
-        return _list.end();
-    }
-}; // END class rx_list
-
-template <typename T>
-class rx_vector {
-private:
-    std::vector<T> _vector;
-public:
-    rx_vector() {}
-    rx_vector(const std::vector<T>& other)
-        : _vector(other) {}
-    rx_vector(const iterable_t& other) {
-        auto _it = other->iter();
-        while(_it->has_next()){ 
-            _vector.push_back(_it->next());
-        }
-    }
-    template<typename IterableT>
-    rx_vector(const IterableT& other)
-        : _vector(other.begin(), other.end()) {}
-    ~rx_vector() {}
-
     void push_back(const T& value) {
-        _vector.push_back(value);
+        list_ptr->push_back(value);
+    }
+    void push_back(T&& value) {
+        list_ptr->push_back(std::move(value));
     }
     void pop_back() {
-        if (!_vector.empty()) {
-            _vector.pop_back();
+        list_ptr->pop_back();
+    }
+    void push_front(const T& value) {
+        list_ptr->push_front(value);
+    }
+    void push_front(T&& value) {
+        list_ptr->push_front(std::move(value));
+    }
+    void pop_front() {
+        list_ptr->pop_front();
+    }
+    void resize(size_t new_size) {
+        list_ptr->resize(new_size);
+    }
+    void swap(RxList& other) {
+        list_ptr->swap(*(other.list_ptr));
+    }
+
+    class iterator {
+    public:
+        using iterator_category = typename std::list<T>::iterator::iterator_category;
+        using value_type = typename std::list<T>::iterator::value_type;
+        using difference_type = typename std::list<T>::iterator::difference_type;
+        using pointer = typename std::list<T>::iterator::pointer;
+        using reference = typename std::list<T>::iterator::reference;
+
+        iterator(typename std::list<T>::iterator it) : internal_iterator(it) {}
+
+        iterator& operator++() {
+            ++internal_iterator;
+            return *this;
         }
+        iterator operator++(int) {
+            iterator temp = *this;
+            ++internal_iterator;
+            return temp;
+        }
+        bool operator==(const iterator& other) const {
+            return internal_iterator == other.internal_iterator;
+        }
+        bool operator!=(const iterator& other) const {
+            return internal_iterator != other.internal_iterator;
+        }
+        reference operator*() {
+            return *internal_iterator;
+        }
+        pointer operator->() {
+            return &(*internal_iterator);
+        }
+
+    private:
+        typename std::list<T>::iterator internal_iterator;
+    }; // END iterator
+
+    class const_iterator {
+    public:
+        using iterator_category = typename std::list<T>::const_iterator::iterator_category;
+        using value_type = typename std::list<T>::const_iterator::value_type;
+        using difference_type = typename std::list<T>::const_iterator::difference_type;
+        using pointer = typename std::list<T>::const_iterator::pointer;
+        using reference = typename std::list<T>::const_iterator::reference;
+
+        const_iterator(typename std::list<T>::const_iterator it) : internal_iterator(it) {}
+
+        const_iterator& operator++() {
+            ++internal_iterator;
+            return *this;
+        }
+        const_iterator operator++(int) {
+            const_iterator temp = *this;
+            ++internal_iterator;
+            return temp;
+        }
+        bool operator==(const const_iterator& other) const {
+            return internal_iterator == other.internal_iterator;
+        }
+        bool operator!=(const const_iterator& other) const {
+            return internal_iterator != other.internal_iterator;
+        }
+        reference operator*() {
+            return *internal_iterator;
+        }
+        pointer operator->() {
+            return &(*internal_iterator);
+        }
+
+    private:
+        typename std::list<T>::const_iterator internal_iterator;
+    }; // END const_iterator
+
+    iterator begin() {
+        return iterator(list_ptr->begin());
     }
-    bool empty() const {
-        return _vector.empty();
+    iterator end() {
+        return iterator(list_ptr->end());
     }
-    size_t size() const {
-        return _vector.size();
+    const_iterator cbegin() const {
+        return const_iterator(list_ptr->cbegin());
     }
-    void clear() {
-        _vector.clear();
+    const_iterator cend() const {
+        return const_iterator(list_ptr->cend());
     }
-    T& operator[](size_t index) {
-        return _vector[index];
+    const_iterator begin() const {
+        return const_iterator(list_ptr->cbegin());
     }
-    const T& operator[](size_t index) const {
-        return _vector[index];
+    const_iterator end() const {
+        return const_iterator(list_ptr->cend());
     }
-    typename std::vector<T>::iterator begin() {
-        return _vector.begin();
-    }
-    typename std::vector<T>::iterator end() {
-        return _vector.end();
-    }
-    typename std::vector<T>::const_iterator begin() const {
-        return _vector.begin();
-    }
-    typename std::vector<T>::const_iterator end() const {
-        return _vector.end();
-    }
-}; // END class rx_vector
+};
 
 namespace iterator {
 

@@ -5,8 +5,13 @@
 
 using namespace rx::observable;
 
+#define RX_ITERABLE_T(variant) iterable_t(rx::iterator::to_iterable(variant))
+
 namespace rx::wrappers {
 
+// catch.h
+Ref<RxObservable> RxObservable::catch_with_iterable(const Variant& sources) {
+    return obs::catch_with_iterable_(RX_ITERABLE_T(sources)); }
 // case.h
 Ref<RxObservable> RxObservable::case_mapper(const Callable& mapper, const Dictionary& sources, Ref<RxObservable> default_source) { 
     return obs::case_(from_cb<Variant>(mapper), sources, default_source); }
@@ -25,7 +30,7 @@ void RxObservable::_bind_methods() {
     /* Constructors */
     ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(VNULL));
 
-    // ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable);
 
     // ClassDB::bind_static_method("RxObservable", D_METHOD("combine_latest", "sources"), &RxObservable::combine_latest);
 

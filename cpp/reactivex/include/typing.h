@@ -9,7 +9,6 @@
 #include <exception>
 #include <memory>
 
-
 namespace rx {
 
 /* Exception */
@@ -102,6 +101,10 @@ typedef std::list<rx_observable_t> observable_list_t;
 typedef std::vector<rx_observable_t> observable_vec_t;
 typedef std::list<disposable_t> disposable_list_t;
 typedef std::vector<disposable_t> disposable_vec_t;
+
+template<typename T> class RxList;
+typedef rx::RxList<rx_observable_t> rx_observable_list_t;
+typedef rx::RxList<disposable_t> rx_disposable_list_t;
 
 /* Functionals */
 
