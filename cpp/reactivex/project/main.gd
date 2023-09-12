@@ -13,7 +13,7 @@ func _ready():
 	
 	
 	RxObservable.concat([
-		RxObservable.timer(0.5),
+		RxObservable.timer(5.0),
 		RxObservable.from([1, 2, 3, 4]),
 		RxObservable.just(5)
 	]) \

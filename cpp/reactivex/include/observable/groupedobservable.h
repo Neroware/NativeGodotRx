@@ -23,8 +23,8 @@ protected:
 
 public:
     ~GroupedObservable(){}
-    inline static std::shared_ptr<GroupedObservable> get(const Variant& key_, const rx_observable_t& underlying_observable_, const std::shared_ptr<RefCountDisposable>& merged_disposable = nullptr) { return std::shared_ptr<GroupedObservable>(new GroupedObservable(key_, underlying_observable_, merged_disposable)); }
-    inline std::shared_ptr<GroupedObservable> getptr() { return std::static_pointer_cast<GroupedObservable>(Observable::getptr()); }
+    inline static rx_grouped_observable_t get(const Variant& key_, const rx_observable_t& underlying_observable_, const std::shared_ptr<RefCountDisposable>& merged_disposable = nullptr) { return std::shared_ptr<GroupedObservable>(new GroupedObservable(key_, underlying_observable_, merged_disposable)); }
+    inline rx_grouped_observable_t getptr() { return std::static_pointer_cast<GroupedObservable>(Observable::getptr()); }
 
 private:
     virtual disposable_t _subscribe_core(const observer_t& observer, const scheduler_t& scheduler = nullptr) override;

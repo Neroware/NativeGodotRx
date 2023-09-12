@@ -32,6 +32,10 @@ namespace abstract {
 namespace observable {
     class Observable;
     class ConnectableObservable;
+    class GroupedObservable;
+}
+namespace disposable {
+    class RefCountDisposable;
 }
 namespace subject {
     class Subject;
@@ -61,12 +65,16 @@ namespace wrappers {
     class RxNotificationOnError;
     class RxNotificationOnCompleted;
 
-    class RxSubject;
+    class RxRefCountDisposable;
+
     class RxObservable;
     class RxConnectableObservable;
+    class RxGroupedObservable;
+
+    class RxSubject;
 };
 
-#define RX_BASEPTR_DECLARE(type, ptr_type, wrapper) \
+#define RX_BASEPTR_DECLARE(type, ptr_type, wrapper, ...) \
     struct ptr_type : public std::shared_ptr<type> { \
         using std::shared_ptr<type>::shared_ptr; \
         ptr_type(const std::shared_ptr<type>& other) noexcept; \
@@ -74,6 +82,7 @@ namespace wrappers {
         ptr_type(const godot::Variant&); \
         operator godot::Ref<wrapper>() const; \
         operator godot::Variant() const; \
+        __VA_ARGS__ \
     };
 RX_BASEPTR_DECLARE(rx::abstract::DisposableBase, disposable_t, rx::wrappers::RxDisposableBase)
 RX_BASEPTR_DECLARE(rx::abstract::IterableBase, iterable_t, rx::wrappers::RxIterableBase)
@@ -91,8 +100,14 @@ RX_BASEPTR_DECLARE(NotificationOnNext, notification_on_next_t, rx::wrappers::RxN
 RX_BASEPTR_DECLARE(NotificationOnError, notification_on_error_t, rx::wrappers::RxNotificationOnError)
 RX_BASEPTR_DECLARE(NotificationOnCompleted, notification_on_completed_t, rx::wrappers::RxNotificationOnCompleted)
 
+RX_BASEPTR_DECLARE(rx::disposable::RefCountDisposable, rx_rc_disposable_t, rx::wrappers::RxRefCountDisposable)
+
 RX_BASEPTR_DECLARE(rx::observable::Observable, rx_observable_t, rx::wrappers::RxObservable)
-RX_BASEPTR_DECLARE(rx::observable::ConnectableObservable, rx_connectable_observable_t, rx::wrappers::RxConnectableObservable)
+RX_BASEPTR_DECLARE(rx::observable::ConnectableObservable, rx_connectable_observable_t, rx::wrappers::RxConnectableObservable,
+    rx_connectable_observable_t(const rx_observable_t& obs);
+)
+RX_BASEPTR_DECLARE(rx::observable::GroupedObservable, rx_grouped_observable_t, rx::wrappers::RxGroupedObservable)
+
 RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t, rx::wrappers::RxSubject)
 
 /* Containers */
@@ -116,6 +131,7 @@ typedef std::function<void()> on_completed_t;
 
 typedef std::function<disposable_t(const observer_t&, const scheduler_t&)> subscription_t;
 
+typedef std::function<void()> action_t;
 typedef std::function<godot::Variant(const godot::Variant&)> periodic_action_t;
 typedef std::function<disposable_t(const scheduler_t&, const godot::Variant&)> scheduled_action_t;
 
@@ -127,6 +143,9 @@ typedef std::function<void(const notification_t&)> notification_handler_t;
 
 typedef std::function<rx_observable_t(const scheduler_t&)> observable_factory_t;
 typedef std::function<rx_observable_t(const rx_observable_t&)> observable_op_t;
+typedef std::function<rx_observable_t(const rx_connectable_observable_t&)> connectable_op_t;
+typedef std::function<observable_vec_t(const rx_observable_t&)> partition_op_t;
+typedef std::function<rx_subject_t(const scheduler_t&)> rx_subject_factory_t;
 
 typedef std::function<void(const notification_t&)> notifier_t;
 

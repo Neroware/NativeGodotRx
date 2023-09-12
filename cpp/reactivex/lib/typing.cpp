@@ -13,7 +13,7 @@ using namespace godot;
 
 namespace rx {
 
-#define RX_BASEPTR_IMPL(ptr_type, base_type, Wrapper) \
+#define RX_BASEPTR_IMPL(ptr_type, base_type, Wrapper, ...) \
     ptr_type::ptr_type(const std::shared_ptr<base_type>& other) noexcept \
         : std::shared_ptr<base_type>(other) {} \
     ptr_type::ptr_type(Ref<Wrapper> other) \
@@ -25,7 +25,8 @@ namespace rx {
     } \
     ptr_type::operator Variant() const { \
         return Wrapper::wrap(*this); \
-    }
+    } \
+    __VA_ARGS__
 
 RX_BASEPTR_IMPL(disposable_t, DisposableBase, RxDisposableBase)
 RX_BASEPTR_IMPL(iterable_t, IterableBase, RxIterableBase)
@@ -43,8 +44,14 @@ RX_BASEPTR_IMPL(notification_on_next_t, NotificationOnNext, RxNotificationOnNext
 RX_BASEPTR_IMPL(notification_on_error_t, NotificationOnError, RxNotificationOnError)
 RX_BASEPTR_IMPL(notification_on_completed_t, NotificationOnCompleted, RxNotificationOnCompleted)
 
+RX_BASEPTR_IMPL(rx_rc_disposable_t, RefCountDisposable, RxRefCountDisposable)
+
 RX_BASEPTR_IMPL(rx_observable_t, Observable, RxObservable)
-RX_BASEPTR_IMPL(rx_connectable_observable_t, ConnectableObservable, RxConnectableObservable)
+RX_BASEPTR_IMPL(rx_connectable_observable_t, ConnectableObservable, RxConnectableObservable,
+    rx_connectable_observable_t::rx_connectable_observable_t(const rx_observable_t& obs)
+        : rx_connectable_observable_t(std::dynamic_pointer_cast<ConnectableObservable>(obs)) {}
+)
+RX_BASEPTR_IMPL(rx_grouped_observable_t, GroupedObservable, RxGroupedObservable)
 
 RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
 
