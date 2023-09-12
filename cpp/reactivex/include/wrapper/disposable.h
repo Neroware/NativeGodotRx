@@ -240,7 +240,7 @@ public:
     // constructor
     inline static Ref<RxCompositeDisposable> get(const TypedArray<RxDisposableBase>& items) { 
         return RxCompositeDisposable::wrap(
-            std::make_shared<CompositeDisposable>(iterable_t(rx::iterator::to_iterable(items))));
+            std::make_shared<CompositeDisposable>(rx::iterator::to_iterable(items)));
     }
     // set-get
     DISPOSABLE_SETGET

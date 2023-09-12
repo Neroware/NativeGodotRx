@@ -328,28 +328,28 @@ public:
 
 namespace iterator {
 
-static Ref<RxIterableBase> to_iterable(const Variant& it) {
+static iterable_t to_iterable(const Variant& it) {
     if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
-        return iterable;
+        return Ref<RxIterableBase>(iterable);
     }
     if (it.get_type() == Variant::ARRAY) {
-        return RxIterableBase::wrap(std::make_shared<array_iterable>(it));
+        return std::make_shared<array_iterable>(it);
     }
     if (it.get_type() == Variant::DICTIONARY) {
-        return RxIterableBase::wrap(std::make_shared<dictionary_iterable>(it));
+        return std::make_shared<dictionary_iterable>(it);
     }
     return to_iterable(Array::make(it));
 }
 
-static Ref<RxIterableBase> iter(const Variant& it) {
+static iterator_t iter(const Variant& it) {
     if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
         return iterable->iter();
     }
     if (it.get_type() == Variant::ARRAY) {
-        return RxIteratorBase::wrap(std::make_shared<array_iterator>(it));
+        return std::make_shared<array_iterator>(it);
     }
     if (it.get_type() == Variant::DICTIONARY) {
-        return RxIteratorBase::wrap(std::make_shared<dictionary_iterator>(it));
+        return std::make_shared<dictionary_iterator>(it);
     }
     return iter(Array::make(it));
 }

@@ -5,7 +5,7 @@
 
 using namespace rx::observable;
 
-#define RX_ITERABLE_T(variant) iterable_t(rx::iterator::to_iterable(variant))
+#define RX_ITERABLE_T(variant) rx::iterator::to_iterable(variant)
 
 namespace rx::wrappers {
 

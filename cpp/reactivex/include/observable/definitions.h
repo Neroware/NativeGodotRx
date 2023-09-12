@@ -10,17 +10,19 @@ namespace rx {
 namespace observable {
 
 struct obs {
-    // catch.h
-    static rx_observable_t catch_with_iterable_(const rx_observable_list_t& sources);
-    static rx_observable_t catch_with_iterable_(const rx_observable_t& sources...);
     // case.h
     static rx_observable_t case_(const mapper_t<Variant>& mapper, const default_mapping<Variant, rx_observable_t>& sources, const rx_observable_t& default_source = nullptr);
+    // catch.h
+    static rx_observable_t catch_with_iterable_(const iterable_t& sources);
+    static rx_observable_t catch_(const rx_observable_list_t& sources);
+    static rx_observable_t catch_(const rx_observable_t& sources...);
     // combinelatest.h
     static rx_observable_t combine_latest_(const rx_observable_list_t& sources);
     static rx_observable_t combine_latest_(const rx_observable_t& sources...);
     // concat.h
-    static rx_observable_t concat_with_iterable_(const rx_observable_list_t& sources);
-    static rx_observable_t concat_with_iterable_(const rx_observable_t& sources...);
+    static rx_observable_t concat_with_iterable_(const iterable_t& sources);
+    static rx_observable_t concat_(const rx_observable_list_t& sources);
+    static rx_observable_t concat_(const rx_observable_t& sources...);
     // defer.h
     static rx_observable_t defer_(const observable_factory_t& factory);
     // empty.h
@@ -67,17 +69,19 @@ struct obs {
     static rx_observable_t zip_(const rx_observable_t& sources...);
 }; // END struct obs
 
-// catch.h
-static rx_observable_t catch_with_iterable(const rx_observable_list_t& sources) { return obs::catch_with_iterable_(sources); }
-static rx_observable_t catch_with_iterable(const rx_observable_t& sources...) { return obs::catch_with_iterable_(sources); }
 // case.h
 static rx_observable_t case_mapper(const mapper_t<Variant>& mapper, const default_mapping<Variant, rx_observable_t>& sources, const rx_observable_t& default_source = nullptr) { return obs::case_(mapper, sources, default_source); }
+// catch.h
+static rx_observable_t catch_with_iterable(const iterable_t& sources) { return obs::catch_with_iterable_(sources); }
+static rx_observable_t catch_with(const rx_observable_list_t& sources) { return obs::catch_(sources); }
+static rx_observable_t catch_with(const rx_observable_t& sources...) { return obs::catch_(sources); }
 // combinelatest.h
 static rx_observable_t combine_latest(const rx_observable_list_t& sources) { return obs::combine_latest_(sources); }
 static rx_observable_t combine_latest(const rx_observable_t& sources...) { return obs::combine_latest_(sources); }
 // concat.h
-static rx_observable_t concat_with_iterable(const rx_observable_list_t& sources) { return obs::concat_with_iterable_(sources); }
-static rx_observable_t concat_with_iterable(const rx_observable_t& sources...) { return obs::concat_with_iterable_(sources); }
+static rx_observable_t concat_with_iterable(const iterable_t& sources) { return obs::concat_with_iterable_(sources); }
+static rx_observable_t concat(const rx_observable_list_t& sources) { return obs::concat_(sources); }
+static rx_observable_t concat(const rx_observable_t& sources...) { return obs::concat_(sources); }
 // defer.h
 static rx_observable_t defer(const observable_factory_t& factory) { return obs::defer_(factory); }
 // empty.h

@@ -4,9 +4,19 @@ var custom_signal_emitted = null
 
 func _ready():
 	
-	var main_thread = RxThread.get_current_thread()
+#	var main_thread = RxThread.get_current_thread()
+#	
+#	RxObservable.just(42, RxCurrentThreadScheduler.singleton()) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
-	RxObservable.just(42, RxCurrentThreadScheduler.singleton()) \
+	
+	
+	RxObservable.concat([
+		RxObservable.timer(0.5),
+		RxObservable.from([1, 2, 3, 4]),
+		RxObservable.just(5)
+	]) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	

@@ -47,7 +47,7 @@ static rx_observable_t catch_handler(
 
 observable_op_t ops::catch_(const rx_observable_t& handler) {
     auto _catch = OP(source) {
-        return catch_with_iterable(observable_list_t{source, handler});
+        return rx::observable::catch_with(observable_list_t{source, handler});
     };
     return _catch;
 }
