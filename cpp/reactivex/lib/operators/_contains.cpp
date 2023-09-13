@@ -2,7 +2,7 @@
 
 namespace rx::observable::op {
 
-static observable_op_t contains_(const Variant& value, const comparer_t<Variant>& comparer = nullptr) {
+observable_op_t ops::contains_(const Variant& value, const comparer_t<Variant>& comparer) {
 
     auto comparer_ = comparer ? comparer : basic::default_comparer<const Variant&>;
 

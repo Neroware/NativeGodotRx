@@ -148,6 +148,36 @@ struct while_iterable : public IterableBase {
 
 }; // END while_iterable
 
+namespace iterator {
+
+static iterable_t to_iterable(const Variant& it) {
+    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
+        return Ref<RxIterableBase>(iterable);
+    }
+    if (it.get_type() == Variant::ARRAY) {
+        return std::make_shared<array_iterable>(it);
+    }
+    if (it.get_type() == Variant::DICTIONARY) {
+        return std::make_shared<dictionary_iterable>(it);
+    }
+    return to_iterable(Array::make(it));
+}
+
+static iterator_t iter(const Variant& it) {
+    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
+        return iterable->iter();
+    }
+    if (it.get_type() == Variant::ARRAY) {
+        return std::make_shared<array_iterator>(it);
+    }
+    if (it.get_type() == Variant::DICTIONARY) {
+        return std::make_shared<dictionary_iterator>(it);
+    }
+    return iter(Array::make(it));
+}
+
+} // END namespace iterator 
+
 template <typename T>
 class RxList {
 private:
@@ -324,37 +354,15 @@ public:
     const_iterator end() const {
         return const_iterator(list_ptr->cend());
     }
+    
+    iterable_t iter() const {
+        Array xs;
+        for (const auto& x : *this) {
+            xs.push_back(x);
+        }
+        return rx::iterator::to_iterable(xs);
+    }
 };
-
-namespace iterator {
-
-static iterable_t to_iterable(const Variant& it) {
-    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
-        return Ref<RxIterableBase>(iterable);
-    }
-    if (it.get_type() == Variant::ARRAY) {
-        return std::make_shared<array_iterable>(it);
-    }
-    if (it.get_type() == Variant::DICTIONARY) {
-        return std::make_shared<dictionary_iterable>(it);
-    }
-    return to_iterable(Array::make(it));
-}
-
-static iterator_t iter(const Variant& it) {
-    if (auto iterable = DYN_CAST_OR_NULL(it, RxIterableBase)) {
-        return iterable->iter();
-    }
-    if (it.get_type() == Variant::ARRAY) {
-        return std::make_shared<array_iterator>(it);
-    }
-    if (it.get_type() == Variant::DICTIONARY) {
-        return std::make_shared<dictionary_iterator>(it);
-    }
-    return iter(Array::make(it));
-}
-
-} // END namespace iterator 
 
 } // END namespace rx
 

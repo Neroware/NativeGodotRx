@@ -61,10 +61,11 @@ Ref<RxObservable> RxObservable::never() {
     return obs::never_();
 }
 // onerrorresumenext.h
-Ref<RxObservable> RxObservable::on_error_resume_next(const Variant& sources, bool use_factory) {
-    return use_factory ?
-        obs::on_error_resume_next_(convert_all_cb<stated_observable_factory_t>(RX_ITERABLE_T(sources), stated_observable_factory_cb)) :
-        obs::on_error_resume_next_(rx_observable_list_t(RX_ITERABLE_T(sources)));
+Ref<RxObservable> RxObservable::on_error_resume_factory(const Variant& sources) {
+    return obs::on_error_resume_next_(convert_all_cb<stated_observable_factory_t>(RX_ITERABLE_T(sources), stated_observable_factory_cb));
+}
+Ref<RxObservable> RxObservable::on_error_resume_next(const Variant& sources) {
+    return obs::on_error_resume_next_(rx_observable_list_t(RX_ITERABLE_T(sources)));
 }
 // range.h
 Ref<RxObservable> RxObservable::range(int64_t start, int64_t stop, int64_t step) {
@@ -143,7 +144,7 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources", "use_factory"), &RxObservable::on_error_resume_next, DEFVAL(false));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources"), &RxObservable::on_error_resume_next);ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_factory", "sources"), &RxObservable::on_error_resume_factory);
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1));
 

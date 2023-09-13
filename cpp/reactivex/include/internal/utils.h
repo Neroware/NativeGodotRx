@@ -11,6 +11,8 @@
 using namespace rx::exception;
 
 #define VNULL Variant()
+#define CBNULL Callable()
+#define UNSET NotSet::value()
 
 #define SUBSCRIBE(observer, scheduler_default) [=](const observer_t& observer, const scheduler_t& scheduler_default) -> disposable_t
 #define OP(source) [=](const rx_observable_t& source) -> rx_observable_t
