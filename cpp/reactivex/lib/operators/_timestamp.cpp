@@ -17,7 +17,7 @@ observable_op_t ops::timestamp_(const scheduler_t& scheduler) {
 
             auto mapper = [=](const Variant& value) -> Variant {
                 Ref<AbsoluteTime> t = memnew(AbsoluteTime(scheduler_->now()));
-                return Array::make(value, t);
+                return RxTimeStamp::from_abs(t, value);
             };
             return source->pipe(map(mapper));
         };

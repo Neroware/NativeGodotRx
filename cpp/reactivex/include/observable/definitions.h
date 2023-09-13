@@ -158,6 +158,11 @@ struct ops {
     static observable_op_t throttle_with_mapper_(const mapper_t<rx_observable_t, Variant>& throttle_duration_mapper);
     // _defaultifempty.h
     static observable_op_t default_if_empty_(const Variant& default_value = VNULL);
+    // _delay.h
+    static rx_observable_t observable_delay_timespan(const rx_observable_t& source, const time_delta_t& duetime, const scheduler_t& scheduler = nullptr);
+    static observable_op_t delay_(const time_delta_t& duetime, const scheduler_t& scheduler = nullptr);
+    // _delaywithmapper.h
+    static observable_op_t delay_with_mapper_(const rx_observable_t& subscription_delay = nullptr, const mapper_t<rx_observable_t, Variant>& subscription_delay_mapper = nullptr, const rx_observable_t& delay_duration_mapper = nullptr);
     // _dematerialize.h
     static observable_op_t dematerialize_();
     // _distinct.h

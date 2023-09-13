@@ -94,6 +94,56 @@ public:
 
 }; // END RelativeTime
 
+class RxTimeStamp : public RefCounted {
+    GDCLASS(RxTimeStamp, RefCounted)
+
+private:
+    Ref<AbsoluteTime> _timestamp;
+    Variant _value;
+
+protected:
+    inline static void _bind_methods() {
+        ClassDB::bind_static_method("RxTimeStamp", D_METHOD("from_abs", "timestamp", "value"), &RxTimeStamp::from_abs, DEFVAL(Variant()));
+        ClassDB::bind_method(D_METHOD("_get_value"), &RxTimeStamp::get_value);
+        ClassDB::bind_method(D_METHOD("_get_timestamp"), &RxTimeStamp::get_timestamp);
+        ADD_PROPERTY(PropertyInfo(Variant::VARIANT_MAX, "value"), "", "_get_value");
+        ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "timestamp"), "", "_get_timestamp");
+    }
+
+public:
+    RxTimeStamp() {}
+    RxTimeStamp(Ref<AbsoluteTime> timestamp, const Variant& value)
+        : _timestamp(timestamp), _value(value) {}
+    inline static Ref<RxTimeStamp> from_abs(Ref<AbsoluteTime> timestamp, const Variant& value = Variant()) {
+        return memnew(RxTimeStamp(timestamp, value));
+    }
+    inline Variant get_value() { return this->_value; }
+    inline Ref<AbsoluteTime> get_timestamp() { return this->_timestamp; }
+    
+}; // END class TimeStamp
+
+template<typename T>
+struct timestamp_t {
+    time_point_t timestamp;
+    T value;
+    timestamp_t(const time_point_t& timestamp_, const Variant& value_)
+        : timestamp(timestamp_), value(value_) {}
+    timestamp_t(const Variant& timestamp_)
+        : timestamp_t(Ref<RxTimeStamp>(timestamp_)) {}
+    timestamp_t(Ref<RxTimeStamp> timestamp_)
+        : timestamp(timestamp_->get_timestamp()->t), value(timestamp_->get_value()) {}
+    operator Ref<RxTimeStamp>() const {
+        return memnew(RxTimeStamp(
+            memnew(AbsoluteTime(timestamp)),
+            value
+        ));
+    }
+    operator Variant() const {
+        return operator godot::Ref<rx::RxTimeStamp>();
+    }
+    
+}; // END struct timestamp_t
+
 }; // END namespace rx
 
 #endif // RX_TIME_H
