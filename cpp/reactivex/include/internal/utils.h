@@ -7,6 +7,8 @@
 #include <functional>
 
 #include "exception/exceptionwrapper.h"
+#include "internal/time.h"
+#include "cast.h"
 
 using namespace rx::exception;
 
@@ -71,6 +73,9 @@ static auto periodic_action_cb = from_cb<Variant, const godot::Variant&>;
 static auto dispose_cb = from_void_cb<>;
 static auto run_cb = from_cb<Variant>;
 static auto notification_handler_cb = from_cb<notification_t, const notification_t&>;
+static auto rx_subject_factory_cb = from_cb<rx_subject_t, const scheduler_t&>;
+static auto comparer_cb = from_cb<bool, const Variant&, const Variant&>;
+static auto sub_comparer_cb = from_cb<double, const Variant&, const Variant&>;
 static auto notifier_cb = from_void_cb<const notification_t&>;
 static handler_t handler_cb(const Callable& cb) {
     if (cb.is_null()) return nullptr;
@@ -78,8 +83,17 @@ static handler_t handler_cb(const Callable& cb) {
         return cb.callv(Array::make(RxError::wrap(error)));
     };
 }
+static std::function<rx_observable_t(const error_t&, const rx_observable_t&)> catch_handler_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
+    return [cb](const error_t& error, const rx_observable_t&) -> rx_observable_t {
+        return cb.callv(Array::make(RxError::wrap(error)));
+    };
+}
 static auto observable_factory_cb = from_cb<rx_observable_t, const scheduler_t&>;
 static auto stated_observable_factory_cb = from_cb<rx_observable_t, const Variant&>;
+template<typename... Args> static auto predicate_cb = from_cb<bool, const Args&...>;
+template<typename RetT, typename... Args> static auto mapper_cb = from_cb<RetT, const Args&...>;
+template<typename StateT, typename T> static auto accumulator_cb = from_cb<StateT, const StateT&, const T&>;
 
 class NotSet : public RefCounted {
     GDCLASS(NotSet, RefCounted)
@@ -145,6 +159,19 @@ static Array tuple(const T& values, int n) {
         res.append(values[i]);
     }
     return res;
+} 
+
+static time_delta_t get_dt(const Variant& time) {
+    if (IS_NUMBER(time)) {
+        return DELTA_ZERO + std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(time.operator double()));
+    }
+    if (auto t = DYN_CAST_OR_NULL(time, AbsoluteTime)) {
+        return t->t.time_since_epoch();
+    }
+    if (auto dt = DYN_CAST_OR_NULL(time, RelativeTime)) {
+        return dt->dt;
+    }
+    throw BadArgumentException("The provided argument was not a timespan!");
 } 
 
 } // END namespace rx

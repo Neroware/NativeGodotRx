@@ -311,7 +311,7 @@ static rx_observable_t do_on_terminate(const rx_observable_t& source, const acti
 static rx_observable_t do_after_terminate(const rx_observable_t& source, const action_t& after_terminate) { return ops::do_on_dispose(source, after_terminate); }
 static observable_op_t do_finally(const action_t& finally_action) { return ops::do_finally_(finally_action); }
 // _elementatordefault.h
-static observable_op_t element_at_or_default_(uint64_t index, bool has_default = false, const Variant& default_value = VNULL) { return ops::element_at_or_default_(index, has_default, default_value); }
+static observable_op_t element_at_or_default(uint64_t index, bool has_default = false, const Variant& default_value = VNULL) { return ops::element_at_or_default_(index, has_default, default_value); }
 // _exclusive.h
 static observable_op_t exclusive() { return ops::exclusive_(); }
 // _expand.h
