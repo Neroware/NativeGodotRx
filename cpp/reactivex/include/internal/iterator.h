@@ -84,6 +84,74 @@ struct dictionary_iterable : public IterableBase {
     }
 }; // END dictionary_iterable
 
+struct range : public IterableBase {
+
+    int64_t start, end, step;
+
+    struct range_iterator : public IteratorBase {
+
+        int64_t current, end, step;
+        Ref<ItEnd> itEnd;
+
+        range_iterator(int64_t start_, int64_t end_, int64_t step_)
+            : current(start_), end(end_), step(step_), itEnd(memnew(ItEnd)) {}
+        
+        inline Variant next() override {
+            Variant res = current < end ? Variant(current) : Variant(itEnd);
+            current += step;
+            return res;
+        }
+
+        inline bool has_next() override {
+            return current < end;
+        }
+
+    }; // END range_iterator
+
+    range(int64_t start_, int64_t end_, int64_t step_ = 1)
+        : start(start_), end(end_), step(step_) {}
+    range(int64_t end_, int64_t step_ = 1)
+        : start(0), end(end_), step(step_) {}
+    
+    inline iterator_t iter() override {
+        return std::make_shared<range_iterator>(start, end, step);
+    }
+
+}; // END struct range
+
+struct repeater : public IterableBase {
+
+    uint64_t count;
+    Variant value;
+
+    struct repeater_iterator : public IteratorBase {
+
+        uint64_t current, end;
+        Variant value;
+        Ref<ItEnd> itEnd;
+
+        repeater_iterator(uint64_t count_, const Variant& value_)
+            : current(0), end(count_), value(value_), itEnd(memnew(ItEnd)) {}
+        
+        inline Variant next() override {
+            return current < end ? Variant(current++) : Variant(itEnd);
+        }
+
+        inline bool has_next() override {
+            return current < end;
+        }
+
+    }; // END range_iterator
+
+    repeater(uint64_t count_, const Variant& value_ = VNULL)
+        : count(count), value(value_) {}
+    
+    inline iterator_t iter() override {
+        return std::make_shared<repeater_iterator>(count, value);
+    }
+
+}; // END struct repeater
+
 struct infinite_iterable : public IterableBase {
 
     Variant value;
