@@ -1,5 +1,6 @@
 #include "observable/definitions.h"
 
+#include "disposable/compositedisposable.h"
 #include "scheduler/scenetreetimeoutscheduler.h"
 
 namespace rx::observable::op {
@@ -7,7 +8,7 @@ namespace rx::observable::op {
 static disposable_t _schedule(const scheduler_t& s, const time_delta_t& t, const scheduled_action_t& action) {
     return s->schedule_relative(t, action);
 }
-static disposable_t _schedule(const scheduler_t& s, const time_point& t, const scheduled_action_t& action) {
+static disposable_t _schedule(const scheduler_t& s, const time_point_t& t, const scheduled_action_t& action) {
     return s->schedule_absolute(t, action);
 }
 
@@ -17,7 +18,7 @@ static observable_op_t skip_until_with_time_template_(const TimeT& start_time, c
     auto skip_until_with_time = OP(source) {
 
         auto subscribe = SUBSCRIBE(observer, scheduler_ = nullptr) {
-            scheduler_t _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : SceneTreeTimeoutScheduler.singleton();
+            scheduler_t _scheduler = scheduler ? scheduler : scheduler_ ? scheduler_ : SceneTreeTimeoutScheduler::singleton();
             auto open = std::make_shared<bool>(false);
 
             on_next_t on_next = [=](const Variant& x) {
@@ -32,6 +33,7 @@ static observable_op_t skip_until_with_time_template_(const TimeT& start_time, c
 
             auto action = ACTION(scheduler__, state) {
                 *open = true;
+                return nullptr;
             };
 
             auto disp = _schedule(_scheduler, start_time, action);
