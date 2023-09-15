@@ -157,7 +157,7 @@ struct ops {
     // _buffer.h
     static observable_op_t buffer_(const rx_observable_t& boundaries);
     static observable_op_t buffer_when_(const mapper_t<rx_observable_t>& closing_mapper);
-    static observable_op_t buffer_toggle_(const rx_observable_t& boundaries, const mapper_t<rx_observable_t>& closing_mapper);
+    static observable_op_t buffer_toggle_(const rx_observable_t& openings, const mapper_t<rx_observable_t, Variant>& closing_mapper);
     static observable_op_t buffer_with_count_(int64_t count, int64_t skip = -1);
     // _bufferwithtime.h
     static observable_op_t buffer_with_time_(const time_delta_t& timespan, const time_delta_t& timeshift = DELTA_ZERO, const scheduler_t& scheduler = nullptr);
@@ -225,6 +225,8 @@ struct ops {
     static observable_op_t first_or_default_(const predicate_t<Variant>& predicate = nullptr, const Variant& default_value = VNULL);
     // _flatmap.h
     static observable_op_t flat_map_(const mapper_t<rx_observable_t, Variant>& mapper = nullptr);
+    static observable_op_t flat_map_indexed_(const mapper_indexed_t<rx_observable_t, Variant>& mapper = nullptr);
+    static observable_op_t flat_map_latest_(const mapper_t<rx_observable_t, Variant>& mapper = nullptr);
     // _forkjoin.h
     static observable_op_t fork_join_(const rx_observable_list_t& args);
     static observable_op_t fork_join_(const rx_observable_t& args...);
@@ -332,7 +334,7 @@ struct ops {
     // _subscribeon.h
     static observable_op_t subscribe_on_(const scheduler_t& scheduler);
     // _sum.h
-    static observable_op_t sum_(const mapper_t<float, Variant>& mapper = nullptr);
+    static observable_op_t sum_(const mapper_t<float, Variant>& key_mapper = nullptr);
     // _switchlatest.h
     static observable_op_t switch_latest_();
     // _take.h
@@ -368,6 +370,7 @@ struct ops {
     static observable_op_t to_dict_(const mapper_t<Variant, Variant>& key_mapper, const mapper_t<Variant, Variant>& element_mapper = nullptr);
     // _tolist.h
     static observable_op_t to_list_();
+    static observable_op_t to_iterable_();
     // _toset.h
     static observable_op_t to_set_(const comparer_t<Variant>& comparer = nullptr);
     // _whiledo.h
@@ -375,7 +378,7 @@ struct ops {
     // _window.h
     static observable_op_t window_toggle_(const rx_observable_t& openings, const mapper_t<rx_observable_t, Variant>& closing_mapper);
     static observable_op_t window_(const rx_observable_t& boundaries);
-    static observable_op_t window_when_(const mapper_t<rx_observable_t, Variant>& closing_mapper);
+    static observable_op_t window_when_(const mapper_t<rx_observable_t>& closing_mapper);
     // _windowwithcount.h
     static observable_op_t window_with_count_(int64_t count, int64_t skip = -1);
     // _windowwithtime.h
@@ -403,7 +406,7 @@ static observable_op_t average(const mapper_t<double, Variant>& key_mapper = nul
 // _buffer.h
 static observable_op_t buffer(const rx_observable_t& boundaries) { return ops::buffer_(boundaries); }
 static observable_op_t buffer_when(const mapper_t<rx_observable_t>& closing_mapper) { return ops::buffer_when_(closing_mapper); }
-static observable_op_t buffer_toggle(const rx_observable_t& boundaries, const mapper_t<rx_observable_t>& closing_mapper) { return ops::buffer_toggle_(boundaries, closing_mapper); }
+static observable_op_t buffer_toggle(const rx_observable_t& openings, const mapper_t<rx_observable_t, Variant>& closing_mapper) { return ops::buffer_toggle_(openings, closing_mapper); }
 static observable_op_t buffer_with_count(int64_t count, int64_t skip = -1) { return ops::buffer_with_count_(count, skip); }
 // _bufferwithtime.h
 static observable_op_t buffer_with_time(const time_delta_t& timespan, const time_delta_t& timeshift = DELTA_ZERO, const scheduler_t& scheduler = nullptr) { return ops::buffer_with_time_(timespan, timeshift, scheduler); }
@@ -471,6 +474,8 @@ static observable_op_t first_or_default_async(bool has_default = false, const Va
 static observable_op_t first_or_default(const predicate_t<Variant>& predicate = nullptr, const Variant& default_value = VNULL) { return ops::first_or_default_(predicate, default_value); }
 // _flatmap.h
 static observable_op_t flat_map(const mapper_t<rx_observable_t, Variant>& mapper = nullptr) { return ops::flat_map_(mapper); }
+static observable_op_t flat_map_indexed(const mapper_indexed_t<rx_observable_t, Variant>& mapper = nullptr) { return ops::flat_map_indexed_(mapper); }
+static observable_op_t flat_map_latest(const mapper_t<rx_observable_t, Variant>& mapper = nullptr) { return ops::flat_map_latest_(mapper); }
 // _forkjoin.h
 static observable_op_t fork_join(const rx_observable_list_t& args) { return ops::fork_join_(args); }
 static observable_op_t fork_join(const rx_observable_t& args...) { return ops::fork_join_(args); }
@@ -572,7 +577,7 @@ static observable_op_t start_with(const Variant& args...) { return ops::start_wi
 // _subscribeon.h
 static observable_op_t subscribe_on(const scheduler_t& scheduler) { return ops::subscribe_on_(scheduler); }
 // _sum.h
-static observable_op_t sum(const mapper_t<float, Variant>& mapper = nullptr) { return ops::sum_(mapper); }
+static observable_op_t sum(const mapper_t<float, Variant>& key_mapper = nullptr) { return ops::sum_(key_mapper); }
 // _switchlatest.h
 static observable_op_t switch_latest() { return ops::switch_latest_(); }
 // _take.h
@@ -608,6 +613,7 @@ static observable_op_t timestamp(const scheduler_t& scheduler = nullptr) { retur
 static observable_op_t to_dict(const mapper_t<Variant, Variant>& key_mapper, const mapper_t<Variant, Variant>& element_mapper = nullptr) { return ops::to_dict_(key_mapper, element_mapper); }
 // _tolist.h
 static observable_op_t to_list() { return ops::to_list_(); }
+static observable_op_t to_iterable() { return ops::to_iterable_(); }
 // _toset.h
 static observable_op_t to_set(const comparer_t<Variant>& comparer = nullptr) { return ops::to_set_(comparer); }
 // _whiledo.h
@@ -615,7 +621,7 @@ static observable_op_t while_do(const predicate_t<rx_observable_t>& condition) {
 // _window.h
 static observable_op_t window_toggle(const rx_observable_t& openings, const mapper_t<rx_observable_t, Variant>& closing_mapper) { return ops::window_toggle_(openings, closing_mapper); }
 static observable_op_t window(const rx_observable_t& boundaries) { return ops::window_(boundaries); }
-static observable_op_t window_when(const mapper_t<rx_observable_t, Variant>& closing_mapper) { return ops::window_when_(closing_mapper); }
+static observable_op_t window_when(const mapper_t<rx_observable_t>& closing_mapper) { return ops::window_when_(closing_mapper); }
 // _windowwithcount.h
 static observable_op_t window_with_count(int64_t count, int64_t skip = -1) { return ops::window_with_count_(count, skip); }
 // _windowwithtime.h
