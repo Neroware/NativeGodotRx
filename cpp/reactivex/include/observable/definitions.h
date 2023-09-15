@@ -154,6 +154,15 @@ struct ops {
     static observable_op_t as_observable_();
     // _average.h
     static observable_op_t average_(const mapper_t<double, Variant>& key_mapper = nullptr);
+    // _buffer.h
+    static observable_op_t buffer_(const rx_observable_t& boundaries);
+    static observable_op_t buffer_when_(const mapper_t<rx_observable_t>& closing_mapper);
+    static observable_op_t buffer_toggle_(const rx_observable_t& boundaries, const mapper_t<rx_observable_t>& closing_mapper);
+    static observable_op_t buffer_with_count_(int64_t count, int64_t skip = -1);
+    // _bufferwithtime.h
+    static observable_op_t buffer_with_time_(const time_delta_t& timespan, const time_delta_t& timeshift = DELTA_ZERO, const scheduler_t& scheduler = nullptr);
+    // _bufferwithtimeorcount.h
+    static observable_op_t buffer_with_time_or_count_(const time_delta_t& timespan, int64_t count, const scheduler_t& scheduler = nullptr);
     // _catch.h
     static observable_op_t catch_(const rx_observable_t& handler);
     static observable_op_t catch_(const std::function<rx_observable_t(const error_t&, const rx_observable_t&)>& handler);
@@ -194,6 +203,8 @@ struct ops {
     static rx_observable_t do_on_terminate(const rx_observable_t& source, const action_t& on_terminate);
     static rx_observable_t do_after_terminate(const rx_observable_t& source, const action_t& after_terminate);
     static observable_op_t do_finally_(const action_t& finally_action);
+    // _whiledo.h
+    static observable_op_t do_while_(const predicate_t<rx_observable_t>& condition);
     // _elementatordefault.h
     static observable_op_t element_at_or_default_(uint64_t index, bool has_default = false, const Variant& default_value = VNULL);
     // _exclusive.h
@@ -212,6 +223,8 @@ struct ops {
     // _firstordefault.h
     static observable_op_t first_or_default_async_(bool has_default = false, const Variant& default_value = VNULL);
     static observable_op_t first_or_default_(const predicate_t<Variant>& predicate = nullptr, const Variant& default_value = VNULL);
+    // _flatmap.h
+    static observable_op_t flat_map_(const mapper_t<rx_observable_t, Variant>& mapper = nullptr);
     // _forkjoin.h
     static observable_op_t fork_join_(const rx_observable_list_t& args);
     static observable_op_t fork_join_(const rx_observable_t& args...);
@@ -282,6 +295,8 @@ struct ops {
     static rx_observable_t sample_observable(const rx_observable_t& source, const rx_observable_t& sampler);
     static observable_op_t sample_(const time_delta_t& sampler, const scheduler_t& scheduler = nullptr);
     static observable_op_t sample_(const rx_observable_t& sampler);
+    // _scan.h
+    static observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value());
     // _sequenceequal.h
     static observable_op_t sequence_equal_(const rx_observable_t& second, const comparer_t<Variant>& comparer = nullptr);
     static observable_op_t sequence_equal_(const iterable_t& second, const comparer_t<Variant>& comparer = nullptr);
@@ -307,14 +322,66 @@ struct ops {
     static observable_op_t skip_while_indexed_(const predicate_indexed_t<Variant>& predicate);
     // _skipwithtime.h
     static observable_op_t skip_with_time_(const time_delta_t& duration, const scheduler_t& scheduler = nullptr);
-    // _scan.h
-    static observable_op_t scan_(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value());
+    // _slice.h
+    static observable_op_t slice_(int64_t start = 0l, int64_t stop = INT64_MAX, int64_t step = 1l);
     // _some.h
     static observable_op_t some_(const predicate_t<Variant>& predicate = nullptr);
+    // _startwith.h
+    static observable_op_t start_with_(const RxList<Variant>& args);
+    static observable_op_t start_with_(const Variant& args...);
+    // _subscribeon.h
+    static observable_op_t subscribe_on_(const scheduler_t& scheduler);
+    // _sum.h
+    static observable_op_t sum_(const mapper_t<float, Variant>& mapper = nullptr);
+    // _switchlatest.h
+    static observable_op_t switch_latest_();
     // _take.h
     static observable_op_t take_(uint64_t count);
+    // _takelast.h
+    static observable_op_t take_last_(uint64_t count);
+    // _takelastwithbuffer.h
+    static observable_op_t take_last_buffer_(uint64_t count);
+    // _takelastwithtime.h
+    static observable_op_t take_last_with_time_(const time_delta_t& duration, const scheduler_t& scheduler = nullptr);
+    // _takeuntil.h
+    static observable_op_t take_until_(const rx_observable_t other);
+    // _takeuntilwithtime.h
+    static observable_op_t take_until_with_time_(const time_delta_t& end_time, const scheduler_t& scheduler = nullptr);
+    static observable_op_t take_until_with_time_(const time_point_t& end_time, const scheduler_t& scheduler = nullptr);
+    // _takewhile.h
+    static observable_op_t take_while_(const predicate_t<Variant>& predciate, bool inclusive = false);
+    static observable_op_t take_while_indexed_(const predicate_indexed_t<Variant>& predciate, bool inclusive = false);
+    // _takewithtime.h
+    static observable_op_t take_with_time_(const time_delta_t& duration, const scheduler_t& scheduler = nullptr);
+    // _throttlefirst.h
+    static observable_op_t throttle_first_(const time_delta_t& window_duration, const scheduler_t& scheduler = nullptr);
+    // _timeinterval.h
+    static observable_op_t time_interval_(const scheduler_t& scheduler = nullptr);
+    // _timeout.h
+    static observable_op_t timeout_(const time_delta_t& duetime, const rx_observable_t& other = nullptr, const scheduler_t& scheduler = nullptr);
+    static observable_op_t timeout_(const time_point_t& duetime, const rx_observable_t& other = nullptr, const scheduler_t& scheduler = nullptr);
+    // _timeoutwithmapper.h
+    static observable_op_t timeout_with_mapper_(const rx_observable_t& first_timeout = nullptr, const mapper_t<rx_observable_t, Variant>& timeout_duration_mapper = nullptr, const rx_observable_t& other = nullptr);
     // _timestamp.h
     static observable_op_t timestamp_(const scheduler_t& scheduler = nullptr);
+    // _todict.h
+    static observable_op_t to_dict_(const mapper_t<Variant, Variant>& key_mapper, const mapper_t<Variant, Variant>& element_mapper = nullptr);
+    // _tolist.h
+    static observable_op_t to_list_();
+    // _toset.h
+    static observable_op_t to_set_(const comparer_t<Variant>& comparer = nullptr);
+    // _whiledo.h
+    static observable_op_t while_do_(const predicate_t<rx_observable_t>& condition);
+    // _window.h
+    static observable_op_t window_toggle_(const rx_observable_t& openings, const mapper_t<rx_observable_t, Variant>& closing_mapper);
+    static observable_op_t window_(const rx_observable_t& boundaries);
+    static observable_op_t window_when_(const mapper_t<rx_observable_t, Variant>& closing_mapper);
+    // _windowwithcount.h
+    static observable_op_t window_with_count_(int64_t count, int64_t skip = -1);
+    // _windowwithtime.h
+    static observable_op_t window_with_time_(const time_delta_t& timespan, const time_delta_t& timeshift = DELTA_ZERO, const scheduler_t& scheduler = nullptr);
+    // _windowwithtimeorcount.h
+    static observable_op_t window_with_time_or_count_(const time_delta_t& timespan, int64_t count, const scheduler_t& scheduler = nullptr);
     // _withlatestfrom.h
     static observable_op_t with_latest_from_(const rx_observable_list_t& sources);
     static observable_op_t with_latest_from_(const rx_observable_t& others...);
@@ -333,6 +400,15 @@ static observable_op_t amb(const rx_observable_t& right_source) { return ops::am
 static observable_op_t as_observable() { return ops::as_observable_(); }
 // _average.h
 static observable_op_t average(const mapper_t<double, Variant>& key_mapper = nullptr) { return ops::average_(key_mapper); }
+// _buffer.h
+static observable_op_t buffer(const rx_observable_t& boundaries) { return ops::buffer_(boundaries); }
+static observable_op_t buffer_when(const mapper_t<rx_observable_t>& closing_mapper) { return ops::buffer_when_(closing_mapper); }
+static observable_op_t buffer_toggle(const rx_observable_t& boundaries, const mapper_t<rx_observable_t>& closing_mapper) { return ops::buffer_toggle_(boundaries, closing_mapper); }
+static observable_op_t buffer_with_count(int64_t count, int64_t skip = -1) { return ops::buffer_with_count_(count, skip); }
+// _bufferwithtime.h
+static observable_op_t buffer_with_time(const time_delta_t& timespan, const time_delta_t& timeshift = DELTA_ZERO, const scheduler_t& scheduler = nullptr) { return ops::buffer_with_time_(timespan, timeshift, scheduler); }
+// _bufferwithtimeorcount.h
+static observable_op_t buffer_with_time_or_count(const time_delta_t& timespan, int64_t count, const scheduler_t& scheduler = nullptr) { return ops::buffer_with_time_or_count_(timespan, count, scheduler); }
 // _catch.h
 static observable_op_t catch_with(const rx_observable_t& handler) { return ops::catch_(handler); }
 static observable_op_t catch_with(const std::function<rx_observable_t(const error_t&, const rx_observable_t&)>& handler) { return ops::catch_(handler); }
@@ -373,6 +449,8 @@ static rx_observable_t do_on_dispose(const rx_observable_t& source, const dispos
 static rx_observable_t do_on_terminate(const rx_observable_t& source, const action_t& on_terminate) { return ops::do_on_dispose(source, on_terminate); }
 static rx_observable_t do_after_terminate(const rx_observable_t& source, const action_t& after_terminate) { return ops::do_on_dispose(source, after_terminate); }
 static observable_op_t do_finally(const action_t& finally_action) { return ops::do_finally_(finally_action); }
+// _whiledo.h
+static observable_op_t do_while(const predicate_t<rx_observable_t>& condition) { return ops::do_while_(condition); }
 // _elementatordefault.h
 static observable_op_t element_at_or_default(uint64_t index, bool has_default = false, const Variant& default_value = VNULL) { return ops::element_at_or_default_(index, has_default, default_value); }
 // _exclusive.h
@@ -391,6 +469,8 @@ static observable_op_t first(const predicate_t<Variant>& predicate = nullptr) { 
 // _firstordefault.h
 static observable_op_t first_or_default_async(bool has_default = false, const Variant& default_value = VNULL) { return ops::first_or_default_async_(has_default, default_value); }
 static observable_op_t first_or_default(const predicate_t<Variant>& predicate = nullptr, const Variant& default_value = VNULL) { return ops::first_or_default_(predicate, default_value); }
+// _flatmap.h
+static observable_op_t flat_map(const mapper_t<rx_observable_t, Variant>& mapper = nullptr) { return ops::flat_map_(mapper); }
 // _forkjoin.h
 static observable_op_t fork_join(const rx_observable_list_t& args) { return ops::fork_join_(args); }
 static observable_op_t fork_join(const rx_observable_t& args...) { return ops::fork_join_(args); }
@@ -461,6 +541,8 @@ static observable_op_t retry(int64_t retry_count = -1) { return ops::retry_(retr
 static rx_observable_t sample_observable(const rx_observable_t& source, const rx_observable_t& sampler) { return ops::sample_observable(source, sampler); }
 static observable_op_t sample(const time_delta_t& sampler, const scheduler_t& scheduler = nullptr) { return ops::sample_(sampler, scheduler); }
 static observable_op_t sample(const rx_observable_t& sampler) { return ops::sample_(sampler); }
+// _scan.h
+static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return ops::scan_(accumulator, seed); }
 // _sequenceequal.h
 static observable_op_t sequence_equal(const rx_observable_t& second, const comparer_t<Variant>& comparer = nullptr) { return ops::sequence_equal_(second, comparer); }
 static observable_op_t sequence_equal(const iterable_t& second, const comparer_t<Variant>& comparer = nullptr) { return ops::sequence_equal_(second, comparer); }
@@ -480,14 +562,66 @@ static observable_op_t skip_until(const rx_observable_t& other) { return ops::sk
 // _skipuntilwithtime.h
 static observable_op_t skip_until_with_time(const time_delta_t& start_time, const scheduler_t& scheduler = nullptr) { return ops::skip_until_with_time_(start_time, scheduler); }
 static observable_op_t skip_until_with_time_(const time_point_t& start_time, const scheduler_t& scheduler = nullptr) { return ops::skip_until_with_time_(start_time, scheduler); }
-// _scan.h
-static observable_op_t scan(const accumulator_t<Variant, Variant>& accumulator, const Variant& seed = NotSet::value()) { return ops::scan_(accumulator, seed); }
+// _slice.h
+static observable_op_t slice(int64_t start = 0l, int64_t stop = INT64_MAX, int64_t step = 1l) { return ops::slice_(start, stop, step); }
 // _some.h
 static observable_op_t some(const predicate_t<Variant>& predicate = nullptr) { return ops::some_(predicate); }
+// _startwith.h
+static observable_op_t start_with(const RxList<Variant>& args) { return ops::start_with_(args); }
+static observable_op_t start_with(const Variant& args...) { return ops::start_with_(args); }
+// _subscribeon.h
+static observable_op_t subscribe_on(const scheduler_t& scheduler) { return ops::subscribe_on_(scheduler); }
+// _sum.h
+static observable_op_t sum(const mapper_t<float, Variant>& mapper = nullptr) { return ops::sum_(mapper); }
+// _switchlatest.h
+static observable_op_t switch_latest() { return ops::switch_latest_(); }
 // _take.h
 static observable_op_t take(uint64_t count) { return ops::take_(count); }
+ // _takelast.h
+static observable_op_t take_last(uint64_t count) { return ops::take_last_(count); }
+// _takelastwithbuffer.h
+static observable_op_t take_last_buffer(uint64_t count) { return ops::take_last_buffer_(count); }
+// _takelastwithtime.h
+static observable_op_t take_last_with_time(const time_delta_t& duration, const scheduler_t& scheduler = nullptr) { return ops::take_last_with_time_(duration, scheduler); }
+// _takeuntil.h
+static observable_op_t take_until(const rx_observable_t other) { return ops::take_until_(other); }
+// _takeuntilwithtime.h
+static observable_op_t take_until_with_time(const time_delta_t& end_time, const scheduler_t& scheduler = nullptr) { return ops::take_until_with_time_(end_time, scheduler); }
+static observable_op_t take_until_with_time(const time_point_t& end_time, const scheduler_t& scheduler = nullptr) { return ops::take_until_with_time_(end_time, scheduler); }
+// _takewhile.h
+static observable_op_t take_while(const predicate_t<Variant>& predicate, bool inclusive = false) { return ops::take_while_(predicate, inclusive); }
+static observable_op_t take_while_indexed(const predicate_indexed_t<Variant>& predicate, bool inclusive = false) { return ops::take_while_indexed_(predicate, inclusive); }
+// _takewithtime.h
+static observable_op_t take_with_time(const time_delta_t& duration, const scheduler_t& scheduler = nullptr) { return ops::take_with_time_(duration, scheduler); }
+// _throttlefirst.h
+static observable_op_t throttle_first(const time_delta_t& window_duration, const scheduler_t& scheduler = nullptr) { return ops::throttle_first_(window_duration, scheduler); }
+// _timeinterval.h
+static observable_op_t time_interval(const scheduler_t& scheduler = nullptr) { return ops::time_interval_(scheduler); }
+// _timeout.h
+static observable_op_t timeout(const time_delta_t& duetime, const rx_observable_t& other = nullptr, const scheduler_t& scheduler = nullptr) { return ops::timeout_(duetime, other, scheduler); }
+static observable_op_t timeout(const time_point_t& duetime, const rx_observable_t& other = nullptr, const scheduler_t& scheduler = nullptr) { return ops::timeout_(duetime, other, scheduler); }
+// _timeoutwithmapper.h
+static observable_op_t timeout_with_mapper(const rx_observable_t& first_timeout = nullptr, const mapper_t<rx_observable_t, Variant>& timeout_duration_mapper = nullptr, const rx_observable_t& other = nullptr) { return ops::timeout_with_mapper_(first_timeout, timeout_duration_mapper, other); }
 // _timestamp.h
 static observable_op_t timestamp(const scheduler_t& scheduler = nullptr) { return ops::timestamp_(scheduler); }
+// _todict.h
+static observable_op_t to_dict(const mapper_t<Variant, Variant>& key_mapper, const mapper_t<Variant, Variant>& element_mapper = nullptr) { return ops::to_dict_(key_mapper, element_mapper); }
+// _tolist.h
+static observable_op_t to_list() { return ops::to_list_(); }
+// _toset.h
+static observable_op_t to_set(const comparer_t<Variant>& comparer = nullptr) { return ops::to_set_(comparer); }
+// _whiledo.h
+static observable_op_t while_do(const predicate_t<rx_observable_t>& condition) { return ops::while_do_(condition); }
+// _window.h
+static observable_op_t window_toggle(const rx_observable_t& openings, const mapper_t<rx_observable_t, Variant>& closing_mapper) { return ops::window_toggle_(openings, closing_mapper); }
+static observable_op_t window(const rx_observable_t& boundaries) { return ops::window_(boundaries); }
+static observable_op_t window_when(const mapper_t<rx_observable_t, Variant>& closing_mapper) { return ops::window_when_(closing_mapper); }
+// _windowwithcount.h
+static observable_op_t window_with_count(int64_t count, int64_t skip = -1) { return ops::window_with_count_(count, skip); }
+// _windowwithtime.h
+static observable_op_t window_with_time(const time_delta_t& timespan, const time_delta_t& timeshift = DELTA_ZERO, const scheduler_t& scheduler = nullptr) { return ops::window_with_time_(timespan, timeshift, scheduler); }
+// _windowwithtimeorcount.h
+static observable_op_t window_with_time_or_count(const time_delta_t& timespan, int64_t count, const scheduler_t& scheduler = nullptr) { return ops::window_with_time_or_count_(timespan, count, scheduler); }
 // _withlatestfrom.h
 static observable_op_t with_latest_from(const rx_observable_list_t& sources) { return ops::with_latest_from_(sources); }
 static observable_op_t with_latest_from(const rx_observable_t& sources...) { return ops::with_latest_from_(sources); }
