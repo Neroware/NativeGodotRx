@@ -346,7 +346,7 @@ struct ops {
     // _takelastwithtime.h
     static observable_op_t take_last_with_time_(const time_delta_t& duration, const scheduler_t& scheduler = nullptr);
     // _takeuntil.h
-    static observable_op_t take_until_(const rx_observable_t other);
+    static observable_op_t take_until_(const rx_observable_t& other);
     // _takeuntilwithtime.h
     static observable_op_t take_until_with_time_(const time_delta_t& end_time, const scheduler_t& scheduler = nullptr);
     static observable_op_t take_until_with_time_(const time_point_t& end_time, const scheduler_t& scheduler = nullptr);
@@ -589,7 +589,7 @@ static observable_op_t take_last_buffer(uint64_t count) { return ops::take_last_
 // _takelastwithtime.h
 static observable_op_t take_last_with_time(const time_delta_t& duration, const scheduler_t& scheduler = nullptr) { return ops::take_last_with_time_(duration, scheduler); }
 // _takeuntil.h
-static observable_op_t take_until(const rx_observable_t other) { return ops::take_until_(other); }
+static observable_op_t take_until(const rx_observable_t& other) { return ops::take_until_(other); }
 // _takeuntilwithtime.h
 static observable_op_t take_until_with_time(const time_delta_t& end_time, const scheduler_t& scheduler = nullptr) { return ops::take_until_with_time_(end_time, scheduler); }
 static observable_op_t take_until_with_time(const time_point_t& end_time, const scheduler_t& scheduler = nullptr) { return ops::take_until_with_time_(end_time, scheduler); }

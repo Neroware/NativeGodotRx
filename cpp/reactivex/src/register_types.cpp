@@ -54,6 +54,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::AbsoluteTime>();
 	ClassDB::register_abstract_class<rx::RelativeTime>();
 	ClassDB::register_abstract_class<rx::RxTimeStamp>();
+	ClassDB::register_abstract_class<rx::RxTimeInterval>();
 	ClassDB::register_class<rx::ItEnd>();
 	ClassDB::register_class<rx::RxThread>();
 	ClassDB::register_class<rx::RxMainThread>();

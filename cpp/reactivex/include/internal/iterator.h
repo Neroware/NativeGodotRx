@@ -186,32 +186,41 @@ struct infinite_iterable : public IterableBase {
 struct while_iterable : public IterableBase {
 
     iterable_t it;
-    predicate_t<> pred;
+    predicate_t<Variant> pred;
 
     struct while_iterator : public IteratorBase {
 
         iterator_t it;
-        predicate_t<> pred;
+        predicate_t<Variant> pred;
         Variant end;
 
-        while_iterator(const iterable_t& it_, const predicate_t<>& pred_)
-            : it(it_->iter()), pred(pred_), end(memnew(ItEnd)) {}
+        bool _has_current;
+        Variant _current;
+
+        while_iterator(const predicate_t<Variant>& pred_, const iterable_t& it_)
+            : pred(pred_), it(it_->iter()), end(memnew(ItEnd)) {
+                this->_has_current = it->has_next();
+                this->_current = _has_current ? it->next() : end;
+            }
         
         inline Variant next() override {
-            return pred() ? it->next() : end;
+            Variant res = _has_current ? (pred(_current) ? _current : end) : end;
+            this->_has_current = it->has_next();
+            this->_current = _has_current ? it->next() : end;
+            return res;
         }
 
         inline bool has_next() override {
-            return pred() && it->has_next();
+            return _has_current && pred(_current);
         }
 
     }; // END while_iterator
 
-    while_iterable(const iterable_t& it_, const predicate_t<>& pred_)
-        : it(it_), pred(pred_) {}
+    while_iterable(const predicate_t<Variant>& pred_, const iterable_t& it_)
+        : pred(pred_), it(it_) {}
     
     inline iterator_t iter() override {
-        return std::make_shared<while_iterator>(this->it, pred);
+        return std::make_shared<while_iterator>(pred, this->it);
     }
 
 }; // END while_iterable

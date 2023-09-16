@@ -120,7 +120,7 @@ public:
     inline Variant get_value() { return this->_value; }
     inline Ref<AbsoluteTime> get_timestamp() { return this->_timestamp; }
     
-}; // END class TimeStamp
+}; // END class RxTimeStamp
 
 template<typename T>
 struct timestamp_t {
@@ -143,6 +143,56 @@ struct timestamp_t {
     }
     
 }; // END struct timestamp_t
+
+class RxTimeInterval : public RefCounted {
+    GDCLASS(RxTimeInterval, RefCounted)
+
+private:
+    Ref<RelativeTime> _interval;
+    Variant _value;
+
+protected:
+    inline static void _bind_methods() {
+        ClassDB::bind_static_method("RxTimeInterval", D_METHOD("from_rel", "interval", "value"), &RxTimeInterval::from_rel, DEFVAL(Variant()));
+        ClassDB::bind_method(D_METHOD("_get_value"), &RxTimeInterval::get_value);
+        ClassDB::bind_method(D_METHOD("_get_interval"), &RxTimeInterval::get_interval);
+        ADD_PROPERTY(PropertyInfo(Variant::VARIANT_MAX, "value"), "", "_get_value");
+        ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "interval"), "", "_get_interval");
+    }
+
+public:
+    RxTimeInterval() {}
+    RxTimeInterval(Ref<RelativeTime> interval, const Variant& value)
+        : _interval(interval), _value(value) {}
+    inline static Ref<RxTimeInterval> from_rel(Ref<RelativeTime> interval, const Variant& value = Variant()) {
+        return memnew(RxTimeInterval(interval, value));
+    }
+    inline Variant get_value() { return this->_value; }
+    inline Ref<RelativeTime> get_interval() { return this->_interval; }
+    
+}; // END class RxTimeInterval
+
+template<typename T>
+struct interval_t {
+    time_delta_t interval;
+    T value;
+    interval_t(const time_delta_t& interval_, const Variant& value_)
+        : interval(interval_), value(value_) {}
+    interval_t(const Variant& interval_)
+        : interval_t(Ref<RxTimeStamp>(interval_)) {}
+    interval_t(Ref<RxTimeInterval> interval_)
+        : interval(interval_->get_interval()->dt), value(interval_->get_value()) {}
+    operator Ref<RxTimeInterval>() const {
+        return memnew(RxTimeInterval(
+            memnew(RelativeTime(interval)),
+            value
+        ));
+    }
+    operator Variant() const {
+        return operator godot::Ref<rx::RxTimeInterval>();
+    }
+    
+}; // END struct interval_t
 
 }; // END namespace rx
 
