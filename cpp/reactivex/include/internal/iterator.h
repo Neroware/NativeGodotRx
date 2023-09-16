@@ -134,7 +134,11 @@ struct repeater : public IterableBase {
             : current(0), end(count_), value(value_), itEnd(memnew(ItEnd)) {}
         
         inline Variant next() override {
-            return current < end ? Variant(current++) : Variant(itEnd);
+            if (current < end) {
+                current++;
+                return value;
+            }
+            return itEnd;
         }
 
         inline bool has_next() override {
@@ -144,7 +148,7 @@ struct repeater : public IterableBase {
     }; // END range_iterator
 
     repeater(uint64_t count_, const Variant& value_ = VNULL)
-        : count(count), value(value_) {}
+        : count(count_), value(value_) {}
     
     inline iterator_t iter() override {
         return std::make_shared<repeater_iterator>(count, value);
