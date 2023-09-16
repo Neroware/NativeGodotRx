@@ -14,6 +14,7 @@ using namespace rx::exception;
 
 #define VNULL Variant()
 #define CBNULL Callable()
+#define DTZERO RelativeTime::from_seconds(0.0)
 #define UNSET NotSet::value()
 
 #define SUBSCRIBE(observer, scheduler_default) [=](const observer_t& observer, const scheduler_t& scheduler_default) -> disposable_t
@@ -94,6 +95,13 @@ static auto stated_observable_factory_cb = from_cb<rx_observable_t, const Varian
 template<typename... Args> static auto predicate_cb = from_cb<bool, const Args&...>;
 template<typename RetT, typename... Args> static auto mapper_cb = from_cb<RetT, const Args&...>;
 template<typename StateT, typename T> static auto accumulator_cb = from_cb<StateT, const StateT&, const T&>;
+static mapper_t<time_delta_t, Variant> time_mapper_cb(const Callable& cb) {
+    if (cb.is_null()) return nullptr;
+    return [cb](const Variant& value) -> time_delta_t {
+        Ref<RelativeTime> dt = cb.callv(Array::make(value));
+        return dt->dt;
+    };
+}
 
 class NotSet : public RefCounted {
     GDCLASS(NotSet, RefCounted)

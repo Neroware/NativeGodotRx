@@ -37,6 +37,8 @@ struct obs {
     static rx_observable_t from_iterable_(const iterable_t& iterable, const scheduler_t& scheduler = nullptr);
     // generate.h
     static rx_observable_t generate_(const Variant& initial_state, const predicate_t<Variant>& condition, const mapper_t<Variant, Variant>& iterate);
+    // generatewithrelativetime.h
+    static rx_observable_t generate_with_relative_time_(const Variant& initial_state, const predicate_t<Variant>& condition, const mapper_t<Variant, Variant>& iterate, const mapper_t<time_delta_t, Variant>& time_mapper);
     // ifthen.h
     static rx_observable_t if_then_(const predicate_t<>& condition, const rx_observable_t& then_source, const rx_observable_t& else_source = nullptr);
     // interval.h
@@ -104,6 +106,8 @@ static rx_observable_t from_iterable(const iterable_t& iterable, const scheduler
 static rx_observable_t from(const iterable_t& iterable, const scheduler_t& scheduler = nullptr) { return obs::from_iterable_(iterable, scheduler); }
 // generate.h
 static rx_observable_t generate(const Variant& initial_state, const predicate_t<Variant>& condition, const mapper_t<Variant, Variant>& iterate) { return obs::generate_(initial_state, condition, iterate); }
+// generatewithrelativetime.h
+static rx_observable_t generate_with_relative_time(const Variant& initial_state, const predicate_t<Variant>& condition, const mapper_t<Variant, Variant>& iterate, const mapper_t<time_delta_t, Variant>& time_mapper) { return obs::generate_with_relative_time_(initial_state, condition, iterate, time_mapper); }
 // ifthen.h
 static rx_observable_t if_then(const predicate_t<>& condition, const rx_observable_t& then_source, const rx_observable_t& else_source = nullptr) { return obs::if_then_(condition, then_source, else_source); }
 // interval.h
@@ -647,7 +651,6 @@ struct connectable {
 
 static rx_observable_t add_ref(const rx_observable_t& xs, const rx_rc_disposable_t& r) { return connectable::add_ref(xs, r); }
 static connectable_op_t ref_count() { return connectable::ref_count_(); }
-
 
 } // END namespace observable
 } // END namespace rx::observable

@@ -3,7 +3,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t sum_(const mapper_t<float, Variant>& key_mapper) {
+observable_op_t ops::sum_(const mapper_t<float, Variant>& key_mapper) {
     if (key_mapper) {
         return pipe::compose(map(key_mapper), ops::sum_());
     }

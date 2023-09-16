@@ -7,7 +7,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t subscribe_on_(const rx_observable_t& source, const scheduler_t& scheduler) {
+observable_op_t ops::subscribe_on_(const scheduler_t& scheduler) {
 
     auto subscribe_on = OP(source) {
 

@@ -7,7 +7,7 @@
 
 namespace rx::observable::op {
 
-observable_op_t timeout_with_mapper_(
+observable_op_t ops::timeout_with_mapper_(
     const rx_observable_t& first_timeout, 
     const mapper_t<rx_observable_t, Variant>& timeout_duration_mapper,
     const rx_observable_t& other

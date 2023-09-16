@@ -17,6 +17,10 @@ using namespace rx::observable;
 
 namespace rx::wrappers {
 
+// amb.h
+Ref<RxObservable> RxObservable::amb(const Variant& sources) {
+    return obs::amb_(RX_ITERABLE_T(sources));
+}
 // case.h
 Ref<RxObservable> RxObservable::case_mapper(const Callable& mapper, const Dictionary& sources, Ref<RxObservable> default_source) { 
     return obs::case_(from_cb<Variant>(mapper), sources, default_source); 
@@ -56,9 +60,17 @@ Ref<RxObservable> RxObservable::from(const Variant& iterable, Ref<RxSchedulerBas
 Ref<RxObservable> RxObservable::generate(const Variant& initial_state, const Callable& condition, const Callable& iterate) {
     return obs::generate_(initial_state, from_cb<bool, const Variant&>(condition), from_cb<Variant, const Variant&>(iterate)); 
 }
+// generatewithrelativetime.h
+Ref<RxObservable> RxObservable::generate_with_relative_time(const Variant& initial_state, const Callable& condition, const Callable& iterate, const Callable& time_mapper) {
+    return obs::generate_with_relative_time_(initial_state, predicate_cb<Variant>(condition), mapper_cb<Variant, Variant>(iterate), time_mapper_cb(time_mapper));
+}
 // ifthen.h
 Ref<RxObservable> RxObservable::if_then(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source) {
     return obs::if_then_(from_cb<bool>(condition), then_source, else_source);
+}
+// interval.h
+Ref<RxObservable> RxObservable::interval(const Variant& period, Ref<RxSchedulerBase> scheduler) {
+    return obs::interval_(get_dt(period), scheduler);
 }
 // merge.h
 Ref<RxObservable> RxObservable::merge(const Variant& sources) {
@@ -78,6 +90,10 @@ Ref<RxObservable> RxObservable::on_error_resume_next(const Variant& sources) {
 // range.h
 Ref<RxObservable> RxObservable::range(int64_t start, int64_t stop, int64_t step) {
     return obs::range_(start, stop, step);
+}
+// repeat.h
+Ref<RxObservable> RxObservable::repeat(const Variant& value, int64_t repeat_count) {
+    return obs::repeat_(value, repeat_count);
 }
 // returnvalue.h
 Ref<RxObservable> RxObservable::return_value(const Variant& value, Ref<RxSchedulerBase> scheduler) {
@@ -130,7 +146,7 @@ Ref<RxObservable> RxObservable::all(const Callable& predicate) {
     return RX_PIPE(op::ops::all_(from_cb<bool, const Variant&>(predicate)));
 }
 // _amb.h
-Ref<RxObservable> RxObservable::amb(Ref<RxObservable> right_source) {
+Ref<RxObservable> RxObservable::amb_with(Ref<RxObservable> right_source) {
     return RX_PIPE(op::ops::amb_(right_source));
 }
 // _asobservable.h
@@ -140,6 +156,27 @@ Ref<RxObservable> RxObservable::as_observable() {
 // _average.h
 Ref<RxObservable> RxObservable::average(const Callable& key_mapper) {
     return RX_PIPE(op::ops::average_(from_cb<double, const Variant&>(key_mapper)));
+}
+// _buffer.h
+Ref<RxObservable> RxObservable::buffer(Ref<RxObservable> boundaries) {
+    return RX_PIPE(op::ops::buffer_(boundaries));
+}
+Ref<RxObservable> RxObservable::buffer_when(const Callable& closing_mapper) {
+    return RX_PIPE(op::ops::buffer_when_(mapper_cb<rx_observable_t>(closing_mapper)));
+}
+Ref<RxObservable> RxObservable::buffer_toggle(Ref<RxObservable> openings, const Callable& closing_mapper) {
+    return RX_PIPE(op::ops::buffer_toggle_(openings, mapper_cb<rx_observable_t, Variant>(closing_mapper)));
+}
+Ref<RxObservable> RxObservable::buffer_with_count(int64_t count, int64_t skip) {
+    return RX_PIPE(op::ops::buffer_with_count_(count, skip));
+}
+// _bufferwithtime.h
+Ref<RxObservable> RxObservable::buffer_with_time(const Variant& timespan, const Variant& timeshift, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::buffer_with_time_(get_dt(timespan), get_dt(timeshift), scheduler));
+}
+// _bufferwithtimeorcount.h
+Ref<RxObservable> RxObservable::buffer_with_time_or_count(const Variant& timespan, int64_t count, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::buffer_with_time_or_count_(get_dt(timespan), count, scheduler));
 }
 // _catch.h
 Ref<RxObservable> RxObservable::catch_with_handler(const Callable& handler) {
@@ -181,6 +218,18 @@ Ref<RxObservable> RxObservable::throttle_with_mapper(const Callable& throttle_du
 Ref<RxObservable> RxObservable::default_if_empty(const Variant& default_value) {
     return RX_PIPE(op::ops::default_if_empty_(default_value));
 }
+// _delay.h
+Ref<RxObservable> RxObservable::delay(const Variant& duetime, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::delay_(get_dt(duetime), scheduler));
+}
+// _delaysubscription.h
+Ref<RxObservable> RxObservable::delay_subscription(const Variant& duetime, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::delay_subscription_(get_dt(duetime), scheduler));
+}
+// _delaywithmapper.h
+Ref<RxObservable> RxObservable::delay_with_mapper(Ref<RxObservable> subscription_delay, const Callable& subscription_delay_mapper, Ref<RxObservable> delay_duration_mapper) {
+    return RX_PIPE(op::ops::delay_with_mapper_(subscription_delay, mapper_cb<Variant, Variant>(subscription_delay_mapper), delay_duration_mapper));
+}
 // _dematerialize.h
 Ref<RxObservable> RxObservable::dematerialize() {
     return RX_PIPE(op::ops::dematerialize_());
@@ -215,6 +264,10 @@ Ref<RxObservable> RxObservable::do_on_terminate(const Callable& on_terminate) {
 Ref<RxObservable> RxObservable::do_finally(const Callable& finally_action) {
     return RX_PIPE(op::ops::do_finally_(from_void_cb<>(finally_action)));
 }
+// _whiledo.h
+Ref<RxObservable> RxObservable::do_while(const Callable& condition) {
+    return RX_PIPE(op::ops::do_while_(predicate_cb<rx_observable_t>(condition)));
+}
 // _elementatordefault.h
 Ref<RxObservable> RxObservable::element_at_or_default(uint64_t index, bool has_default, const Variant& default_value) {
     return RX_PIPE(op::ops::element_at_or_default_(index, has_default, default_value));
@@ -242,6 +295,16 @@ Ref<RxObservable> RxObservable::first(const Callable& predicate) {
 // _firstordefault
 Ref<RxObservable> RxObservable::first_or_default(const Callable& predicate, const Variant& default_value) {
     return RX_PIPE(op::ops::first_or_default_(predicate_cb<Variant>(predicate), default_value));
+}
+// _flatmap.h
+Ref<RxObservable> RxObservable::flat_map(const Callable& mapper) {
+    return RX_PIPE(op::ops::flat_map_(mapper_cb<rx_observable_t, Variant>(mapper)));
+}
+Ref<RxObservable> RxObservable::flat_map_indexed(const Callable& mapper) {
+    return RX_PIPE(op::ops::flat_map_indexed_(mapper_cb<rx_observable_t, Variant, uint64_t>(mapper)));
+}
+Ref<RxObservable> RxObservable::flat_map_latest(const Callable& mapper) {
+    return RX_PIPE(op::ops::flat_map_latest_(mapper_cb<rx_observable_t, Variant>(mapper)));
 }
 // _forkjoin.h
 Ref<RxObservable> RxObservable::fork_join_withv(const Variant& others) {
@@ -377,21 +440,209 @@ Ref<RxObservable> RxObservable::publish_value(const Variant& initial_value, cons
 Ref<RxObservable> RxObservable::reduce(const Callable& accumulator, const Variant& seed) {
     return RX_PIPE(op::ops::reduce_(accumulator_cb<Variant, Variant>(accumulator), seed));
 }
+// _repeat.h
+Ref<RxObservable> RxObservable::repeated(int64_t repeat_count) {
+    return RX_PIPE(op::ops::repeat_(repeat_count));
+}
+// _replay.h
+Ref<RxObservable> RxObservable::replay(const Callable& mapper, uint64_t buffer_size, const Variant& window, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::replay_(mapper_cb<rx_observable_t, rx_observable_t>(mapper), buffer_size, get_dt(window), scheduler));
+}
+// _retry.h
+Ref<RxObservable> RxObservable::retry(int64_t retry_count) {
+    return RX_PIPE(op::ops::retry_(retry_count));
+}
+// _sample.h
+Ref<RxObservable> RxObservable::sample_with_time(const Variant& sampler, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::sample_(get_dt(sampler), scheduler));
+}
+Ref<RxObservable> RxObservable::sample(Ref<RxObservable> sampler) {
+    return RX_PIPE(op::ops::sample_(sampler));
+}
 // _scan.h
 Ref<RxObservable> RxObservable::scan(const Callable& accumulator, const Variant& seed) {
     return RX_PIPE(op::ops::scan_(accumulator_cb<Variant, Variant>(accumulator), seed));
+}
+// _sequenceequal.h
+Ref<RxObservable> RxObservable::sequence_equal(Ref<RxObservable> second, const Callable& comparer) {
+    return RX_PIPE(op::ops::sequence_equal_(second, comparer_cb(comparer)));
+}
+Ref<RxObservable>  RxObservable::sequence_equal_iterable(const Variant& iterable, const Callable& comparer) {
+    return RX_PIPE(op::ops::sequence_equal_(RX_ITERABLE_T(iterable), comparer_cb(comparer)));
+}
+// _single.h
+Ref<RxObservable> RxObservable::single(const Callable& predicate) {
+    return RX_PIPE(op::ops::single_(predicate_cb<Variant>(predicate)));
+}
+// _singleordefault.h
+Ref<RxObservable> RxObservable::single_or_default_async(bool has_default, const Variant& default_value) {
+    return RX_PIPE(op::ops::single_or_default_async_(has_default, default_value));
+}
+Ref<RxObservable> RxObservable::single_or_default(const Callable& predicate, const Variant& default_value) {
+    return RX_PIPE(op::ops::single_or_default_(predicate_cb<Variant>(predicate), default_value));
+}
+// _skip.h
+Ref<RxObservable> RxObservable::skip(uint64_t count) {
+    return RX_PIPE(op::ops::skip_(count));
+}
+// _skiplast.h
+Ref<RxObservable> RxObservable::skip_last(uint64_t count) {
+    return RX_PIPE(op::ops::skip_last_(count));
+}
+// _skiplastwithtime.h
+Ref<RxObservable> RxObservable::skip_last_with_time_rel(Ref<RelativeTime> duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_last_with_time_(duration->dt, scheduler));
+}
+Ref<RxObservable> RxObservable::skip_last_with_time_abs(Ref<AbsoluteTime> duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_last_with_time_(duration->t, scheduler));
+}
+Ref<RxObservable> RxObservable::skip_last_with_time(double duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_last_with_time_(get_dt(duration), scheduler));
+}
+// _skipuntil.h
+Ref<RxObservable> RxObservable::skip_until(Ref<RxObservable> other) {
+    return RX_PIPE(op::ops::skip_until_(other));
+}
+// _skipuntilwithtime.h
+Ref<RxObservable> RxObservable::skip_until_with_time_rel(Ref<RelativeTime> start_time, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_until_with_time_(start_time->dt, scheduler));
+}
+Ref<RxObservable> RxObservable::skip_until_with_time_abs(Ref<AbsoluteTime> start_time, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_until_with_time_(start_time->t, scheduler));
+}
+Ref<RxObservable> RxObservable::skip_until_with_time(double start_time, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_until_with_time_(get_dt(start_time), scheduler));
+}
+// _skipwhile.h
+Ref<RxObservable> RxObservable::skip_while(const Callable& predicate) {
+    return RX_PIPE(op::ops::skip_while_(predicate_cb<Variant>(predicate)));
+}
+Ref<RxObservable> RxObservable::skip_while_indexed(const Callable& predicate) {
+    return RX_PIPE(op::ops::skip_while_indexed_(predicate_cb<Variant, uint64_t>(predicate)));
+}
+// _skipwithtime.h
+Ref<RxObservable> RxObservable::skip_with_time(const Variant& duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::skip_with_time_(get_dt(duration), scheduler));
+}
+// _slice.h
+Ref<RxObservable> RxObservable::slice(int64_t start, int64_t stop, int64_t step) {
+    return RX_PIPE(op::ops::slice_(start, stop, step));
 }
 // _some.h
 Ref<RxObservable> RxObservable::some(const Callable& predicate) {
     return RX_PIPE(op::ops::some_(predicate_cb<Variant>(predicate)));
 }
+// _startwith.h
+Ref<RxObservable> RxObservable::start_with(const Variant& args) {
+    return RX_PIPE(op::ops::start_with_(RxList<Variant>(RX_ITERABLE_T(args))));
+}
+// _subscribeon.h
+Ref<RxObservable> RxObservable::subscribe_on(Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::subscribe_on_(scheduler));
+}
+// _sum.h
+Ref<RxObservable> RxObservable::sum(const Callable& key_mapper) {
+    return RX_PIPE(op::ops::sum_(mapper_cb<Variant, Variant>(key_mapper)));
+}
+// _switchlatest.h
+Ref<RxObservable> RxObservable::switch_latest() {
+    return RX_PIPE(op::ops::switch_latest_());
+}
 // _take.h
 Ref<RxObservable> RxObservable::take(uint64_t count) {
     return RX_PIPE(op::ops::take_(count));
 }
+// _takelast.h
+Ref<RxObservable> RxObservable::take_last(uint64_t count) {
+    return RX_PIPE(op::ops::take_last_(count));
+}
+// _takelastwithbuffer.h
+Ref<RxObservable> RxObservable::take_last_buffer(uint64_t count) {
+    return RX_PIPE(op::ops::take_last_buffer_(count));
+}
+// _takelastwithtime.h
+Ref<RxObservable> RxObservable::take_last_with_time(const Variant& duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::take_last_with_time_(get_dt(duration), scheduler));
+}
+// _takeuntil.h
+Ref<RxObservable> RxObservable::take_until(Ref<RxObservable> other) {
+    return RX_PIPE(op::ops::take_until_(other));
+}
+// _takeuntilwithtime.h
+Ref<RxObservable> RxObservable::take_until_with_time(const Variant& end_time, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::take_until_with_time_(get_dt(end_time), scheduler));
+}
+// _takewhile.h
+Ref<RxObservable> RxObservable::take_while(const Callable& predicate, bool inclusive) {
+    return RX_PIPE(op::ops::take_while_(predicate_cb<Variant>(predicate), inclusive));
+}
+Ref<RxObservable> RxObservable::take_while_indexed(const Callable& predciate, bool inclusive) {
+    return RX_PIPE(op::ops::take_while_indexed_(predicate_cb<Variant, uint64_t>(predciate), inclusive));
+}
+// _takewithtime.h
+Ref<RxObservable> RxObservable::take_with_time(const Variant& duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::take_with_time_(get_dt(duration), scheduler));
+}
+// _throttlefirst.h
+Ref<RxObservable> RxObservable::throttle_first(const Variant& window_duration, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::throttle_first_(get_dt(window_duration), scheduler));
+}
+// _timeinterval.h
+Ref<RxObservable> RxObservable::time_interval(Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::time_interval_(scheduler));
+}
+// _timeout.h
+Ref<RxObservable> RxObservable::timeout(const Variant& duetime, Ref<RxObservable> other, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::timeout_(get_dt(duetime), other, scheduler));
+}
+// _timeoutwithmapper.h
+Ref<RxObservable> RxObservable::timeout_with_mapper(Ref<RxObservable> first_timeout, const Callable& timeout_duration_mapper, Ref<RxObservable> other) {
+    return RX_PIPE(op::ops::timeout_with_mapper_(first_timeout, mapper_cb<rx_observable_t, Variant>(timeout_duration_mapper), other));
+}
 // _timestamp.h
 Ref<RxObservable> RxObservable::timestamp(Ref<RxSchedulerBase> scheduler) {
     return RX_PIPE(op::ops::timestamp_(scheduler));
+}
+// _todict.h
+Ref<RxObservable> RxObservable::to_dict(const Callable& key_mapper, const Callable& element_mapper) {
+    return RX_PIPE(op::ops::to_dict_(mapper_cb<Variant, Variant>(key_mapper), mapper_cb<Variant, Variant>(key_mapper)));
+}
+// _tolist.h
+Ref<RxObservable> RxObservable::to_list() {
+    return RX_PIPE(op::ops::to_list_());
+}
+Ref<RxObservable> RxObservable::to_iterable() {
+    return RX_PIPE(op::ops::to_iterable_());
+}
+// _toset.h
+Ref<RxObservable> RxObservable::to_set(const Callable& comparer) {
+    return RX_PIPE(op::ops::to_set_(comparer_cb(comparer)));
+}
+// _whiledo.h
+Ref<RxObservable> RxObservable::while_do(const Callable& condition) {
+    return RX_PIPE(op::ops::while_do_(predicate_cb<rx_observable_t>(condition)));
+}
+// _window.h
+Ref<RxObservable> RxObservable::window_toggle(Ref<RxObservable> openings, const Callable& closing_mapper) {
+    return RX_PIPE(op::ops::window_toggle_(openings, mapper_cb<rx_observable_t, Variant>(closing_mapper)));
+}
+Ref<RxObservable> RxObservable::window(Ref<RxObservable> boundaries) {
+    return RX_PIPE(op::ops::window_(boundaries));
+}
+Ref<RxObservable> RxObservable::window_when(const Callable& closing_mapper) {
+    return RX_PIPE(op::ops::window_when_(mapper_cb<rx_observable_t>(closing_mapper)));
+}
+// _windowwithcount.h
+Ref<RxObservable> RxObservable::window_with_count(int64_t count, int64_t skip) {
+    return RX_PIPE(op::ops::window_with_count_(count, skip));
+}
+// _windowwithtime.h
+Ref<RxObservable> RxObservable::window_with_time(const Variant& timespan, const Variant& timeshift, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::window_with_time_(get_dt(timespan), get_dt(timeshift), scheduler));
+}
+// _windowwithtimeorcount.h
+Ref<RxObservable> RxObservable::window_with_time_or_count(const Variant& timespan, int64_t count, Ref<RxSchedulerBase> scheduler) {
+    return RX_PIPE(op::ops::window_with_time_or_count_(get_dt(timespan), count, scheduler));
 }
 // _withlatestfrom.h
 Ref<RxObservable> RxObservable::latest_from_withv(const Variant& sources) {
@@ -411,11 +662,21 @@ Ref<RxObservable> RxObservable::zip_with_iterable(const Variant& iterable) {
     return RX_PIPE(op::ops::zip_with_iterable_(RX_ITERABLE_T(iterable)));
 }
 
+// _refcount.h
+Ref<RxObservable> RxObservable::add_ref(Ref<RxObservable> xs, Ref<RxRefCountDisposable> r) {
+    return connectable::add_ref(xs, r);
+}
+Ref<RxObservable> RxObservable::ref_count() {
+    return RX_PIPE(connectable::ref_count_());
+}
+
 void RxObservable::_bind_methods() {
     /* Wrapper Casts */
     RX_WRAPPER_CAST_BINDS(RxObservable)
 
     /* Constructors */
+    ClassDB::bind_static_method("RxObservable", D_METHOD("amb", "sources"), &RxObservable::amb);
+
     ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(VNULL));
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable);
@@ -435,7 +696,11 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate);
 
+    ClassDB::bind_static_method("RxObservable", D_METHOD("generate_with_relative_time", "initial_state", "condition", "iterate", "time_mapper"), &RxObservable::generate_with_relative_time);
+
     ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(VNULL));
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("interval", "period", "scheduler"), &RxObservable::interval, DEFVAL(VNULL));
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("merge", "sources"), &RxObservable::merge);
 
@@ -444,6 +709,8 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources"), &RxObservable::on_error_resume_next);ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_factory", "sources"), &RxObservable::on_error_resume_factory);
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1));
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("repeat", "value", "repeat_count"), &RxObservable::repeat, DEFVAL(-1));
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("return_value", "value", "scheduler"), &RxObservable::return_value, DEFVAL(VNULL));
     ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::just, DEFVAL(VNULL));
@@ -467,11 +734,20 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("all", "predicate"), &RxObservable::all);
 
-    ClassDB::bind_method(D_METHOD("amb", "right_source"), &RxObservable::amb);
+    ClassDB::bind_method(D_METHOD("amb_with", "right_source"), &RxObservable::amb_with);
 
     ClassDB::bind_method(D_METHOD("as_observable"), &RxObservable::as_observable);
 
     ClassDB::bind_method(D_METHOD("average", "key_mapper"), &RxObservable::average, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("buffer", "boundaries"), &RxObservable::buffer);
+    ClassDB::bind_method(D_METHOD("buffer_when", "closing_mapper"), &RxObservable::buffer_when);
+    ClassDB::bind_method(D_METHOD("buffer_toggle", "openings", "closing_mapper"), &RxObservable::buffer_toggle);
+    ClassDB::bind_method(D_METHOD("buffer_with_count", "count", "skip"), &RxObservable::buffer_with_count, DEFVAL(-1));
+
+    ClassDB::bind_method(D_METHOD("buffer_with_time", "timespan", "timeshift", "scheduler"), &RxObservable::buffer_with_time, DEFVAL(DTZERO), DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("buffer_with_time_or_count", "timespan", "count", "scheduler"), &RxObservable::buffer_with_time_or_count, DEFVAL(VNULL));
 
     ClassDB::bind_method(D_METHOD("catch_with", "observable"), &RxObservable::catch_with);
     ClassDB::bind_method(D_METHOD("catch_with_handler", "handler"), &RxObservable::catch_with_handler);
@@ -491,6 +767,12 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("default_if_empty", "default_value"), &RxObservable::default_if_empty, DEFVAL(VNULL));
 
+    ClassDB::bind_method(D_METHOD("delay", "duetime", "scheduler"), &RxObservable::delay, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("delay_subscription", "duetime", "scheduler"), &RxObservable::delay_subscription, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("delay_with_mapper", "duetime", "scheudler"), &RxObservable::delay_with_mapper, DEFVAL(VNULL));
+
     ClassDB::bind_method(D_METHOD("dematerialize"), &RxObservable::dematerialize);
 
     ClassDB::bind_method(D_METHOD("distinct", "key_mapper", "comparer"), &RxObservable::distinct, DEFVAL(CBNULL), DEFVAL(CBNULL));
@@ -505,6 +787,8 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("do_on_terminate", "on_terminate"), &RxObservable::do_on_terminate);
     ClassDB::bind_method(D_METHOD("do_finally", "finally_action"), &RxObservable::do_finally);
 
+    ClassDB::bind_method(D_METHOD("do_while", "condition"), &RxObservable::do_while);
+
     ClassDB::bind_method(D_METHOD("element_at_or_default", "index", "has_default", "default_value"), &RxObservable::element_at_or_default, DEFVAL(false), DEFVAL(VNULL));
 
     ClassDB::bind_method(D_METHOD("exclusive"), &RxObservable::exclusive);
@@ -516,6 +800,10 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("find_value", "predicate", "yield_index"), &RxObservable::find_value);
 
     ClassDB::bind_method(D_METHOD("first", "predicate"), &RxObservable::first, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("flat_map", "mapper"), &RxObservable::flat_map, DEFVAL(CBNULL));
+    ClassDB::bind_method(D_METHOD("flat_map_indexed", "mapper"), &RxObservable::flat_map_indexed, DEFVAL(CBNULL));
+    ClassDB::bind_method(D_METHOD("flat_map_latest", "mapper"), &RxObservable::flat_map_latest, DEFVAL(CBNULL));
 
     ClassDB::bind_method(D_METHOD("first_or_default", "predicate"), &RxObservable::first_or_default, DEFVAL(CBNULL));
 
@@ -581,13 +869,95 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("reduce", "accumulator", "seed"), &RxObservable::reduce, DEFVAL(CBNULL), DEFVAL(memnew(NotSet)));
 
+    ClassDB::bind_method(D_METHOD("repeated", "repeat_count"), &RxObservable::repeated, DEFVAL(-1));
+
+    ClassDB::bind_method(D_METHOD("replay", "mapper", "buffer_size", "window", "scheduler"), &RxObservable::replay, DEFVAL(CBNULL), DEFVAL(1024ul), DEFVAL(DTZERO), DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("retry", "retry_count"), &RxObservable::retry, DEFVAL(-1));
+
+    ClassDB::bind_method(D_METHOD("sample_with_time", "sampler", "scheduler"), &RxObservable::sample_with_time, DEFVAL(VNULL));
+    ClassDB::bind_method(D_METHOD("sample", "sampler"), &RxObservable::sample);
+
     ClassDB::bind_method(D_METHOD("scan", "accumulator", "seed"), &RxObservable::scan, DEFVAL(memnew(NotSet)));
 
-    ClassDB::bind_method(D_METHOD("some", "predicate"), &RxObservable::some, DEFVAL(CBNULL)); 
+    ClassDB::bind_method(D_METHOD("sequence_equal", "second", "comparer"), &RxObservable::sequence_equal, DEFVAL(CBNULL));
+    ClassDB::bind_method(D_METHOD("sequence_equal_it", "iterable", "comparer"), &RxObservable::sequence_equal_iterable, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("single", "predicate"), &RxObservable::single, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("single_or_default_async", "has_default", "default_value"), &RxObservable::single_or_default_async, DEFVAL(false), DEFVAL(VNULL));
+    ClassDB::bind_method(D_METHOD("single_or_default", "predicate", "default_value"), &RxObservable::single_or_default, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("skip", "count"), &RxObservable::skip);
+
+    ClassDB::bind_method(D_METHOD("skip_last", "count"), &RxObservable::skip_last);
+
+    ClassDB::bind_method(D_METHOD("skip_last_with_time_rel", "duration", "scheduler"), &RxObservable::skip_last_with_time_rel, DEFVAL(VNULL));
+    ClassDB::bind_method(D_METHOD("skip_last_with_time_abs", "duration", "scheduler"), &RxObservable::skip_last_with_time_abs, DEFVAL(VNULL));
+    ClassDB::bind_method(D_METHOD("skip_last_with_time", "duration", "scheduler"), &RxObservable::skip_last_with_time, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("skip_until", "other"), &RxObservable::skip_until);
+
+    ClassDB::bind_method(D_METHOD("skip_until_with_time_rel", "start_time", "scheduler"), &RxObservable::skip_until_with_time_rel, DEFVAL(VNULL));
+    ClassDB::bind_method(D_METHOD("skip_until_with_time_abs", "start_time", "scheduler"), &RxObservable::skip_until_with_time_abs, DEFVAL(VNULL));
+    ClassDB::bind_method(D_METHOD("skip_until_with_time", "start_time", "scheduler"), &RxObservable::skip_until_with_time, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("skip_while", "predicate"), &RxObservable::skip_while);
+    ClassDB::bind_method(D_METHOD("skip_while_indexed", "predicate"), &RxObservable::skip_while_indexed);
+
+    ClassDB::bind_method(D_METHOD("skip_with_time", "duration", "scheduler"), &RxObservable::skip_with_time, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("slice", "start", "stop", "step"), &RxObservable::slice, DEFVAL(0l), DEFVAL(INT64_MAX), DEFVAL(1l));
+
+    ClassDB::bind_method(D_METHOD("some", "predicate"), &RxObservable::some, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("start_with", "args"), &RxObservable::start_with);
+
+    ClassDB::bind_method(D_METHOD("subscribe_on", "scheduler"), &RxObservable::subscribe_on);
+
+    ClassDB::bind_method(D_METHOD("sum", "key_mapper"), &RxObservable::sum, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("switch_latest"), &RxObservable::switch_latest);
 
     ClassDB::bind_method(D_METHOD("take", "count"), &RxObservable::take);
 
+    ClassDB::bind_method(D_METHOD("take_last_buffer", "count"), &RxObservable::take_last_buffer);
+
+    ClassDB::bind_method(D_METHOD("take_last_with_time", "duration", "scheduler"), &RxObservable::take_last_with_time, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("take_while", "predicate", "inclusive"), &RxObservable::take_while, DEFVAL(false));
+    ClassDB::bind_method(D_METHOD("take_while_indexed", "predicate", "inclusive"), &RxObservable::take_while_indexed, DEFVAL(false));
+
+    ClassDB::bind_method(D_METHOD("take_with_time", "duration", "scheduler"), &RxObservable::take_with_time, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("throttle_first", "window_duration", "scheduler"), &RxObservable::throttle_first, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("time_interval", "scheduler"), &RxObservable::time_interval, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("timeout", "duetime", "other", "scheduler"), &RxObservable::timeout, DEFVAL(VNULL), DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("timeout_with_mapper", "first_timeout", "timeout_duration_mapper", "other"), &RxObservable::timeout_with_mapper, DEFVAL(VNULL), DEFVAL(CBNULL), DEFVAL(VNULL));
+
     ClassDB::bind_method(D_METHOD("timestamp", "scheduler"), &RxObservable::timestamp, DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("to_dict", "key_mapper", "element_mapper"), &RxObservable::to_dict, DEFVAL(CBNULL), DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("to_list"), &RxObservable::to_list);
+    ClassDB::bind_method(D_METHOD("to_iterable"), &RxObservable::to_iterable);
+
+    ClassDB::bind_method(D_METHOD("to_set", "comparer"), &RxObservable::to_set, DEFVAL(CBNULL));
+
+    ClassDB::bind_method(D_METHOD("while_do", "condition"), &RxObservable::while_do);
+
+    ClassDB::bind_method(D_METHOD("window_toggle", "openings", "closing_mapper"), &RxObservable::window_toggle);
+    ClassDB::bind_method(D_METHOD("window", "boundaries"), &RxObservable::window);
+    ClassDB::bind_method(D_METHOD("window_when", "closing_mapper"), &RxObservable::window_when);
+
+    ClassDB::bind_method(D_METHOD("window_with_count", "count", "skip"), &RxObservable::window_with_count, DEFVAL(-1));
+
+    ClassDB::bind_method(D_METHOD("window_with_time", "timespan", "timeshift", "scheduler"), &RxObservable::window_with_time, DEFVAL(DTZERO), DEFVAL(VNULL));
+
+    ClassDB::bind_method(D_METHOD("window_with_time_or_count", "timespan", "count", "scheduler"), &RxObservable::window_with_time_or_count, DEFVAL(VNULL));
 
     ClassDB::bind_method(D_METHOD("latest_from_withv", "sources"), &RxObservable::latest_from_withv);
     RX_BIND_VARARG_METHOD(RxObservable, latest_from_with, OBJECT, "sources")
@@ -595,6 +965,11 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("zip_withv", "sources"), &RxObservable::zip_withv);
     RX_BIND_VARARG_METHOD(RxObservable, zip_with, OBJECT, "sources")
     ClassDB::bind_method(D_METHOD("zip_with_iterable", "iterable"), &RxObservable::zip_with_iterable);
+
+    /* CONNECTABLE */
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("add_ref", "xs", "r"), &RxObservable::add_ref);
+    ClassDB::bind_method(D_METHOD("ref_count"), &RxObservable::ref_count);
 }
 
 } // END namespace rx::wrappers

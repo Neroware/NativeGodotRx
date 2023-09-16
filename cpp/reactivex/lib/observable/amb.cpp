@@ -18,4 +18,8 @@ rx_observable_t obs::amb_(const rx_observable_list_t& sources) {
 
 }
 
+rx_observable_t obs::amb_(const rx_observable_t& sources...) {
+    return amb_({sources});
+}
+
 } // END namespace rx::observable
