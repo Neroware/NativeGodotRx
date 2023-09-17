@@ -20,7 +20,8 @@ public:
     RLock lock;
     
 public:
-    InnerSubscription(const rx_subject_t& subject, const observer_t& observer = nullptr) {}
+    InnerSubscription(const rx_subject_t& subject_, const observer_t& observer_ = nullptr) 
+        : subject(subject_), observer(observer_) {}
     ~InnerSubscription(){ this->dispose(); }
 
     void dispose() override;

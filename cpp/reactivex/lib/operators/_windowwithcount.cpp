@@ -25,7 +25,7 @@ observable_op_t ops::window_with_count_(int64_t count, int64_t skip) {
             auto n = std::make_shared<int64_t>(0);
             auto q = std::make_shared<std::list<rx_subject_t>>();
 
-            auto create_window = [&]() {
+            auto create_window = [=]() {
                 auto s = Subject::get();
                 q->push_back(s);
                 observer->on_next(add_ref(s, refCountDisposable));

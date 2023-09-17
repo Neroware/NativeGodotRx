@@ -12,15 +12,15 @@ func _ready():
 	
 	
 	
-	RxObservable.concat([
-		RxObservable.timer(5.0),
-		RxObservable.from([1, 2, 3, 4]),
-		RxObservable.just(5)
-	]) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+#	RxObservable.concat([
+#		RxObservable.timer(5.0),
+#		RxObservable.from([1, 2, 3, 4]),
+#		RxObservable.just(5)
+#	]) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
-	RxObservable.just(42).repeated(3) \
+	RxObservable.just(42).repeated(16).buffer_with_count(3) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
