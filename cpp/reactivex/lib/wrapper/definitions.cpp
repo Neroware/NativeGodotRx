@@ -18,123 +18,123 @@ using namespace rx::observable;
 namespace rx::wrappers {
 
 // amb.h
-Ref<RxObservable> RxObservable::amb(const Variant& sources) {
+Ref<RxObservable> RxObservable::Amb(const Variant& sources) {
     return obs::amb_(RX_ITERABLE_T(sources));
 }
 // case.h
-Ref<RxObservable> RxObservable::case_mapper(const Callable& mapper, const Dictionary& sources, Ref<RxObservable> default_source) { 
+Ref<RxObservable> RxObservable::Case(const Callable& mapper, const Dictionary& sources, Ref<RxObservable> default_source) { 
     return obs::case_(from_cb<Variant>(mapper), sources, default_source); 
 }
 // catch.h
-Ref<RxObservable> RxObservable::catch_with_iterable(const Variant& sources) {
+Ref<RxObservable> RxObservable::Catch(const Variant& sources) {
     return obs::catch_with_iterable_(RX_ITERABLE_T(sources)); 
 }
 // combinelatest.h
-Ref<RxObservable> RxObservable::combine_latest(const Variant& sources) {
+Ref<RxObservable> RxObservable::CombineLatest(const Variant& sources) {
     return obs::combine_latest_(RX_ITERABLE_T(sources)); 
 }
 // concat.h
-Ref<RxObservable> RxObservable::concat(const Variant& sources) {
+Ref<RxObservable> RxObservable::Concat(const Variant& sources) {
     return obs::concat_with_iterable_(RX_ITERABLE_T(sources)); 
 }
 // defer.h
-Ref<RxObservable> RxObservable::defer(const Callable& factory) {
+Ref<RxObservable> RxObservable::Defer(const Callable& factory) {
     return obs::defer_(observable_factory_cb(factory)); 
 }
 // empty.h
-Ref<RxObservable> RxObservable::empty(Ref<RxSchedulerBase> scheduler) { 
+Ref<RxObservable> RxObservable::Empty(Ref<RxSchedulerBase> scheduler) { 
     return obs::empty_(scheduler); 
 }
 // forkjoin.h
-Ref<RxObservable> RxObservable::fork_join(const Variant& sources) {
+Ref<RxObservable> RxObservable::ForkJoin(const Variant& sources) {
     return obs::fork_join_(RX_ITERABLE_T(sources)); 
 }
 // fromiterable.h
-Ref<RxObservable> RxObservable::from_iterable(const Variant& iterable, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::FromIterable(const Variant& iterable, Ref<RxSchedulerBase> scheduler) {
     return obs::from_iterable_(RX_ITERABLE_T(iterable), scheduler); 
 }
-Ref<RxObservable> RxObservable::from(const Variant& iterable, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::From(const Variant& iterable, Ref<RxSchedulerBase> scheduler) {
     return obs::from_iterable_(RX_ITERABLE_T(iterable), scheduler); 
 }
 // generate.h
-Ref<RxObservable> RxObservable::generate(const Variant& initial_state, const Callable& condition, const Callable& iterate) {
+Ref<RxObservable> RxObservable::Generate(const Variant& initial_state, const Callable& condition, const Callable& iterate) {
     return obs::generate_(initial_state, from_cb<bool, const Variant&>(condition), from_cb<Variant, const Variant&>(iterate)); 
 }
 // generatewithrelativetime.h
-Ref<RxObservable> RxObservable::generate_with_relative_time(const Variant& initial_state, const Callable& condition, const Callable& iterate, const Callable& time_mapper) {
+Ref<RxObservable> RxObservable::GenerateWithRelativeTime(const Variant& initial_state, const Callable& condition, const Callable& iterate, const Callable& time_mapper) {
     return obs::generate_with_relative_time_(initial_state, predicate_cb<Variant>(condition), mapper_cb<Variant, Variant>(iterate), time_mapper_cb(time_mapper));
 }
 // ifthen.h
-Ref<RxObservable> RxObservable::if_then(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source) {
+Ref<RxObservable> RxObservable::IfThen(const Callable& condition, Ref<RxObservable> then_source, Ref<RxObservable> else_source) {
     return obs::if_then_(from_cb<bool>(condition), then_source, else_source);
 }
 // interval.h
-Ref<RxObservable> RxObservable::interval(const Variant& period, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::Interval(const Variant& period, Ref<RxSchedulerBase> scheduler) {
     return obs::interval_(get_dt(period), scheduler);
 }
 // merge.h
-Ref<RxObservable> RxObservable::merge(const Variant& sources) {
+Ref<RxObservable> RxObservable::Merge(const Variant& sources) {
     return obs::merge_(RX_ITERABLE_T(sources)); 
 }
 // never.h
-Ref<RxObservable> RxObservable::never() {
+Ref<RxObservable> RxObservable::Never() {
     return obs::never_();
 }
 // onerrorresumenext.h
-Ref<RxObservable> RxObservable::on_error_resume_factory(const Variant& sources) {
+Ref<RxObservable> RxObservable::OnErrorResumeFactory(const Variant& sources) {
     return obs::on_error_resume_next_(convert_all_cb<stated_observable_factory_t>(RX_ITERABLE_T(sources), stated_observable_factory_cb));
 }
-Ref<RxObservable> RxObservable::on_error_resume_next(const Variant& sources) {
+Ref<RxObservable> RxObservable::OnErrorResumeNext(const Variant& sources) {
     return obs::on_error_resume_next_(rx_observable_list_t(RX_ITERABLE_T(sources)));
 }
 // range.h
-Ref<RxObservable> RxObservable::range(int64_t start, int64_t stop, int64_t step) {
+Ref<RxObservable> RxObservable::Range(int64_t start, int64_t stop, int64_t step) {
     return obs::range_(start, stop, step);
 }
 // repeat.h
-Ref<RxObservable> RxObservable::repeat(const Variant& value, int64_t repeat_count) {
+Ref<RxObservable> RxObservable::Repeat(const Variant& value, int64_t repeat_count) {
     return obs::repeat_(value, repeat_count);
 }
 // returnvalue.h
-Ref<RxObservable> RxObservable::return_value(const Variant& value, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::ReturnValue(const Variant& value, Ref<RxSchedulerBase> scheduler) {
     return obs::return_value_(value, scheduler);
 }
-Ref<RxObservable> RxObservable::just(const Variant& value, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::Just(const Variant& value, Ref<RxSchedulerBase> scheduler) {
     return obs::return_value_(value, scheduler);
 }
 // throw.h
-Ref<RxObservable> RxObservable::throw_message(const String& what, const String& type, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::ThrowMessage(const String& what, const String& type, Ref<RxSchedulerBase> scheduler) {
     try { throw rx_exception(what.ascii().get_data(), type.ascii().get_data()); } catch(...) { return obs::throw_(std::current_exception(), scheduler); }
 }
-Ref<RxObservable> RxObservable::throw_error(Ref<RxError> error, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::ThrowError(Ref<RxError> error, Ref<RxSchedulerBase> scheduler) {
     return obs::throw_(RxError::unwrap(error), scheduler); 
 }
 // timer.h
-Ref<RxObservable> RxObservable::timer_abs(Ref<AbsoluteTime> duetime, Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::TimerAbs(Ref<AbsoluteTime> duetime, Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler) {
     return period.is_null() ? obs::timer_(duetime->t, scheduler) : obs::timer_(duetime->t, period->dt, scheduler);
 }
-Ref<RxObservable> RxObservable::timer_rel(Ref<RelativeTime> duetime, Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::TimerRel(Ref<RelativeTime> duetime, Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler) {
     return period.is_null() ? obs::timer_(duetime->dt, scheduler) : obs::timer_(duetime->dt, period->dt, scheduler);
 }
-Ref<RxObservable> RxObservable::timer(double duetime, double period, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::Timer(double duetime, double period, Ref<RxSchedulerBase> scheduler) {
     return period < 0.0 ? obs::timer_(duetime, scheduler) : obs::timer_(duetime, Scheduler::to_timedelta(period), scheduler);
 }
-Ref<RxObservable> RxObservable::periodic_timer_rel(Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::PeriodicTimerRel(Ref<RelativeTime> period, Ref<RxSchedulerBase> scheduler) {
     return obs::timer_(period->dt, period->dt, scheduler);
 }
-Ref<RxObservable> RxObservable::periodic_timer(double period, Ref<RxSchedulerBase> scheduler) {
+Ref<RxObservable> RxObservable::PeriodicTimer(double period, Ref<RxSchedulerBase> scheduler) {
     return obs::timer_(period, Scheduler::to_timedelta(period), scheduler);
 }
 // using.h
-Ref<RxObservable> RxObservable::using_resource(const Callable& resource_factory, const Callable& observable_factory) {
+Ref<RxObservable> RxObservable::Using(const Callable& resource_factory, const Callable& observable_factory) {
     return obs::using_(from_cb<disposable_t>(resource_factory), from_cb<rx_observable_t, const disposable_t&>(observable_factory));
 }
 // withlatestfrom.h
-Ref<RxObservable> RxObservable::with_latest_from(Ref<RxObservable> parent, const Variant& sources) {
+Ref<RxObservable> RxObservable::WithLatestFrom(Ref<RxObservable> parent, const Variant& sources) {
     return obs::with_latest_from_(parent, RX_ITERABLE_T(sources));
 }
 // zip.h
-Ref<RxObservable> RxObservable::zip(const Variant& sources) {
+Ref<RxObservable> RxObservable::Zip(const Variant& sources) {
     return obs::zip_(RX_ITERABLE_T(sources));
 }
 
@@ -146,7 +146,7 @@ Ref<RxObservable> RxObservable::all(const Callable& predicate) {
     return RX_PIPE(op::ops::all_(from_cb<bool, const Variant&>(predicate)));
 }
 // _amb.h
-Ref<RxObservable> RxObservable::amb_with(Ref<RxObservable> right_source) {
+Ref<RxObservable> RxObservable::amb(Ref<RxObservable> right_source) {
     return RX_PIPE(op::ops::amb_(right_source));
 }
 // _asobservable.h
@@ -186,17 +186,17 @@ Ref<RxObservable> RxObservable::catch_with(Ref<RxObservable> obs) {
     return RX_PIPE(op::ops::catch_(obs));
 }
 // _combinelatest.h
-Ref<RxObservable> RxObservable::combine_latest_withv(const Variant& others) {
+Ref<RxObservable> RxObservable::combine_latestv(const Variant& others) {
     return RX_PIPE(op::ops::combine_latest_(RX_ITERABLE_T(others)));
 }
-Ref<RxObservable> RxObservable::combine_latest_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<RxObservable> RxObservable::combine_latest(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     RX_VUNWRAP(others) return RX_PIPE(op::ops::combine_latest_(RX_ITERABLE_T(others)));
 }
 // _concat.h.h
-Ref<RxObservable> RxObservable::concat_withv(const Variant& others) {
+Ref<RxObservable> RxObservable::concatv(const Variant& others) {
     return RX_PIPE(op::ops::concat_(RX_ITERABLE_T(others)));
 }
-Ref<RxObservable> RxObservable::concat_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<RxObservable> RxObservable::concat(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     RX_VUNWRAP(others) return RX_PIPE(op::ops::concat_(RX_ITERABLE_T(others)));
 }
 // _contains
@@ -307,10 +307,10 @@ Ref<RxObservable> RxObservable::flat_map_latest(const Callable& mapper) {
     return RX_PIPE(op::ops::flat_map_latest_(mapper_cb<rx_observable_t, Variant>(mapper)));
 }
 // _forkjoin.h
-Ref<RxObservable> RxObservable::fork_join_withv(const Variant& others) {
+Ref<RxObservable> RxObservable::fork_joinv(const Variant& others) {
     return RX_PIPE(op::ops::fork_join_(RX_ITERABLE_T(others)));
 }
-Ref<RxObservable> RxObservable::fork_join_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<RxObservable> RxObservable::fork_join(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     RX_VUNWRAP(others) return RX_PIPE(op::ops::fork_join_(RX_ITERABLE_T(others)));
 }
 // _filter.h
@@ -375,10 +375,10 @@ Ref<RxObservable> RxObservable::max_by(const Callable& key_mapper, const Callabl
 Ref<RxObservable> RxObservable::merge_all() {
     return RX_PIPE(op::ops::merge_all_());
 }
-Ref<RxObservable> RxObservable::merge_withv(const Variant& others, int64_t max_concurrent) {
+Ref<RxObservable> RxObservable::mergev(const Variant& others, int64_t max_concurrent) {
     return RX_PIPE(op::ops::merge_(RX_ITERABLE_T(others), max_concurrent));
 }
-Ref<RxObservable> RxObservable::merge_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<RxObservable> RxObservable::merge(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     RX_VUNWRAP(others) int64_t max_concurrent = others.pop_front(); return RX_PIPE(op::ops::merge_(RX_ITERABLE_T(others), max_concurrent));
 }
 // _min.h
@@ -401,7 +401,7 @@ Ref<RxObservable> RxObservable::observe_on(Ref<RxSchedulerBase> scheduler) {
     return RX_PIPE(op::ops::observe_on_(scheduler));
 }
 // _onerrorresumenext.h
-Ref<RxObservable> RxObservable::on_error_resume_next_with(Ref<RxObservable> second) {
+Ref<RxObservable> RxObservable::on_error_resume_next(Ref<RxObservable> second) {
     return RX_PIPE(op::ops::on_error_resume_next_(second));
 }
 // _pairwise.h
@@ -441,7 +441,7 @@ Ref<RxObservable> RxObservable::reduce(const Callable& accumulator, const Varian
     return RX_PIPE(op::ops::reduce_(accumulator_cb<Variant, Variant>(accumulator), seed));
 }
 // _repeat.h
-Ref<RxObservable> RxObservable::repeated(int64_t repeat_count) {
+Ref<RxObservable> RxObservable::repeat(int64_t repeat_count) {
     return RX_PIPE(op::ops::repeat_(repeat_count));
 }
 // _replay.h
@@ -645,17 +645,17 @@ Ref<RxObservable> RxObservable::window_with_time_or_count(const Variant& timespa
     return RX_PIPE(op::ops::window_with_time_or_count_(get_dt(timespan), count, scheduler));
 }
 // _withlatestfrom.h
-Ref<RxObservable> RxObservable::latest_from_withv(const Variant& sources) {
+Ref<RxObservable> RxObservable::with_latest_fromv(const Variant& sources) {
     return RX_PIPE(op::ops::with_latest_from_(RX_ITERABLE_T(sources)));
 }
-Ref<RxObservable> RxObservable::latest_from_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<RxObservable> RxObservable::with_latest_from(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     RX_VUNWRAP(others) return RX_PIPE(op::ops::with_latest_from_(RX_ITERABLE_T(others)));
 }
 // _zip.h
-Ref<RxObservable> RxObservable::zip_withv(const Variant& others) {
+Ref<RxObservable> RxObservable::zipv(const Variant& others) {
     return RX_PIPE(op::ops::zip_(RX_ITERABLE_T(others)));
 }
-Ref<RxObservable> RxObservable::zip_with(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+Ref<RxObservable> RxObservable::zip(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
     RX_VUNWRAP(others) return RX_PIPE(op::ops::zip_(RX_ITERABLE_T(others)));
 }
 Ref<RxObservable> RxObservable::zip_with_iterable(const Variant& iterable) {
@@ -675,66 +675,67 @@ void RxObservable::_bind_methods() {
     RX_WRAPPER_CAST_BINDS(RxObservable)
 
     /* Constructors */
-    ClassDB::bind_static_method("RxObservable", D_METHOD("amb", "sources"), &RxObservable::amb);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Amb", "sources"), &RxObservable::Amb);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("case", "mapper", "sources", "default"), &RxObservable::case_mapper, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Case", "mapper", "sources", "default"), &RxObservable::Case, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("catch", "sources"), &RxObservable::catch_with_iterable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Catch", "sources"), &RxObservable::Catch);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("combine_latest", "sources"), &RxObservable::combine_latest);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("CombineLatest", "sources"), &RxObservable::CombineLatest);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("concat", "sources"), &RxObservable::concat);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Concat", "sources"), &RxObservable::Concat);
     
-    ClassDB::bind_static_method("RxObservable", D_METHOD("defer", "factory"), &RxObservable::defer);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Defer", "factory"), &RxObservable::Defer);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("empty", "scheduler"), &RxObservable::empty, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Empty", "scheduler"), &RxObservable::Empty, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("fork_join", "sources"), &RxObservable::fork_join);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("ForkJoin", "sources"), &RxObservable::ForkJoin);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("from_iterable", "iterable", "scheduler"), &RxObservable::from_iterable, DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("from", "iterable", "scheduler"), &RxObservable::from, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("FromIterable", "iterable", "scheduler"), &RxObservable::FromIterable, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("From", "iterable", "scheduler"), &RxObservable::From, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("generate", "initial_state", "condition", "iterate"), &RxObservable::generate);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Generate", "initial_state", "condition", "iterate"), &RxObservable::Generate);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("generate_with_relative_time", "initial_state", "condition", "iterate", "time_mapper"), &RxObservable::generate_with_relative_time);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("GenerateWithRelativeTime", "initial_state", "condition", "iterate", "time_mapper"), &RxObservable::GenerateWithRelativeTime);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("if_then", "condition", "then_source", "else_source"), &RxObservable::if_then, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("IfThen", "condition", "then_source", "else_source"), &RxObservable::IfThen, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("interval", "period", "scheduler"), &RxObservable::interval, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Interval", "period", "scheduler"), &RxObservable::Interval, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("merge", "sources"), &RxObservable::merge);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Merge", "sources"), &RxObservable::Merge);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("never"), &RxObservable::never);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Never"), &RxObservable::Never);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_next", "sources"), &RxObservable::on_error_resume_next);ClassDB::bind_static_method("RxObservable", D_METHOD("on_error_resume_factory", "sources"), &RxObservable::on_error_resume_factory);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnErrorResumeNext", "sources"), &RxObservable::OnErrorResumeNext);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnErrorResumeFactory", "sources"), &RxObservable::OnErrorResumeFactory);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("range", "start", "stop", "step"), &RxObservable::range, DEFVAL(INT64_MAX), DEFVAL(1));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Range", "start", "stop", "step"), &RxObservable::Range, DEFVAL(INT64_MAX), DEFVAL(1));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("repeat", "value", "repeat_count"), &RxObservable::repeat, DEFVAL(-1));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Repeat", "value", "repeat_count"), &RxObservable::Repeat, DEFVAL(-1));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("return_value", "value", "scheduler"), &RxObservable::return_value, DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("just", "value", "scheduler"), &RxObservable::just, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("ReturnValue", "value", "scheduler"), &RxObservable::ReturnValue, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Just", "value", "scheduler"), &RxObservable::Just, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("raise", "message", "type", "scheduler"), &RxObservable::throw_message, DEFVAL("RxError"), DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("throw", "error", "scheduler"), &RxObservable::throw_error, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Raise", "message", "type", "scheduler"), &RxObservable::ThrowMessage, DEFVAL("RxError"), DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Throw", "error", "scheduler"), &RxObservable::ThrowError, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("timer_abs", "duetime", "period", "scheduler"), &RxObservable::timer_abs, DEFVAL(VNULL), DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("timer_rel", "duetime", "period", "scheduler"), &RxObservable::timer_rel, DEFVAL(VNULL), DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("timer", "duetime", "period", "scheduler"), &RxObservable::timer, DEFVAL(-1.0), DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("periodic_timer", "period", "scheduler"), &RxObservable::periodic_timer, DEFVAL(VNULL));
-    ClassDB::bind_static_method("RxObservable", D_METHOD("periodic_timer_rel", "period", "scheduler"), &RxObservable::periodic_timer_rel, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("TimerAbs", "duetime", "period", "scheduler"), &RxObservable::TimerAbs, DEFVAL(VNULL), DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("TimerRel", "duetime", "period", "scheduler"), &RxObservable::TimerRel, DEFVAL(VNULL), DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Timer", "duetime", "period", "scheduler"), &RxObservable::Timer, DEFVAL(-1.0), DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("PeriodicTimer", "period", "scheduler"), &RxObservable::PeriodicTimer, DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("PeriodicTimerRel", "period", "scheduler"), &RxObservable::PeriodicTimerRel, DEFVAL(VNULL));
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("using", "resource_factory", "observable_factory"), &RxObservable::using_resource);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Using", "resource_factory", "observable_factory"), &RxObservable::Using);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("with_latest_from", "parent", "sources"), &RxObservable::with_latest_from);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("WithLatestFrom", "parent", "sources"), &RxObservable::WithLatestFrom);
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("zip", "sources"), &RxObservable::zip);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Zip", "sources"), &RxObservable::Zip);
 
     /* BIND OPERATORS HERE */
 
     ClassDB::bind_method(D_METHOD("all", "predicate"), &RxObservable::all);
 
-    ClassDB::bind_method(D_METHOD("amb_with", "right_source"), &RxObservable::amb_with);
+    ClassDB::bind_method(D_METHOD("amb", "right_source"), &RxObservable::amb);
 
     ClassDB::bind_method(D_METHOD("as_observable"), &RxObservable::as_observable);
 
@@ -749,14 +750,14 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("buffer_with_time_or_count", "timespan", "count", "scheduler"), &RxObservable::buffer_with_time_or_count, DEFVAL(VNULL));
 
-    ClassDB::bind_method(D_METHOD("catch_with", "observable"), &RxObservable::catch_with);
+    ClassDB::bind_method(D_METHOD("catch", "observable"), &RxObservable::catch_with);
     ClassDB::bind_method(D_METHOD("catch_with_handler", "handler"), &RxObservable::catch_with_handler);
 
-    ClassDB::bind_method(D_METHOD("combine_latest_withv", "sources"), &RxObservable::combine_latest_withv);
-    RX_BIND_VARARG_METHOD(RxObservable, combine_latest_with, OBJECT, sources)
+    ClassDB::bind_method(D_METHOD("combine_latestv", "sources"), &RxObservable::combine_latestv);
+    RX_BIND_VARARG_METHOD(RxObservable, combine_latest, OBJECT, sources)
 
-    ClassDB::bind_method(D_METHOD("concat_withv", "sources"), &RxObservable::concat_withv);
-    RX_BIND_VARARG_METHOD(RxObservable, concat_with, OBJECT, sources)
+    ClassDB::bind_method(D_METHOD("concatv", "sources"), &RxObservable::concatv);
+    RX_BIND_VARARG_METHOD(RxObservable, concat, OBJECT, sources)
 
     ClassDB::bind_method(D_METHOD("contains", "value", "comparer"), &RxObservable::contains, DEFVAL(CBNULL));
 
@@ -807,8 +808,8 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("first_or_default", "predicate"), &RxObservable::first_or_default, DEFVAL(CBNULL));
 
-    ClassDB::bind_method(D_METHOD("fork_join_withv", "sources"), &RxObservable::fork_join_withv);
-    RX_BIND_VARARG_METHOD(RxObservable, fork_join_with, OBJECT, sources)
+    ClassDB::bind_method(D_METHOD("fork_joinv", "sources"), &RxObservable::fork_joinv);
+    RX_BIND_VARARG_METHOD(RxObservable, fork_join, OBJECT, sources)
 
     ClassDB::bind_method(D_METHOD("filter", "predicate"), &RxObservable::filter);
     ClassDB::bind_method(D_METHOD("filter_indexed", "predicate"), &RxObservable::filter_indexed, DEFVAL(CBNULL));
@@ -839,8 +840,8 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("max_by", "key_mapper", "comparer"), &RxObservable::max_by, DEFVAL(CBNULL));
 
     ClassDB::bind_method(D_METHOD("merge_all"), &RxObservable::merge_all);
-    ClassDB::bind_method(D_METHOD("merge_withv", "sources", "max_concurrent"), &RxObservable::merge_withv, DEFVAL(-1));
-    RX_BIND_VARARG_METHOD(RxObservable, merge_with, VARIANT_MAX, sources);
+    ClassDB::bind_method(D_METHOD("mergev", "sources", "max_concurrent"), &RxObservable::mergev, DEFVAL(-1));
+    RX_BIND_VARARG_METHOD(RxObservable, merge, VARIANT_MAX, sources);
 
     ClassDB::bind_method(D_METHOD("min", "comparer"), &RxObservable::min, DEFVAL(CBNULL));
 
@@ -851,7 +852,7 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("observe_on", "scheduler"), &RxObservable::observe_on);
 
-    ClassDB::bind_method(D_METHOD("on_error_resume_next_with", "second"), &RxObservable::on_error_resume_next_with);
+    ClassDB::bind_method(D_METHOD("on_error_resume_next", "second"), &RxObservable::on_error_resume_next);
 
     ClassDB::bind_method(D_METHOD("pairwise"), &RxObservable::pairwise);
 
@@ -869,7 +870,7 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("reduce", "accumulator", "seed"), &RxObservable::reduce, DEFVAL(CBNULL), DEFVAL(memnew(NotSet)));
 
-    ClassDB::bind_method(D_METHOD("repeated", "repeat_count"), &RxObservable::repeated, DEFVAL(-1));
+    ClassDB::bind_method(D_METHOD("repeat", "repeat_count"), &RxObservable::repeat, DEFVAL(-1));
 
     ClassDB::bind_method(D_METHOD("replay", "mapper", "buffer_size", "window", "scheduler"), &RxObservable::replay, DEFVAL(CBNULL), DEFVAL(1024ul), DEFVAL(DTZERO), DEFVAL(VNULL));
 
@@ -959,11 +960,11 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("window_with_time_or_count", "timespan", "count", "scheduler"), &RxObservable::window_with_time_or_count, DEFVAL(VNULL));
 
-    ClassDB::bind_method(D_METHOD("latest_from_withv", "sources"), &RxObservable::latest_from_withv);
-    RX_BIND_VARARG_METHOD(RxObservable, latest_from_with, OBJECT, "sources")
+    ClassDB::bind_method(D_METHOD("with_latest_fromv", "sources"), &RxObservable::with_latest_fromv);
+    RX_BIND_VARARG_METHOD(RxObservable, with_latest_from, OBJECT, "sources")
 
-    ClassDB::bind_method(D_METHOD("zip_withv", "sources"), &RxObservable::zip_withv);
-    RX_BIND_VARARG_METHOD(RxObservable, zip_with, OBJECT, "sources")
+    ClassDB::bind_method(D_METHOD("zipv", "sources"), &RxObservable::zipv);
+    RX_BIND_VARARG_METHOD(RxObservable, zip, OBJECT, "sources")
     ClassDB::bind_method(D_METHOD("zip_with_iterable", "iterable"), &RxObservable::zip_with_iterable);
 
     /* CONNECTABLE */
