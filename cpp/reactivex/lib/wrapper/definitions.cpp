@@ -37,6 +37,10 @@ Ref<RxObservable> RxObservable::CombineLatest(const Variant& sources) {
 Ref<RxObservable> RxObservable::Concat(const Variant& sources) {
     return obs::concat_with_iterable_(RX_ITERABLE_T(sources)); 
 }
+// create.h
+Ref<RxObservable> RxObservable::Create(const Callable& subscribe) {
+    return obs::create_(from_cb<disposable_t, const observer_t&, const scheduler_t&>(subscribe));
+}
 // defer.h
 Ref<RxObservable> RxObservable::Defer(const Callable& factory) {
     return obs::defer_(observable_factory_cb(factory)); 
@@ -684,6 +688,8 @@ void RxObservable::_bind_methods() {
     ClassDB::bind_static_method("RxObservable", D_METHOD("CombineLatest", "sources"), &RxObservable::CombineLatest);
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("Concat", "sources"), &RxObservable::Concat);
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("Create", "subscribe"), &RxObservable::Create, DEFVAL(CBNULL));
     
     ClassDB::bind_static_method("RxObservable", D_METHOD("Defer", "factory"), &RxObservable::Defer);
 

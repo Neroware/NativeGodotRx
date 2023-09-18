@@ -8,6 +8,8 @@ static Ref<RxObservable> Catch(const Variant& sources);
 static Ref<RxObservable> CombineLatest(const Variant& sources);
 // concat.h
 static Ref<RxObservable> Concat(const Variant& sources);
+// create.h
+static Ref<RxObservable> Create(const Callable& subscribe = CBNULL);
 // defer.h
 static Ref<RxObservable> Defer(const Callable& factory);
 // empty.h

@@ -26,6 +26,8 @@ struct obs {
     static rx_observable_t concat_with_iterable_(const iterable_t& sources);
     static rx_observable_t concat_(const rx_observable_list_t& sources);
     static rx_observable_t concat_(const rx_observable_t& sources...);
+    // create.h
+    static rx_observable_t create_(const subscription_t& subscribe = nullptr);
     // defer.h
     static rx_observable_t defer_(const observable_factory_t& factory);
     // empty.h
@@ -94,6 +96,8 @@ static rx_observable_t combine_latest(const rx_observable_t& sources...) { retur
 static rx_observable_t concat_with_iterable(const iterable_t& sources) { return obs::concat_with_iterable_(sources); }
 static rx_observable_t concat(const rx_observable_list_t& sources) { return obs::concat_(sources); }
 static rx_observable_t concat(const rx_observable_t& sources...) { return obs::concat_(sources); }
+// create.h
+static rx_observable_t create(const subscription_t& subscribe = nullptr) { return obs::create_(subscribe); }
 // defer.h
 static rx_observable_t defer(const observable_factory_t& factory) { return obs::defer_(factory); }
 // empty.h

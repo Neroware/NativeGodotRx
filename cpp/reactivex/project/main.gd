@@ -11,18 +11,40 @@ func _ready():
 #		.dispose_with(self)
 	
 	
+	var run = func():
+		print("Working...")
+		OS.delay_msec(1000)
+		print("Done!")
 	
-	RxObservable.Concat([
-		RxObservable.Timer(5.0),
-		RxObservable.From([1, 2, 3, 4]),
-		RxObservable.Just(5)
-	]).to_list() \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+	var nts = RxNewThreadScheduler.get()
 	
-	RxObservable.Just(42).repeat(16).buffer_with_count(3) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
+	var obs = RxObservable.Create(
+		func(observer : RxObserverBase, scheduler : RxSchedulerBase):
+			observer.on_next(":)")
+			observer.on_completed()
+			return RxDisposable.get(func(): return)
+	)
+	obs.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END"))
+	
+#	RxObservable.Just(0, nts) \
+#		.do_action(func(__): run.call()) \
+#		.subscribe(func(__):pass) \
+#		.dispose_with(self)
+	
+	
+	
+	
+#	RxObservable.Concat([
+#		RxObservable.Timer(5.0),
+#		RxObservable.From([1, 2, 3, 4]),
+#		RxObservable.Just(5)
+#	]).to_list() \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
+#	
+#	RxObservable.Just(42).repeat(16).buffer_with_count(3) \
+#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+#		.dispose_with(self)
 	
 #	get_tree().quit()
 	
