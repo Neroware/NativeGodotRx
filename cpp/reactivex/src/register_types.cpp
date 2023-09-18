@@ -24,6 +24,7 @@
 #include "internal/utils.h"
 // wrappers
 #include "wrapper/abstract.h"
+#include "wrapper/lock.h"
 #include "wrapper/scheduler.h"
 #include "wrapper/disposable.h"
 #include "wrapper/observer.h"
@@ -73,6 +74,9 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_abstract_class<rx::wrappers::RxObservable>();
 	ClassDB::register_abstract_class<rx::wrappers::RxSubjectBase>();
 	ClassDB::register_abstract_class<rx::wrappers::RxNotification>();
+	// lock
+	ClassDB::register_abstract_class<rx::wrappers::RxRecursiveLock>();
+	ClassDB::register_abstract_class<rx::wrappers::RxLock>();
 	// disposable
 	ClassDB::register_abstract_class<rx::disposable::RxAutoDisposer>();
 	ClassDB::register_abstract_class<rx::wrappers::RxBooleanDisposable>();
