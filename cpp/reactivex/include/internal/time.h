@@ -10,6 +10,8 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
+#include "exception/exception.h"
+
 namespace rx {
 
 class AbsoluteTime;
@@ -33,7 +35,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    AbsoluteTime() : AbsoluteTime(0.0) {}
+    AbsoluteTime() : AbsoluteTime(UTC_ZERO) {}
     AbsoluteTime(time_point_t t) : t(t){}
     AbsoluteTime(double t) : t(UTC_ZERO + std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t))) {
     }
@@ -70,7 +72,7 @@ protected:
 	static void _bind_methods();
 
 public:
-    RelativeTime() : RelativeTime(0.0) {}
+    RelativeTime() : RelativeTime(DELTA_ZERO) {}
     RelativeTime(time_delta_t dt) : dt(dt) {}
     RelativeTime(double t) : dt(DELTA_ZERO + std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(t))) {}
     ~RelativeTime() {}
@@ -111,7 +113,7 @@ protected:
     }
 
 public:
-    RxTimeStamp() {}
+    RxTimeStamp() { throw rx::exception::NotImplementedException(); }
     RxTimeStamp(Ref<AbsoluteTime> timestamp, const Variant& value)
         : _timestamp(timestamp), _value(value) {}
     inline static Ref<RxTimeStamp> from_abs(Ref<AbsoluteTime> timestamp, const Variant& value = Variant()) {
@@ -161,7 +163,7 @@ protected:
     }
 
 public:
-    RxTimeInterval() {}
+    RxTimeInterval() { throw rx::exception::NotImplementedException(); }
     RxTimeInterval(Ref<RelativeTime> interval, const Variant& value)
         : _interval(interval), _value(value) {}
     inline static Ref<RxTimeInterval> from_rel(Ref<RelativeTime> interval, const Variant& value = Variant()) {
