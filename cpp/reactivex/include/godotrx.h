@@ -20,6 +20,7 @@
 #include "scheduler/immediatescheduler.h"
 #include "scheduler/timeoutscheduler.h"
 #include "scheduler/scenetreetimeoutscheduler.h"
+#include "scheduler/godotsignalscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
 #define GDRX __GDRxSingleton__::singleton()
@@ -44,6 +45,7 @@ public:
     const std::shared_ptr<_CurrentThreadScheduler_Local> CurrentThreadScheduler_local_ = _CurrentThreadScheduler_Local::get();
     const std::shared_ptr<ImmediateScheduler> ImmediateScheduler_ = ImmediateScheduler::get();
     const std::shared_ptr<TimeoutScheduler> TimeoutScheduler_ = TimeoutScheduler::get();
+    const std::shared_ptr<GodotSignalScheduler> GodotSignalScheduler_ = GodotSignalScheduler::get();
     std::map<uint8_t, std::shared_ptr<SceneTreeTimeoutScheduler>> SceneTreeTimeoutScheduler_;
 
     /* Not Set */

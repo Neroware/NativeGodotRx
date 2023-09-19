@@ -28,6 +28,7 @@ namespace abstract {
     class SchedulerBase;
     class StartableBase;
     class SubjectBase;
+    class GodotSignalSchedulerBase;
 }
 namespace observable {
     class Observable;
@@ -59,6 +60,7 @@ namespace wrappers {
     class RxSchedulerBase;
     class RxStartableBase;
     class RxSubjectBase;
+    class RxGodotSignalSchedulerBase;
 
     class RxNotification;
     class RxNotificationOnNext;
@@ -94,6 +96,7 @@ RX_BASEPTR_DECLARE(rx::abstract::PeriodicSchedulerBase, periodic_scheduler_t, rx
 RX_BASEPTR_DECLARE(rx::abstract::SchedulerBase, scheduler_t, rx::wrappers::RxSchedulerBase)
 RX_BASEPTR_DECLARE(rx::abstract::StartableBase, startable_t, rx::wrappers::RxStartableBase)
 RX_BASEPTR_DECLARE(rx::abstract::SubjectBase, subject_t, rx::wrappers::RxSubjectBase)
+RX_BASEPTR_DECLARE(rx::abstract::GodotSignalSchedulerBase, gd_signal_scheduler_t, rx::wrappers::RxGodotSignalSchedulerBase)
 
 RX_BASEPTR_DECLARE(Notification, notification_t, rx::wrappers::RxNotification)
 RX_BASEPTR_DECLARE(NotificationOnNext, notification_on_next_t, rx::wrappers::RxNotificationOnNext)

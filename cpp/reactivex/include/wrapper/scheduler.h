@@ -10,6 +10,7 @@
 #include "scheduler/scenetreetimeoutscheduler.h"
 #include "scheduler/timeoutscheduler.h"
 #include "scheduler/eventloopscheduler.h"
+#include "scheduler/godotsignalscheduler.h"
 
 using namespace godot;
 using namespace rx::abstract;
@@ -195,6 +196,27 @@ public:
     }
 
 }; // END class RxTimeoutScheduler
+
+class RxGodotSignalScheduler : public RxGodotSignalSchedulerBase {
+    GDCLASS(RxGodotSignalScheduler, RxGodotSignalSchedulerBase)
+    RX_WRAPPER(RxGodotSignalScheduler, GodotSignalScheduler, RxGodotSignalSchedulerBase, GodotSignalSchedulerBase)
+
+protected:
+    static inline void _bind_methods() {
+        ClassDB::bind_static_method("RxGodotSignalScheduler", D_METHOD("get"), &RxGodotSignalScheduler::get);
+        ClassDB::bind_static_method("RxGodotSignalScheduler", D_METHOD("singleton"), &RxGodotSignalScheduler::singleton);
+        RX_WRAPPER_CAST_BINDS(RxGodotSignalScheduler)
+    }
+
+public:
+    inline static Ref<RxGodotSignalScheduler> get() {
+        return RxGodotSignalScheduler::wrap(GodotSignalScheduler::get());
+    }
+    inline static Ref<RxGodotSignalScheduler> singleton() {
+        return RxGodotSignalScheduler::wrap(GodotSignalScheduler::singleton());
+    }
+
+}; // END class RxGodotSignalScheduler
 
 } // END namespace wrappers
 } // END namespace rx

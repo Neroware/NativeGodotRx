@@ -13,6 +13,7 @@
 #include "abstract/scheduler.h"
 #include "abstract/startable.h"
 #include "abstract/subject.h"
+#include "abstract/godotsignalscheduler.h"
 
 #include "internal/time.h"
 #include "internal/utils.h"
@@ -148,6 +149,7 @@ protected:
         ClassDB::bind_method(D_METHOD("schedule_absolute", "duetime", "action", "state"), &RxSchedulerBase::schedule_absolute, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("schedule_relative", "duetime", "action", "state"), &RxSchedulerBase::schedule_relative, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("schedule_periodic", "duetime", "action", "state"), &RxSchedulerBase::schedule_periodic, DEFVAL(Variant()));
+        ClassDB::bind_method(D_METHOD("schedule_signal", "owner", "signal_name", "action", "state"), &RxSchedulerBase::schedule_signal, DEFVAL(VNULL));
         ClassDB::bind_method(D_METHOD("now"), &RxSchedulerBase::now);
         ClassDB::bind_method(D_METHOD("invoke_action", "action", "state"), &RxSchedulerBase::invoke_action, DEFVAL(Variant()));
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxSchedulerBase::equals);
@@ -162,6 +164,7 @@ public:
     Ref<RxDisposableBase> schedule_absolute(Ref<AbsoluteTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<RxDisposableBase> schedule_relative(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
     Ref<RxDisposableBase> schedule_periodic(Ref<RelativeTime> duetime, const Callable& action, const Variant& state = Variant());
+    Ref<RxDisposableBase> schedule_signal(const Object* owner, const StringName& signal_name, const Callable& action, const Variant& state = VNULL);
     Ref<AbsoluteTime> now();
     Ref<RxDisposableBase> invoke_action(const Callable& action, const Variant& state);
 
@@ -263,6 +266,26 @@ public:
     void on_next(const Variant& item);
     void on_error(Ref<RxError> error);
     void on_completed();
+
+};
+
+} // END namespace wrapper
+} // END namespace rx
+
+namespace rx {
+namespace wrappers {
+
+class RxGodotSignalSchedulerBase : public RefCounted {
+    GDCLASS(RxGodotSignalSchedulerBase, RefCounted)
+    RX_ABSTRACT_WRAPPER(RxGodotSignalSchedulerBase, GodotSignalSchedulerBase)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxGodotSignalSchedulerBase)
+        ClassDB::bind_method(D_METHOD("schedule_signal", "owner", "signal_name", "action", "state"), &RxGodotSignalSchedulerBase::schedule_signal, DEFVAL(VNULL));
+    }
+public:
+    Ref<RxDisposableBase> schedule_signal(const Object* owner, const StringName& signal_name, const Callable& action, const Variant& state = VNULL);
 
 };
 

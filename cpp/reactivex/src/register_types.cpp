@@ -74,6 +74,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxObservable>(true);
 	ClassDB::register_class<rx::wrappers::RxSubjectBase>(true);
 	ClassDB::register_class<rx::wrappers::RxNotification>(true);
+	ClassDB::register_class<rx::wrappers::RxGodotSignalSchedulerBase>(true);
 	// lock
 	ClassDB::register_class<rx::wrappers::RxRecursiveLock>(true);
 	ClassDB::register_class<rx::wrappers::RxLock>(true);
@@ -89,6 +90,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxCompositeDisposable>(true);
 	// scheduler
 	ClassDB::register_class<rx::scheduler::RxSceneTreeTimeout>();
+	ClassDB::register_class<rx::scheduler::RxSignalCallback>();
 	ClassDB::register_class<rx::wrappers::RxCatchScheduler>(true);
 	ClassDB::register_class<rx::wrappers::RxTrampolineScheduler>(true);
 	ClassDB::register_class<rx::wrappers::RxCurrentThreadScheduler>(true);
@@ -97,6 +99,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxNewThreadScheduler>(true);
 	ClassDB::register_class<rx::wrappers::RxSceneTreeTimeoutScheduler>(true);
 	ClassDB::register_class<rx::wrappers::RxTimeoutScheduler>(true);
+	ClassDB::register_class<rx::wrappers::RxGodotSignalScheduler>(true);
 	// observable
 	ClassDB::register_class<rx::wrappers::RxConnectableObservable>(true);
 	ClassDB::register_class<rx::wrappers::RxGroupedObservable>(true);

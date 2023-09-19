@@ -38,6 +38,7 @@ RX_BASEPTR_IMPL(periodic_scheduler_t, PeriodicSchedulerBase, RxPeriodicScheduler
 RX_BASEPTR_IMPL(scheduler_t, SchedulerBase, RxSchedulerBase)
 RX_BASEPTR_IMPL(startable_t, StartableBase, RxStartableBase)
 RX_BASEPTR_IMPL(subject_t, SubjectBase, RxSubjectBase)
+RX_BASEPTR_IMPL(gd_signal_scheduler_t, GodotSignalSchedulerBase, RxGodotSignalSchedulerBase)
 
 RX_BASEPTR_IMPL(notification_t, Notification, RxNotification)
 RX_BASEPTR_IMPL(notification_on_next_t, NotificationOnNext, RxNotificationOnNext)

@@ -131,6 +131,13 @@ Ref<RxDisposableBase> RxSchedulerBase::schedule_periodic(Ref<RelativeTime> dueti
     }
     return RxDisposableBase::wrap(periodic_scheduler->schedule_periodic(duetime->dt, periodic_action_cb(action), state));
 }
+Ref<RxDisposableBase> RxSchedulerBase::schedule_signal(const Object* owner, const StringName& signal_name, const Callable& action, const Variant& state) {
+    auto signal_scheduler = std::dynamic_pointer_cast<GodotSignalSchedulerBase>(this->_ptr);
+    if (!signal_scheduler) {
+        throw NotImplementedException();
+    }
+    return RxDisposableBase::wrap(signal_scheduler->schedule_signal(owner, signal_name, periodic_action_cb(action), state));
+}
 Ref<AbsoluteTime> RxSchedulerBase::now() {
     return memnew(AbsoluteTime(this->_ptr->now()));
 }
@@ -181,6 +188,11 @@ void RxSubjectBase::on_error(Ref<RxError> error) {
 }
 void RxSubjectBase::on_completed() {
     this->_ptr->on_completed();
+}
+
+
+Ref<RxDisposableBase> RxGodotSignalSchedulerBase::schedule_signal(const Object* owner, const StringName& signal_name, const Callable& action, const Variant& state) {
+    return RxDisposableBase::wrap(this->_ptr->schedule_signal(owner, signal_name, periodic_action_cb(action), state));
 }
 
 } // END namespace rx::wrappers
