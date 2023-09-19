@@ -304,3 +304,6 @@ Ref<RxObservable> zip_with_iterable(const Variant& iterable);
 /* CONNECTABLE */
 static Ref<RxObservable> add_ref(Ref<RxObservable> xs, Ref<RxRefCountDisposable> r);
 Ref<RxObservable> ref_count();
+
+/* GODOT-specifics */
+static Ref<RxObservable> from_signal(Object* owner, const StringName& signal_name, bool track_owner = false, Ref<RxSchedulerBase> scheduler = VNULL);

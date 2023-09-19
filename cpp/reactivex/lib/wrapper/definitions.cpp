@@ -674,6 +674,12 @@ Ref<RxObservable> RxObservable::ref_count() {
     return RX_PIPE(connectable::ref_count_());
 }
 
+// _fromsignal.h
+
+Ref<RxObservable> RxObservable::from_signal(Object* owner, const StringName& signal_name, bool track_owner, Ref<RxSchedulerBase> scheduler) {
+    return rx::observable::godot::from_signal_(owner, signal_name, track_owner, scheduler);
+}
+
 void RxObservable::_bind_methods() {
     /* Wrapper Casts */
     RX_WRAPPER_CAST_BINDS(RxObservable)
@@ -977,6 +983,10 @@ void RxObservable::_bind_methods() {
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("add_ref", "xs", "r"), &RxObservable::add_ref);
     ClassDB::bind_method(D_METHOD("ref_count"), &RxObservable::ref_count);
+
+    /* GODOT */
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("from_signal", "owner", "signal_name", "track_owner", "scheduler"), &RxObservable::from_signal, DEFVAL(false), DEFVAL(VNULL));
 }
 
 } // END namespace rx::wrappers

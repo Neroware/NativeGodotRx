@@ -35,12 +35,11 @@ func _ready():
 	#print("> ", s.get("get_name"))
 	
 	#print("foo owner: ", foo.get_object_id(), " :: ", instance_from_id(foo.get_object_id()))
-	var s : RxGodotSignalSchedulerBase = RxGodotSignalScheduler.singleton()
-	var d = s.schedule_signal(self, "foo", func(args = null, __ = null): print(">>> ", args))
-	d.dispose_with(self)
+	RxObservable.from_signal(self, "foo") \
+		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+		.dispose_with(self)
+	
 	foo.emit(4, 2)
-	d.dispose()
-	foo.emit(4, 3)
 	
 #	RxObservable.Just(0, nts) \
 #		.do_action(func(__): run.call()) \

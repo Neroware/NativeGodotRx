@@ -30,7 +30,7 @@ std::shared_ptr<GodotSignalScheduler> GodotSignalScheduler::singleton() {
 }
 
 disposable_t GodotSignalScheduler::schedule(const scheduled_action_t& action, const Variant& state) {
-    return CurrentThreadScheduler::singleton()->schedule(action, state);
+    return SceneTreeTimeoutScheduler::singleton()->schedule(action, state);
 }
 
 disposable_t GodotSignalScheduler::schedule_relative(const time_delta_t& duetime, const scheduled_action_t& action, const Variant& state) {

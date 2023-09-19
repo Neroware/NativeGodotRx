@@ -656,6 +656,14 @@ struct connectable {
 static rx_observable_t add_ref(const rx_observable_t& xs, const rx_rc_disposable_t& r) { return connectable::add_ref(xs, r); }
 static connectable_op_t ref_count() { return connectable::ref_count_(); }
 
+struct godot {
+
+    static rx_observable_t from_signal_(Object* owner, const StringName& signal_name, bool track_owner = false, const scheduler_t& scheduler = nullptr);
+
+}; // END struct godot
+
+static rx_observable_t from_signal(Object* owner, const StringName& signal_name, bool track_owner = false, const scheduler_t& scheduler = nullptr) { return godot::from_signal_(owner, signal_name, track_owner, scheduler); }
+
 } // END namespace observable
 } // END namespace rx::observable
 
