@@ -35,11 +35,16 @@ func _ready():
 	#print("> ", s.get("get_name"))
 	
 	#print("foo owner: ", foo.get_object_id(), " :: ", instance_from_id(foo.get_object_id()))
-	RxObservable.from_signal(self, "foo") \
+	RxObservable.FromSignal(self, "foo") \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
 	foo.emit(4, 2)
+	
+	var d = RxObservable.OnInputAsObservable(self) \
+		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END"))
+	RxObservable.Timer(3.0).subscribe(func(__): d.dispose()).dispose_with(self)
+	
 	
 #	RxObservable.Just(0, nts) \
 #		.do_action(func(__): run.call()) \

@@ -10,6 +10,9 @@
 
 #include "basic.h"
 
+#include <godot_cpp/classes/rendering_device.hpp>
+#include <godot_cpp/classes/http_request.hpp>
+
 using namespace godot;
 using namespace rx::abstract;
 using namespace rx::exception;

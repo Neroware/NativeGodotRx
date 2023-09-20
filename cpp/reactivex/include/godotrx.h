@@ -4,6 +4,8 @@
 #include <godot_cpp/core/binder_common.hpp>
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -23,7 +25,7 @@
 #include "scheduler/godotsignalscheduler.h"
 
 #define GDRX_SINGLETON_NAME "GDRx"
-#define GDRX __GDRxSingleton__::singleton()
+#define GDRX __GDRxSingleton__::get_singleton()
 // #define GDRX Ref<__GDRxSingleton__>(Engine::get_singleton()->get_singleton(GDRX_SINGLETON_NAME))
 
 using namespace godot;
@@ -64,7 +66,7 @@ protected:
     }
 
 public:
-    inline static __GDRxSingleton__* singleton() {
+    inline static __GDRxSingleton__* get_singleton() {
         return __GDRxSingleton__::p_instance;
     }
 
@@ -91,6 +93,13 @@ public:
     }
 
     ~__GDRxSingleton__(){}
+
+    inline Node* get_root() {
+        return this->get_tree()->get_root();
+    }
+    inline SceneTree* get_tree() {
+        return Object::cast_to<SceneTree>(Engine::get_singleton()->get_main_loop());
+    }
 
     inline Ref<RxIteratorBase> iter(const Variant& iterable) {
         return rx::iterator::iter(iterable);

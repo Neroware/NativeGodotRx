@@ -306,4 +306,46 @@ static Ref<RxObservable> add_ref(Ref<RxObservable> xs, Ref<RxRefCountDisposable>
 Ref<RxObservable> ref_count();
 
 /* GODOT-specifics */
-static Ref<RxObservable> from_signal(Object* owner, const StringName& signal_name, bool track_owner = false, Ref<RxSchedulerBase> scheduler = VNULL);
+// fromsignal.h
+static Ref<RxObservable> FromSignal(Object* owner, const StringName& signal_name, bool track_owner = false, Ref<RxSchedulerBase> scheduler = VNULL);
+// input.h
+static Ref<RxObservable> OnMouseDown();
+static Ref<RxObservable> OnMouseUp();
+static Ref<RxObservable> OnMouseDoubleClick();
+static Ref<RxObservable> OnMouseMotion();
+static Ref<RxObservable> RelativeMouseMovement();
+static Ref<RxObservable> OnKeyJustPressed(int key);
+static Ref<RxObservable> OnKeyPressed(int key);
+static Ref<RxObservable> OnKeyJustReleased(int key);
+static Ref<RxObservable> OnScreenTouch();
+static Ref<RxObservable> OnScreenDrag();
+static Ref<RxObservable> OnMidiEvent();
+static Ref<RxObservable> OnJoypadButtonDown();
+static Ref<RxObservable> OnJoypadButtonPressed();
+static Ref<RxObservable> OnJoypadButtonReleased();
+// inputaction.h
+static Ref<RxObservable> FromInputAction(const String& input_action, Ref<RxObservable> checks);
+// nodelifecycle.h
+static Ref<RxObservable> OnProcessAsObservable(Node* conn);
+static Ref<RxObservable> OnPhysicsAsObservable(Node* conn);
+static Ref<RxObservable> OnInputAsObservable(Node* conn);
+static Ref<RxObservable> OnShortcutInputAsObservable(Node* conn);
+static Ref<RxObservable> OnUnhandledInputAsObservable(Node* conn);
+static Ref<RxObservable> OnUnhandledKeyInputAsObservable(Node* conn);
+// computeshader.h
+static Ref<RxObservable> FromComputeShader(const String& shader_path, RenderingDevice* rd, const Vector3i& work_groups, const Array& uniform_sets = Array(), Ref<RxSchedulerBase> scheduler = VNULL);
+// framevents.h
+static Ref<RxObservable> OnIdleFrame();
+static Ref<RxObservable> OnPhysicsStep();
+static Ref<RxObservable> OnTreeChanged();
+static Ref<RxObservable> OnFramePostDraw();
+static Ref<RxObservable> OnFramePreDraw();
+// scenetree.h
+static Ref<RxObservable> OnTreeEnterAsObservable(Node* node);
+static Ref<RxObservable> OnTreeExitAsObservable(Node* node);
+static Ref<RxObservable> OnTreeExitingAsObservable(Node* node);
+// httprequest.h
+static Ref<RxObservable> FromHTTPRequest(const String& url, const Variant& request_data = "", bool raw = false, const String& encoding = "", HTTPRequest* requester = nullptr, const PackedStringArray& custom_headers = PackedStringArray(), bool tls_validate_domain = true, HTTPClient::Method method = HTTPClient::Method::METHOD_GET);
+// _processtimeinterval.h
+Ref<RxObservable> process_time_interval(double initial_time = 0.0);
+Ref<RxObservable> physics_time_interval(double initial_time = 0.0);

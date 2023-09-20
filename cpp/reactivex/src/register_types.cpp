@@ -22,6 +22,7 @@
 #include "internal/time.h"
 #include "internal/thread.h"
 #include "internal/utils.h"
+#include "internal/godot.h"
 // wrappers
 #include "wrapper/abstract.h"
 #include "wrapper/lock.h"
@@ -60,6 +61,14 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::RxThread>();
 	ClassDB::register_class<rx::RxMainThread>();
 	ClassDB::register_class<rx::NotSet>();
+	ClassDB::register_class<rx::RxNodeLifecycleListener>();
+	ClassDB::register_class<rx::RxListenerOnProcess>();
+	ClassDB::register_class<rx::RxListenerOnPhysicsProcess>();
+	ClassDB::register_class<rx::RxListenerOnInput>();
+	ClassDB::register_class<rx::RxListenerOnShortcutInput>();
+	ClassDB::register_class<rx::RxListenerOnUnhandledInput>();
+	ClassDB::register_class<rx::RxListenerOnUnhandledKeyInput>();
+	ClassDB::register_class<rx::RxHttpRequestResult>(true);
 	// abstract
 	ClassDB::register_class<rx::wrappers::RxLockBase>(true);
 	ClassDB::register_class<rx::wrappers::RxDisposableBase>(true);

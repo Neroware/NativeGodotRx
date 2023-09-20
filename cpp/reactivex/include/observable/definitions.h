@@ -1,6 +1,9 @@
 #ifndef RX_OBSERVABLE_DEFINITIONS_H
 #define RX_OBSERVABLE_DEFINITIONS_H
 
+#include <godot_cpp/classes/rendering_device.hpp>
+#include <godot_cpp/classes/http_request.hpp>
+
 #include "observable/observable.h"
 
 #include "internal/mapping.h"
@@ -658,11 +661,96 @@ static connectable_op_t ref_count() { return connectable::ref_count_(); }
 
 struct godot {
 
+    // fromsignal.h
     static rx_observable_t from_signal_(Object* owner, const StringName& signal_name, bool track_owner = false, const scheduler_t& scheduler = nullptr);
+    // input.h
+    static rx_observable_t on_mouse_down_();
+    static rx_observable_t on_mouse_up_();
+    static rx_observable_t on_mouse_double_click_();
+    static rx_observable_t on_mouse_motion_();
+    static rx_observable_t relative_mouse_movement_();
+    static rx_observable_t on_key_just_pressed_(int key);
+    static rx_observable_t on_key_pressed_(int key);
+    static rx_observable_t on_key_just_released_(int key);
+    static rx_observable_t on_screen_touch_();
+    static rx_observable_t on_screen_drag_();
+    static rx_observable_t on_midi_event_();
+    static rx_observable_t on_joypad_button_down_();
+    static rx_observable_t on_joypad_button_pressed_();
+    static rx_observable_t on_joypad_button_released_();
+    // nodelifecycle.h
+    static rx_observable_t on_process_as_observable_(Node* conn);
+    static rx_observable_t on_physics_process_as_observable_(Node* conn);
+    static rx_observable_t on_input_as_observable_(Node* conn);
+    static rx_observable_t on_shortcut_input_as_observable_(Node* conn);
+    static rx_observable_t on_unhandled_input_as_observable_(Node* conn);
+    static rx_observable_t on_unhandled_key_input_as_observable_(Node* conn);
+    // inputaction.h
+    static rx_observable_t from_input_action_(const String& input_action, const rx_observable_t& checks);
+    // computeshader.h
+    static rx_observable_t from_compute_shader_(const String& shader_path, RenderingDevice* rd, const Vector3i& work_groups, const Array& uniform_sets = Array(), const scheduler_t& scheduler = nullptr);
+    // frameevents.h
+    static rx_observable_t on_idle_frame_();
+    static rx_observable_t on_physics_step_();
+    static rx_observable_t on_tree_changed_();
+    static rx_observable_t on_frame_post_draw_();
+    static rx_observable_t on_frame_pre_draw_();
+    // scenetree.h
+    static rx_observable_t on_tree_enter_as_observable_(Node* node);
+    static rx_observable_t on_tree_exit_as_observable_(Node* node);
+    static rx_observable_t on_tree_exiting_as_observable_(Node* node);
+    // httprequest
+    static rx_observable_t from_http_request_(const String& url, const Variant& request_data = "", bool raw = false, const String& encoding = "", HTTPRequest* requester = nullptr, const PackedStringArray& custom_headers = PackedStringArray(), bool tls_validate_domain = true, HTTPClient::Method method = HTTPClient::Method::METHOD_GET);
+
+    // _processinterval.h
+    static observable_op_t process_time_interval_(double initial_time = 0.0);
+    static observable_op_t physics_time_interval_(double initial_time = 0.0);
 
 }; // END struct godot
 
+// fromsignal.h
 static rx_observable_t from_signal(Object* owner, const StringName& signal_name, bool track_owner = false, const scheduler_t& scheduler = nullptr) { return godot::from_signal_(owner, signal_name, track_owner, scheduler); }
+// input.h
+static rx_observable_t on_mouse_down() { return godot::on_mouse_down_(); }
+static rx_observable_t on_mouse_up() { return godot::on_mouse_up_(); }
+static rx_observable_t on_mouse_double_click() { return godot::on_mouse_double_click_(); }
+static rx_observable_t on_mouse_motion() { return godot::on_mouse_motion_(); }
+static rx_observable_t relative_mouse_movement() { return godot::relative_mouse_movement_(); }
+static rx_observable_t on_key_just_pressed(int key) { return godot::on_key_just_pressed_(key); }
+static rx_observable_t on_key_pressed(int key) { return godot::on_key_pressed_(key); }
+static rx_observable_t on_key_just_released(int key) { return godot::on_key_just_released_(key); }
+static rx_observable_t on_screen_touch() { return godot::on_screen_touch_(); }
+static rx_observable_t on_screen_drag() { return godot::on_screen_drag_(); }
+static rx_observable_t on_midi_event() { return godot::on_midi_event_(); }
+static rx_observable_t on_joypad_button_down() { return godot::on_joypad_button_down_(); }
+static rx_observable_t on_joypad_button_pressed() { return godot::on_joypad_button_pressed_(); }
+static rx_observable_t on_joypad_button_released() { return godot::on_joypad_button_released_(); }
+// nodelifecycle.h
+static rx_observable_t on_process_as_observable(Node* conn) { return godot::on_process_as_observable_(conn); }
+static rx_observable_t on_physics_process_as_observable(Node* conn) { return godot::on_physics_process_as_observable_(conn); }
+static rx_observable_t on_input_as_observable(Node* conn) { return godot::on_input_as_observable_(conn); }
+static rx_observable_t on_shortcut_input_as_observable(Node* conn) { return godot::on_shortcut_input_as_observable_(conn); }
+static rx_observable_t on_unhandled_input_as_observable(Node* conn) { return godot::on_unhandled_input_as_observable_(conn); }
+static rx_observable_t on_unhandled_key_input_as_observable(Node* conn) { return godot::on_unhandled_key_input_as_observable_(conn); }
+// inputaction.h
+static rx_observable_t from_input_action(const String& input_action, const rx_observable_t& checks) { return godot::from_input_action_(input_action, checks); }
+// computeshader.h
+static rx_observable_t from_compute_shader(const String& shader_path, RenderingDevice* rd, const Vector3i& work_groups, const Array& uniform_sets = Array(), const scheduler_t& scheduler = nullptr) { return godot::from_compute_shader_(shader_path, rd, work_groups, uniform_sets, scheduler); }
+// frameevents.h
+static rx_observable_t on_idle_frame() { return godot::on_idle_frame_(); }
+static rx_observable_t on_physics_step() { return godot::on_physics_step_(); }
+static rx_observable_t on_tree_changed() { return godot::on_tree_changed_(); }
+static rx_observable_t on_frame_post_draw() { return godot::on_frame_post_draw_(); }
+static rx_observable_t on_frame_pre_draw() { return godot::on_frame_pre_draw_(); }
+// scenetree.h
+static rx_observable_t on_tree_enter_as_observable(Node* node) { return godot::on_tree_enter_as_observable_(node); }
+static rx_observable_t on_tree_exit_as_observable(Node* node) { return godot::on_tree_exit_as_observable_(node); }
+static rx_observable_t on_tree_exiting_as_observable(Node* node) { return godot::on_tree_exiting_as_observable_(node); }
+// httprequest.h
+static rx_observable_t from_http_request(const String& url, const Variant& request_data = "", bool raw = false, const String& encoding = "", HTTPRequest* requester = nullptr, const PackedStringArray& custom_headers = PackedStringArray(), bool tls_validate_domain = true, HTTPClient::Method method = HTTPClient::Method::METHOD_GET) { return godot::from_http_request_(url, request_data, raw, encoding, requester, custom_headers, tls_validate_domain, method); }
+// _processinterval.h
+static observable_op_t process_time_interval(double initial_time = 0.0) { return godot::process_time_interval_(initial_time); }
+static observable_op_t physics_time_interval(double initial_time = 0.0) { return godot::physics_time_interval_(initial_time); }
 
 } // END namespace observable
 } // END namespace rx::observable

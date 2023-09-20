@@ -74,6 +74,13 @@ public:
         : rx_exception(what_, "ArgumentOutOfRangeError") {}
 };
 
+class HttpRequestFailedException : public rx_exception
+{
+public:
+    HttpRequestFailedException(const std::string& what_ = "A HTTP request has failed") 
+        : rx_exception(what_, "HttpRequestFailedException") {}
+};
+
 } // END namespace exception
 } // END namepsace rx
 

@@ -674,10 +674,118 @@ Ref<RxObservable> RxObservable::ref_count() {
     return RX_PIPE(connectable::ref_count_());
 }
 
-// _fromsignal.h
+/* Godot-specifics */
 
-Ref<RxObservable> RxObservable::from_signal(Object* owner, const StringName& signal_name, bool track_owner, Ref<RxSchedulerBase> scheduler) {
+// _fromsignal.h
+Ref<RxObservable> RxObservable::FromSignal(Object* owner, const StringName& signal_name, bool track_owner, Ref<RxSchedulerBase> scheduler) {
     return rx::observable::godot::from_signal_(owner, signal_name, track_owner, scheduler);
+}
+// input.h
+Ref<RxObservable> RxObservable::OnMouseDown() {
+    return rx::observable::godot::on_mouse_down_();
+}
+Ref<RxObservable> RxObservable::OnMouseUp() {
+    return rx::observable::godot::on_mouse_up_();
+}
+Ref<RxObservable> RxObservable::OnMouseDoubleClick() {
+    return rx::observable::godot::on_mouse_double_click_();
+}
+Ref<RxObservable> RxObservable::OnMouseMotion() {
+    return rx::observable::godot::on_mouse_motion_();
+}
+Ref<RxObservable> RxObservable::RelativeMouseMovement() {
+    return rx::observable::godot::relative_mouse_movement_();
+}
+Ref<RxObservable> RxObservable::OnKeyJustPressed(int key) {
+    return rx::observable::godot::on_key_just_pressed_(key);
+}
+Ref<RxObservable> RxObservable::OnKeyPressed(int key) {
+    return rx::observable::godot::on_key_pressed_(key);
+}
+Ref<RxObservable> RxObservable::OnKeyJustReleased(int key) {
+    return rx::observable::godot::on_key_just_released_(key);
+}
+Ref<RxObservable> RxObservable::OnScreenTouch() {
+    return rx::observable::godot::on_screen_touch_();
+}
+Ref<RxObservable> RxObservable::OnScreenDrag() {
+    return rx::observable::godot::on_screen_drag_();
+}
+Ref<RxObservable> RxObservable::OnMidiEvent() {
+    return rx::observable::godot::on_midi_event_();
+}
+Ref<RxObservable> RxObservable::OnJoypadButtonDown() {
+    return rx::observable::godot::on_joypad_button_down_();
+}
+Ref<RxObservable> RxObservable::OnJoypadButtonPressed() {
+    return rx::observable::godot::on_joypad_button_pressed_();
+}
+Ref<RxObservable> RxObservable::OnJoypadButtonReleased() {
+    return rx::observable::godot::on_joypad_button_released_();
+}
+// inputaction.h
+Ref<RxObservable> RxObservable::FromInputAction(const String& input_action, Ref<RxObservable> checks) {
+    return rx::observable::godot::from_input_action_(input_action, checks);
+}
+// nodelifecycle.h
+Ref<RxObservable> RxObservable::OnProcessAsObservable(Node* conn) {
+    return rx::observable::godot::on_process_as_observable_(conn);
+}
+Ref<RxObservable> RxObservable::OnPhysicsAsObservable(Node* conn) {
+    return rx::observable::godot::on_physics_process_as_observable_(conn);
+}
+Ref<RxObservable> RxObservable::OnInputAsObservable(Node* conn) {
+    return rx::observable::godot::on_input_as_observable_(conn);
+}
+Ref<RxObservable> RxObservable::OnShortcutInputAsObservable(Node* conn) {
+    return rx::observable::godot::on_shortcut_input_as_observable_(conn);
+}
+Ref<RxObservable> RxObservable::OnUnhandledInputAsObservable(Node* conn) {
+    return rx::observable::godot::on_unhandled_input_as_observable_(conn);
+}
+Ref<RxObservable> RxObservable::OnUnhandledKeyInputAsObservable(Node* conn) {
+    return rx::observable::godot::on_unhandled_key_input_as_observable_(conn);
+}
+// computeshader.h
+Ref<RxObservable> RxObservable::FromComputeShader(const String& shader_path, RenderingDevice* rd, const Vector3i& work_groups, const Array& uniform_sets, Ref<RxSchedulerBase> scheduler) {
+    return rx::observable::from_compute_shader(shader_path, rd, work_groups, uniform_sets, scheduler);
+}
+// framevents.h
+Ref<RxObservable> RxObservable::OnIdleFrame() {
+    return rx::observable::godot::on_idle_frame_();
+}
+Ref<RxObservable> RxObservable::OnPhysicsStep() {
+    return rx::observable::godot::on_physics_step_();
+}
+Ref<RxObservable> RxObservable::OnTreeChanged() {
+    return rx::observable::godot::on_tree_changed_();
+}
+Ref<RxObservable> RxObservable::OnFramePostDraw() {
+    return rx::observable::godot::on_frame_post_draw_();
+}
+Ref<RxObservable> RxObservable::OnFramePreDraw() {
+    return rx::observable::godot::on_frame_pre_draw_();
+}
+// scenetree.h
+Ref<RxObservable> RxObservable::OnTreeEnterAsObservable(Node* node) {
+    return rx::observable::godot::on_tree_enter_as_observable_(node);
+}
+Ref<RxObservable> RxObservable::OnTreeExitAsObservable(Node* node) {
+    return rx::observable::godot::on_tree_exit_as_observable_(node);
+}
+Ref<RxObservable> RxObservable::OnTreeExitingAsObservable(Node* node) {
+    return rx::observable::godot::on_tree_exiting_as_observable_(node);
+}
+// httprequest.h
+Ref<RxObservable> RxObservable::FromHTTPRequest(const String& url, const Variant& request_data, bool raw, const String& encoding, HTTPRequest* requester, const PackedStringArray& custom_headers, bool tls_validate_domain, HTTPClient::Method method)  {
+    return rx::observable::godot::from_http_request_(url, request_data, raw, encoding, requester, custom_headers, tls_validate_domain, method);   
+}
+// _processtimeinterval.h
+Ref<RxObservable> RxObservable::process_time_interval(double initial_time) {
+    return RX_PIPE(rx::observable::godot::process_time_interval_(initial_time));
+}
+Ref<RxObservable> RxObservable::physics_time_interval(double initial_time) {
+    return RX_PIPE(rx::observable::godot::physics_time_interval_(initial_time));
 }
 
 void RxObservable::_bind_methods() {
@@ -986,7 +1094,48 @@ void RxObservable::_bind_methods() {
 
     /* GODOT */
 
-    ClassDB::bind_static_method("RxObservable", D_METHOD("from_signal", "owner", "signal_name", "track_owner", "scheduler"), &RxObservable::from_signal, DEFVAL(false), DEFVAL(VNULL));
+    ClassDB::bind_static_method("RxObservable", D_METHOD("FromSignal", "owner", "signal_name", "track_owner", "scheduler"), &RxObservable::FromSignal, DEFVAL(false), DEFVAL(VNULL));
+    
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnMouseDown"), &RxObservable::OnMouseDown);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnMouseUp"), &RxObservable::OnMouseUp);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnMouseDoubleClick"), &RxObservable::OnMouseDoubleClick);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnMouseMotion"), &RxObservable::OnMouseMotion);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("RelativeMouseMovement"), &RxObservable::RelativeMouseMovement);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnKeyJustPressed", "key"), &RxObservable::OnKeyJustPressed);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnKeyPressed", "key"), &RxObservable::OnKeyPressed);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnKeyJustReleased", "key"), &RxObservable::OnKeyJustReleased);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnScreenTouch"), &RxObservable::OnScreenTouch);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnScreenDrag"), &RxObservable::OnScreenDrag);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnMidiEvent"), &RxObservable::OnMidiEvent);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnJoypadButtonDown"), &RxObservable::OnJoypadButtonDown);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnJoypadButtonPressed"), &RxObservable::OnJoypadButtonPressed);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnJoypadButtonReleased"), &RxObservable::OnJoypadButtonReleased);
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("FromInputAction", "input_action", "checks"), &RxObservable::FromInputAction);
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnProcessAsObservable", "conn"), &RxObservable::OnProcessAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnPhysicsAsObservable", "conn"), &RxObservable::OnPhysicsAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnInputAsObservable", "conn"), &RxObservable::OnInputAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnShortcutInputAsObservable", "conn"), &RxObservable::OnShortcutInputAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnUnhandledInputAsObservable", "conn"), &RxObservable::OnUnhandledInputAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnUnhandledKeyInputAsObservable", "conn"), &RxObservable::OnUnhandledKeyInputAsObservable);
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("FromComputeShader", "shader_path", "rd", "work_groups", "uniform_sets", "scheduler"), &RxObservable::FromComputeShader, DEFVAL(Array()), DEFVAL(VNULL));
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnIdleFrame"), &RxObservable::OnIdleFrame);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnPhysicsStep"), &RxObservable::OnPhysicsStep);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnTreeChanged"), &RxObservable::OnTreeChanged);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnFramePostDraw"), &RxObservable::OnFramePostDraw);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnFramePreDraw"), &RxObservable::OnFramePreDraw);
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnTreeEnterAsObservable", "conn"), &RxObservable::OnTreeEnterAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnTreeExitAsObservable", "conn"), &RxObservable::OnTreeExitAsObservable);
+    ClassDB::bind_static_method("RxObservable", D_METHOD("OnTreeExitingAsObservable", "conn"), &RxObservable::OnTreeExitingAsObservable);
+
+    ClassDB::bind_static_method("RxObservable", D_METHOD("FromHTTPRequest", "url", "request_data", "raw", "encoding", "requester", "custom_headers", "tls_validate_domain", "method"), &RxObservable::FromHTTPRequest, DEFVAL(""), DEFVAL(false), DEFVAL(""), DEFVAL(nullptr), DEFVAL(PackedStringArray()), DEFVAL(true), DEFVAL(HTTPClient::Method::METHOD_GET));
+
+    ClassDB::bind_method(D_METHOD("process_time_interval", "initial_time"), &RxObservable::process_time_interval, DEFVAL(0.0));
+    ClassDB::bind_method(D_METHOD("physics_time_interval", "initial_time"), &RxObservable::physics_time_interval, DEFVAL(0.0));
 }
 
 } // END namespace rx::wrappers
