@@ -22,11 +22,16 @@
         return "[" + String(#GodotType) + ":" + UtilityFunctions::str(              \
             reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";                    \
     }
+#define RX_WRAPPER_DEFAULT_CONSTRUCTOR(GodotType)                                   \
+public:                                                                             \
+    GodotType() {                                                                   \
+        throw NotImplementedException("called 'new' instead of 'get'");             \
+    }
+
 #define _RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                               \
 private:                                                                            \
     std::shared_ptr<AbstractType> _ptr;                                             \
 public:                                                                             \
-    GodotType() { throw NotImplementedException(); }                                \
     GodotType(const std::shared_ptr<AbstractType>& ptr) : _ptr(ptr) {}              \
     ~GodotType(){}                                                                  \
     inline static Ref<GodotType> wrap(const std::shared_ptr<AbstractType>& ptr) {   \
@@ -46,7 +51,6 @@ public:                                                                         
 private:                                                                            \
     std::shared_ptr<Type> _ptr;                                                     \
 public:                                                                             \
-    GodotType() { throw NotImplementedException(); }                                \
     GodotType(const std::shared_ptr<Type>& ptr)                                     \
         : _ptr(ptr), GodotBaseType(std::static_pointer_cast<BaseType>(ptr)) {}      \
     ~GodotType(){}                                                                  \
@@ -66,11 +70,13 @@ public:                                                                         
 
 
 #define RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                                \
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(GodotType)                                       \
     _RX_ABSTRACT_WRAPPER(GodotType, AbstractType)                                   \
     RX_WRAPPER_EQUALITY(GodotType)                                                  \
     RX_WRAPPER_TOSTRING(GodotType)                                                  
 
 #define RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                        \
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(GodotType)                                       \
     _RX_WRAPPER(GodotType, Type, GodotBaseType, BaseType)                           \
     RX_WRAPPER_TOSTRING(GodotType)                                                  
 

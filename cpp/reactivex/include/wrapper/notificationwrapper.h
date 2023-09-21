@@ -15,6 +15,7 @@ namespace rx::wrappers {
 
 class RxNotification : public RefCounted {
     GDCLASS(RxNotification, RefCounted)
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(RxNotification)
     _RX_ABSTRACT_WRAPPER(RxNotification, Notification)
     RX_WRAPPER_EQUALITY(RxNotification)
 
@@ -63,6 +64,7 @@ protected:
 
 class RxNotificationOnNext : public RxNotification {
     GDCLASS(RxNotificationOnNext, RxNotification)
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(RxNotificationOnNext)
     _RX_WRAPPER(RxNotificationOnNext, NotificationOnNext, RxNotification, Notification)
 
     inline String _to_string() const {
@@ -83,6 +85,7 @@ public:
 
 class RxNotificationOnError : public RxNotification {
     GDCLASS(RxNotificationOnError, RxNotification)
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(RxNotificationOnError)
     _RX_WRAPPER(RxNotificationOnError, NotificationOnError, RxNotification, Notification)
 
     inline String _to_string() const {
@@ -108,6 +111,7 @@ public:
 
 class RxNotificationOnCompleted : public RxNotification {
     GDCLASS(RxNotificationOnCompleted, RxNotification)
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(RxNotificationOnCompleted)
     _RX_WRAPPER(RxNotificationOnCompleted, NotificationOnCompleted, RxNotification, Notification)
 
     inline String _to_string() const {

@@ -45,6 +45,19 @@ namespace disposable {
 namespace subject {
     class Subject;
 }
+namespace templates {
+    class Disposable_;
+    class Iterable_;
+    class Iterator_;
+    class Lock_;
+    class Observable_;
+    class Observer_;
+    class PeriodicScheduler_;
+    class Scheduler_;
+    class Startable_;
+    class Subject_;
+    class GodotSignalScheduler_;
+}
 class Notification;
 class NotificationOnNext;
 class NotificationOnError;
@@ -82,6 +95,18 @@ namespace wrappers {
     class RxReadOnlyReactiveCollection;
 
     class RxSubject;
+
+    class RxDisposable_;
+    class RxIterable_;
+    class RxIterator_;
+    class RxLock_;
+    class RxObservable_;
+    class RxObserver_;
+    class RxPeriodicScheduler_;
+    class RxScheduler_;
+    class RxStartable_;
+    class RxSubject_;
+    class RxGodotSignalScheduler_;
 };
 
 #define RX_BASEPTR_DECLARE(type, ptr_type, wrapper, ...) \
@@ -124,6 +149,17 @@ RX_BASEPTR_DECLARE(rx::observable::ReactiveCollection, rx_reactive_collection_t,
 RX_BASEPTR_DECLARE(rx::observable::ReadOnlyReactiveCollection, rx_readonly_reactive_collection_t, rx::wrappers::RxReadOnlyReactiveCollection)
 
 RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t, rx::wrappers::RxSubject)
+
+RX_BASEPTR_DECLARE(rx::templates::Iterable_, iterable_, rx::wrappers::RxIterable_)
+RX_BASEPTR_DECLARE(rx::templates::Iterator_, iterator_, rx::wrappers::RxIterator_)
+RX_BASEPTR_DECLARE(rx::templates::Lock_, disposable_, rx::wrappers::RxLock_)
+RX_BASEPTR_DECLARE(rx::templates::Observable_, observable_, rx::wrappers::RxObservable_)
+RX_BASEPTR_DECLARE(rx::templates::Observer_, observer_, rx::wrappers::RxObserver_)
+RX_BASEPTR_DECLARE(rx::templates::PeriodicScheduler_, periodic_scheduler_, rx::wrappers::RxPeriodicScheduler_)
+RX_BASEPTR_DECLARE(rx::templates::Scheduler_, scheduler_, rx::wrappers::RxScheduler_)
+RX_BASEPTR_DECLARE(rx::templates::Startable_, startable_, rx::wrappers::RxStartable_)
+RX_BASEPTR_DECLARE(rx::templates::Subject_, subject_, rx::wrappers::RxSubject_)
+RX_BASEPTR_DECLARE(rx::templates::GodotSignalScheduler_, gd_signal_scheduler_, rx::wrappers::RxGodotSignalScheduler_)
 
 /* Containers */
 

@@ -93,6 +93,7 @@ protected:
 
 class RxReactiveProperty : public RxObservable {
     GDCLASS(RxReactiveProperty, RxObservable)
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(RxReactiveProperty)
     _RX_WRAPPER(RxReactiveProperty, ReactiveProperty, RxObservable, Observable)
 
 public:
@@ -203,6 +204,7 @@ protected:
 
 class RxReadOnlyReactiveProperty : public RxObservable {
     GDCLASS(RxReadOnlyReactiveProperty, RxObservable)
+    RX_WRAPPER_DEFAULT_CONSTRUCTOR(RxReadOnlyReactiveProperty)
     _RX_WRAPPER(RxReadOnlyReactiveProperty, ReadOnlyReactiveProperty, RxObservable, Observable)
 
 public:
