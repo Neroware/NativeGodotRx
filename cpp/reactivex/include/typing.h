@@ -34,6 +34,10 @@ namespace observable {
     class Observable;
     class ConnectableObservable;
     class GroupedObservable;
+    class ReactiveProperty;
+    class ReadOnlyReactiveProperty;
+    class ReactiveCollection;
+    class ReadOnlyReactiveCollection;
 }
 namespace disposable {
     class RefCountDisposable;
@@ -72,6 +76,10 @@ namespace wrappers {
     class RxObservable;
     class RxConnectableObservable;
     class RxGroupedObservable;
+    class RxReactiveProperty;
+    class RxReadOnlyReactiveProperty;
+    class RxReactiveCollection;
+    class RxReadOnlyReactiveCollection;
 
     class RxSubject;
 };
@@ -110,6 +118,10 @@ RX_BASEPTR_DECLARE(rx::observable::ConnectableObservable, rx_connectable_observa
     rx_connectable_observable_t(const rx_observable_t& obs);
 )
 RX_BASEPTR_DECLARE(rx::observable::GroupedObservable, rx_grouped_observable_t, rx::wrappers::RxGroupedObservable)
+RX_BASEPTR_DECLARE(rx::observable::ReactiveProperty, rx_reactive_property_t, rx::wrappers::RxReactiveProperty)
+RX_BASEPTR_DECLARE(rx::observable::ReadOnlyReactiveProperty, rx_readonly_reactive_property_t, rx::wrappers::RxReadOnlyReactiveProperty)
+RX_BASEPTR_DECLARE(rx::observable::ReactiveCollection, rx_reactive_collection_t, rx::wrappers::RxReactiveCollection)
+RX_BASEPTR_DECLARE(rx::observable::ReadOnlyReactiveCollection, rx_readonly_reactive_collection_t, rx::wrappers::RxReadOnlyReactiveCollection)
 
 RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t, rx::wrappers::RxSubject)
 

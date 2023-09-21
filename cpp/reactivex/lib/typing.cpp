@@ -53,6 +53,7 @@ RX_BASEPTR_IMPL(rx_connectable_observable_t, ConnectableObservable, RxConnectabl
         : rx_connectable_observable_t(std::dynamic_pointer_cast<ConnectableObservable>(obs)) {}
 )
 RX_BASEPTR_IMPL(rx_grouped_observable_t, GroupedObservable, RxGroupedObservable)
+RX_BASEPTR_IMPL(rx_reactive_property_t, ReactiveProperty, RxReactiveProperty)
 
 RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
 

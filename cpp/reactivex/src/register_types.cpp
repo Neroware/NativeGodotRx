@@ -112,6 +112,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	// observable
 	ClassDB::register_class<rx::wrappers::RxConnectableObservable>(true);
 	ClassDB::register_class<rx::wrappers::RxGroupedObservable>(true);
+	ClassDB::register_class<rx::wrappers::RxReactiveProperty>(true);
 	// observer
 	ClassDB::register_class<rx::wrappers::RxObserver>(true);
 	ClassDB::register_class<rx::wrappers::RxScheduledObserver>(true);

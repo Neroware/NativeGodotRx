@@ -4,67 +4,26 @@ var custom_signal_emitted = null
 
 signal foo(a : int, b : int)
 
+var _test : int = -1
+
+func set_test(test_ : int):
+	self._test = test_
+func get_test() -> int:
+	return self._test
+
+var Test : RxReactiveProperty = RxReactiveProperty.FromMember(self, "_test")
+
 func _process(__):
 	pass
 
 func _ready():
-	pass
-#	var main_thread = RxThread.get_current_thread()
-#	
-#	RxObservable.just(42, RxCurrentThreadScheduler.singleton()) \
-#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-#		.dispose_with(self)
-	
-	
-#	var run = func():
-#		print("Working...")
-#		OS.delay_msec(1000)
-#		print("Done!")
-#
-#	var nts = RxNewThreadScheduler.get()
-#
-#	var obs = RxObservable.Create(
-#		func(observer : RxObserverBase, scheduler : RxSchedulerBase):
-#			observer.on_next(":)")
-#			observer.on_completed()
-#			return RxDisposable.get(func(): return)
-#	)
-#	obs.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END"))
-	
-	#s = Array([foo, 0])[0]
-	#print("> ", s.get("get_name"))
-	
-	#print("foo owner: ", foo.get_object_id(), " :: ", instance_from_id(foo.get_object_id()))
-	RxObservable.FromSignal(self, "foo") \
+	Test \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
-	foo.emit(4, 2)
-	
-	var d = RxObservable.OnInputAsObservable(self) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END"))
-	RxObservable.Timer(3.0).subscribe(func(__): d.dispose()).dispose_with(self)
-	
-	
-#	RxObservable.Just(0, nts) \
-#		.do_action(func(__): run.call()) \
-#		.subscribe(func(__):pass) \
-#		.dispose_with(self)
-	
-	
-	
-	
-#	RxObservable.Concat([
-#		RxObservable.Timer(5.0),
-#		RxObservable.From([1, 2, 3, 4]),
-#		RxObservable.Just(5)
-#	]).to_list() \
-#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-#		.dispose_with(self)
-#	
-#	RxObservable.Just(42).repeat(16).buffer_with_count(3) \
-#		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-#		.dispose_with(self)
+	Test.Value = 43
+	print(">>>> Test: ", Test)
+	print(">>>> Test: ", self._test)
 	
 #	get_tree().quit()
 	

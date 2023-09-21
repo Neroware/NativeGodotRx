@@ -670,7 +670,7 @@ Ref<RxObservable> RxObservable::zip_with_iterable(const Variant& iterable) {
 Ref<RxObservable> RxObservable::add_ref(Ref<RxObservable> xs, Ref<RxRefCountDisposable> r) {
     return connectable::add_ref(xs, r);
 }
-Ref<RxObservable> RxObservable::ref_count() {
+Ref<RxObservable> RxConnectableObservable::ref_count() {
     return RX_PIPE(connectable::ref_count_());
 }
 
@@ -1090,7 +1090,6 @@ void RxObservable::_bind_methods() {
     /* CONNECTABLE */
 
     ClassDB::bind_static_method("RxObservable", D_METHOD("add_ref", "xs", "r"), &RxObservable::add_ref);
-    ClassDB::bind_method(D_METHOD("ref_count"), &RxObservable::ref_count);
 
     /* GODOT */
 
