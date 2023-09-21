@@ -54,6 +54,7 @@ RX_BASEPTR_IMPL(rx_connectable_observable_t, ConnectableObservable, RxConnectabl
 )
 RX_BASEPTR_IMPL(rx_grouped_observable_t, GroupedObservable, RxGroupedObservable)
 RX_BASEPTR_IMPL(rx_reactive_property_t, ReactiveProperty, RxReactiveProperty)
+RX_BASEPTR_IMPL(rx_readonly_reactive_property_t, ReadOnlyReactiveProperty, RxReadOnlyReactiveProperty)
 
 RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
 

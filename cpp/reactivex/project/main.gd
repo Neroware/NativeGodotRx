@@ -4,26 +4,37 @@ var custom_signal_emitted = null
 
 signal foo(a : int, b : int)
 
-var _test : int = -1
+var _test1 : int = 0
+var _test2 : int = 0
 
-func set_test(test_ : int):
-	self._test = test_
-func get_test() -> int:
-	return self._test
+var test1 : RxReactiveProperty = RxReactiveProperty.FromMember(self, "_test1")
+var Test1 : RxReadOnlyReactiveProperty = test1.to_readonly()
 
-var Test : RxReactiveProperty = RxReactiveProperty.FromMember(self, "_test")
+var test2 : RxReactiveProperty = RxReactiveProperty.FromMember(self, "_test2")
+var Test2 : RxReadOnlyReactiveProperty = test2.to_readonly()
 
 func _process(__):
 	pass
 
 func _ready():
-	Test \
+	#Test1 \
+	#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	#	.dispose_with(self)
+	
+	#RxReactiveProperty.Computed([Test1, Test2], func(args : Array): return args[0] + args[1]) \
+	#	.subscribe(func(i): print("ii> ", i), func(e): print("ERR: ", e), func(): print("END")) \
+	#	.dispose_with(self)
+	
+	RxReactiveProperty.Derived(Test2, func(value): return 2 * value) \
 		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
 		.dispose_with(self)
 	
-	Test.Value = 43
-	print(">>>> Test: ", Test)
-	print(">>>> Test: ", self._test)
+	test1.Value = 2
+	test2.Value = 40
+	
+	print(">>>> Test: ", Test1)
+	print(">>>> Test: ", self._test1)
+	
 	
 #	get_tree().quit()
 	

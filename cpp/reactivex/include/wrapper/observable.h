@@ -8,6 +8,7 @@
 #include "observable/connectableobservable.h"
 #include "observable/groupedobservable.h"
 #include "observable/reactiveproperty.h"
+#include "observable/readonlyreactiveproperty.h"
 
 #include "basic.h"
 
@@ -124,9 +125,9 @@ public:
     inline void _set_is_disposed(bool is_disposed_) {
         this->_ptr->is_disposed = is_disposed_;
     }
-    // inline Ref<RxReadOnlyReactiveProperty> to_readonly() {
-    //     return this->_ptr->to_readonly();
-    // }
+    inline Ref<RxReadOnlyReactiveProperty> to_readonly() {
+        return this->_ptr->to_readonly();
+    }
     inline static Ref<RxReactiveProperty> FromGetSet(
         const Callable& getter,
         const Callable& setter,
@@ -157,7 +158,24 @@ public:
             raise_latest_value_on_subscribe
         );
     }
-
+    inline static Ref<RxReadOnlyReactiveProperty> Derived(
+        Ref<RxReadOnlyReactiveProperty> p, 
+        const Callable& fn
+    ) {
+        return ReactiveProperty::derived(
+            p,
+            mapper_cb<Variant, Variant>(fn)
+        );
+    }
+    inline static Ref<RxReadOnlyReactiveProperty> Computed(
+        const Variant& sources,
+        const Callable& fn
+    ) {
+        return ReactiveProperty::computed(
+            mapper_cb<Variant, Array>(fn),
+            iterator::to_iterable(sources)
+        );
+    }
 
 protected:
     inline static void _bind_methods() {
@@ -165,6 +183,8 @@ protected:
         ClassDB::bind_static_method("RxReactiveProperty", D_METHOD("get", "initial_value", "distinct_until_changed", "raise_latest_value_on_subscribe", "source"), &RxReactiveProperty::get, DEFVAL(true), DEFVAL(true), DEFVAL(VNULL));
         ClassDB::bind_static_method("RxReactiveProperty", D_METHOD("FromGetSet", "getter", "setter", "distinct_until_changed", "raise_latest_value_on_subscribe"), &RxReactiveProperty::FromGetSet, DEFVAL(true), DEFVAL(true));
         ClassDB::bind_static_method("RxReactiveProperty", D_METHOD("FromMember", "target", "member_name", "convert", "convert_back", "distinct_until_changed", "raise_latest_value_on_subscribe"), &RxReactiveProperty::FromMember, DEFVAL(CBNULL), DEFVAL(CBNULL), DEFVAL(true), DEFVAL(true));
+        ClassDB::bind_static_method("RxReactiveProperty", D_METHOD("Derived", "p", "fn"), &RxReactiveProperty::Derived);
+        ClassDB::bind_static_method("RxReactiveProperty", D_METHOD("Computed", "sources", "fn"), &RxReactiveProperty::Computed);
 
         ClassDB::bind_method(D_METHOD("_set_value", "value"), &RxReactiveProperty::_set_value);
         ClassDB::bind_method(D_METHOD("_get_value"), &RxReactiveProperty::_get_value);
@@ -176,7 +196,57 @@ protected:
 
         ClassDB::bind_method(D_METHOD("equals", "other"), &RxReactiveProperty::equals);
         ClassDB::bind_method(D_METHOD("dispose"), &RxReactiveProperty::dispose);
+        ClassDB::bind_method(D_METHOD("to_readonly"), &RxReactiveProperty::to_readonly);
+    }
+};
 
+
+class RxReadOnlyReactiveProperty : public RxObservable {
+    GDCLASS(RxReadOnlyReactiveProperty, RxObservable)
+    _RX_WRAPPER(RxReadOnlyReactiveProperty, ReadOnlyReactiveProperty, RxObservable, Observable)
+
+public:
+    inline static Ref<RxReadOnlyReactiveProperty> get(Ref<RxObservable> source, const Variant& initial_value_, bool distinct_until_changed_ = true, bool raise_latest_value_on_subscribe_ = true) {
+        return ReadOnlyReactiveProperty::get(
+            source,
+            initial_value_,
+            distinct_until_changed_,
+            raise_latest_value_on_subscribe_
+        );
+    }
+    inline String _to_string() const {
+        return this->_ptr->to_string();
+    }
+    inline Variant _get_value() const {
+        return this->_ptr->_get_value();
+    }
+    inline bool equals(const Variant& other) const {
+        return this->_ptr->equals(other);
+    }
+    inline void dispose() {
+        this->_ptr->dispose();
+    }
+    inline bool _get_is_disposed() {
+        return this->_ptr->is_disposed;
+    }
+    inline void _set_is_disposed(bool is_disposed_) {
+        this->_ptr->is_disposed = is_disposed_;
+    }
+
+protected:
+    inline static void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxReadOnlyReactiveProperty)
+        ClassDB::bind_static_method("RxReadOnlyReactiveProperty", D_METHOD("get", "source", "initial_value", "distinct_until_changed", "raise_latest_value_on_subscribe"), &RxReadOnlyReactiveProperty::get, DEFVAL(true), DEFVAL(true));
+
+        ClassDB::bind_method(D_METHOD("_get_value"), &RxReadOnlyReactiveProperty::_get_value);
+        ADD_PROPERTY(PropertyInfo(Variant::VARIANT_MAX, "Value"), "", "_get_value");
+
+        ClassDB::bind_method(D_METHOD("_set_is_disposed", "is_disposed"), &RxReadOnlyReactiveProperty::_set_is_disposed);
+        ClassDB::bind_method(D_METHOD("_get_is_disposed"), &RxReadOnlyReactiveProperty::_get_is_disposed);
+        ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_disposed"), "_set_is_disposed", "_get_is_disposed");
+
+        ClassDB::bind_method(D_METHOD("equals", "other"), &RxReadOnlyReactiveProperty::equals);
+        ClassDB::bind_method(D_METHOD("dispose"), &RxReadOnlyReactiveProperty::dispose);
     }
 };
 

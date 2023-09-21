@@ -1,4 +1,7 @@
 #include "observable/reactiveproperty.h"
+#include "observable/definitions.h"
+
+#include "observable/readonlyreactiveproperty.h"
 
 #include "disposable/disposable.h"
 
@@ -88,7 +91,8 @@ void ReactiveProperty::dispose() {
 }
 
 rx_readonly_reactive_property_t ReactiveProperty::to_readonly() {
-    throw NotImplementedException();
+    return ReadOnlyReactiveProperty::get(getptr(), this->_latest_value, 
+        this->_distinct_until_changed, this->_raise_latest_value_on_subscribe);
 }
 
 rx_reactive_property_t ReactiveProperty::get(const Variant& initial_value_, bool distinct_until_changed_, bool raise_latest_value_on_subscribe_, const rx_observable_t& source) { 
@@ -154,20 +158,36 @@ rx_readonly_reactive_property_t ReactiveProperty::derived(
     const rx_readonly_reactive_property_t& p, 
     const mapper_t<Variant, Variant>& fn
 ) {
-    throw NotImplementedException();
+    return ReadOnlyReactiveProperty::get(
+        p->pipe(op::map(fn)),
+        fn(p->_get_value())
+    );
 }
 
 rx_readonly_reactive_property_t ReactiveProperty::computed(
-    const mapper_t<Variant, Variant>& fn,
+    const mapper_t<Variant, Array>& fn,
     const rx_readonly_reactive_property_t& p...
 ) {
-    throw NotImplementedException();
+    return computed(fn, {p});
 }
 rx_readonly_reactive_property_t ReactiveProperty::computed(
-    const mapper_t<Variant, Variant>& fn,
+    const mapper_t<Variant, Array>& fn,
     const RxList<rx_readonly_reactive_property_t>& p_list
 ) {
-    throw NotImplementedException();
+    observable_vec_t xs(p_list.begin(), p_list.end());
+
+    Array args;
+    for(const auto& rx : p_list) {
+        args.push_back(rx->_get_value());
+    }
+    Variant initial_value = fn(args);
+
+    return ReadOnlyReactiveProperty::get(
+        combine_latest(xs)->pipe(
+            op::map(fn)
+        ),
+        initial_value
+    );
 }
 
 } // END namespace rx::observable

@@ -56,11 +56,11 @@ public:
     );
 
     static rx_readonly_reactive_property_t computed(
-        const mapper_t<Variant, Variant>& fn,
+        const mapper_t<Variant, Array>& fn,
         const rx_readonly_reactive_property_t& p...
     );
     static rx_readonly_reactive_property_t computed(
-        const mapper_t<Variant, Variant>& fn,
+        const mapper_t<Variant, Array>& fn,
         const RxList<rx_readonly_reactive_property_t>& p_list
     );
 
