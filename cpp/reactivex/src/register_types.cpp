@@ -32,6 +32,7 @@
 #include "wrapper/observable.h"
 #include "wrapper/subject.h"
 #include "wrapper/notificationwrapper.h"
+#include "wrapper/templates.h"
 // disposable
 #include "disposable/autodisposer.h"
 // scheduler
@@ -128,6 +129,14 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxNotificationOnNext>(true);
 	ClassDB::register_class<rx::wrappers::RxNotificationOnError>(true);
 	ClassDB::register_class<rx::wrappers::RxNotificationOnCompleted>(true);
+	// templates
+	ClassDB::register_class<rx::wrappers::RxOnNext>();
+	ClassDB::register_class<rx::wrappers::RxOnError>();
+	ClassDB::register_class<rx::wrappers::RxOnCompleted>();
+	ClassDB::register_class<rx::wrappers::RxAction>();
+	ClassDB::register_class<rx::wrappers::RxPeriodicAction>();
+	ClassDB::register_class<rx::wrappers::RxSchedulerTemplate>();
+	ClassDB::register_class<rx::wrappers::RxScheduler_>();
 	// GodotRx Singleton
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 

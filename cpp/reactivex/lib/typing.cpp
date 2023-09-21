@@ -6,9 +6,11 @@
 #include "wrapper/observable.h"
 #include "wrapper/subject.h"
 #include "wrapper/notificationwrapper.h"
+#include "wrapper/scheduler.h"
 
 using namespace rx::abstract;
 using namespace rx::wrappers;
+using namespace rx::templates;
 using namespace godot;
 
 namespace rx {
@@ -57,6 +59,8 @@ RX_BASEPTR_IMPL(rx_reactive_property_t, ReactiveProperty, RxReactiveProperty)
 RX_BASEPTR_IMPL(rx_readonly_reactive_property_t, ReadOnlyReactiveProperty, RxReadOnlyReactiveProperty)
 
 RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
+
+RX_BASEPTR_IMPL(scheduler_, Scheduler_, RxScheduler_)
 
 // #define RX_WRAPPERREF_IMPL
 

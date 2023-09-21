@@ -12,10 +12,13 @@
 #include "scheduler/eventloopscheduler.h"
 #include "scheduler/godotsignalscheduler.h"
 
+#include "templates/scheduler.h"
+
 using namespace godot;
 using namespace rx::abstract;
 using namespace rx::exception;
 using namespace rx::scheduler;
+using namespace rx::templates;
 
 namespace rx {
 namespace wrappers {
@@ -217,6 +220,33 @@ public:
     }
 
 }; // END class RxGodotSignalScheduler
+
+class RxScheduler_ : public RxScheduler {
+    GDCLASS(RxScheduler_, RxScheduler)
+    _RX_WRAPPER(RxScheduler_, Scheduler_, RxScheduler, Scheduler)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxScheduler_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxScheduler_::_template);
+    }
+
+public:
+    RxScheduler_() 
+        : RxScheduler(std::static_pointer_cast<Scheduler>(Scheduler_::get())), 
+        _ptr(std::static_pointer_cast<Scheduler_>(RxScheduler::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxSchedulerTemplate> t) {
+        this->_ptr->_template(t);
+    }
+    
+
+}; // END class RxScheduler_
 
 } // END namespace wrappers
 } // END namespace rx

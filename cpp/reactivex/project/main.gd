@@ -2,39 +2,28 @@ extends "res://test_base.gd"
 
 var custom_signal_emitted = null
 
-signal foo(a : int, b : int)
-
-var _test1 : int = 0
-var _test2 : int = 0
-
-var test1 : RxReactiveProperty = RxReactiveProperty.FromMember(self, "_test1")
-var Test1 : RxReadOnlyReactiveProperty = test1.to_readonly()
-
-var test2 : RxReactiveProperty = RxReactiveProperty.FromMember(self, "_test2")
-var Test2 : RxReadOnlyReactiveProperty = test2.to_readonly()
-
-func _process(__):
-	pass
+class MyScheduler extends RxScheduler_:
+	
+	func _init():
+		self._template(_Methods.new())
+	
+	class _Methods extends RxSchedulerTemplate:
+		
+		func _now(this) -> AbsoluteTime:
+			return AbsoluteTime.from_seconds(4.2)
+		
+		func _schedule(this, action : RxAction, state) -> RxDisposableBase:
+			action.invoke(this, state)
+			return RxDisposable.get(func():print("END"))
+		
+		func _classname() -> StringName:
+			return "MyScheduler"
 
 func _ready():
-	#Test1 \
-	#	.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	#	.dispose_with(self)
-	
-	#RxReactiveProperty.Computed([Test1, Test2], func(args : Array): return args[0] + args[1]) \
-	#	.subscribe(func(i): print("ii> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-	#	.dispose_with(self)
-	
-	RxReactiveProperty.Derived(Test2, func(value): return 2 * value) \
-		.subscribe(func(i): print("i> ", i), func(e): print("ERR: ", e), func(): print("END")) \
-		.dispose_with(self)
-	
-	test1.Value = 2
-	test2.Value = 40
-	
-	print(">>>> Test: ", Test1)
-	print(">>>> Test: ", self._test1)
-	
+	var scheduler = MyScheduler.new()
+	scheduler.schedule(func(__ = null, ___ = null): print("I'm here!"))
+	#scheduler._template(MySchedulerTemplate.new())
+	print("t> ", scheduler.now().to_sec())
 	
 #	get_tree().quit()
 	
