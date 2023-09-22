@@ -10,7 +10,10 @@
 #include "subject/asyncsubject.h"
 #include "subject/replaysubject.h"
 
+#include "templates/subject.h"
+
 using namespace rx::subject;
+using namespace rx::templates;
 
 namespace rx {
 namespace wrappers {
@@ -142,6 +145,65 @@ public:
 
 
 }; // END class RxAsyncSubject
+
+
+/* ================================================================================ */
+//                                   TEMPLATES
+/* ================================================================================ */
+
+class RxSubject_ : public RxSubject {
+    GDCLASS(RxSubject_, RxSubject)
+    _RX_WRAPPER(RxSubject_, Subject_, RxSubject, Subject)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxSubject_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxSubject_::_template);
+    }
+
+public:
+    RxSubject_() 
+        : RxSubject(std::static_pointer_cast<Subject>(Subject_::get())), 
+        _ptr(std::static_pointer_cast<Subject_>(RxSubject::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxSubjectTemplate_> t) {
+        this->_ptr->_template(t);
+    }
+    
+}; // END class RxSubject_
+
+
+class RxSubjectBase_ : public RxSubjectBase {
+    GDCLASS(RxSubjectBase_, RxSubjectBase)
+    _RX_WRAPPER(RxSubjectBase_, SubjectBase_, RxSubjectBase, SubjectBase)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxSubjectBase_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxSubjectBase_::_template);
+    }
+
+public:
+    RxSubjectBase_() 
+        : RxSubjectBase(std::static_pointer_cast<SubjectBase>(SubjectBase_::get())), 
+        _ptr(std::static_pointer_cast<SubjectBase_>(RxSubjectBase::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxSubjectTemplate_Base_> t) {
+        this->_ptr->_template(t);
+    }
+    
+}; // END class RxSubject_
+
 
 } // END namespace wrappers
 } // END namespace rx

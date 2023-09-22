@@ -15,10 +15,13 @@
 #include <godot_cpp/classes/rendering_device.hpp>
 #include <godot_cpp/classes/http_request.hpp>
 
+#include "templates/observable.h"
+
 using namespace godot;
 using namespace rx::abstract;
 using namespace rx::exception;
 using namespace rx::observable;
+using namespace rx::templates;
 
 namespace rx {
 namespace wrappers {
@@ -251,6 +254,63 @@ protected:
         ClassDB::bind_method(D_METHOD("dispose"), &RxReadOnlyReactiveProperty::dispose);
     }
 };
+
+
+/* ================================================================================ */
+//                                   TEMPLATES
+/* ================================================================================ */
+
+class RxObservable_ : public RxObservable {
+    GDCLASS(RxObservable_, RxObservable)
+    _RX_WRAPPER(RxObservable_, Observable_, RxObservable, Observable)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxObservable_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxObservable_::_template);
+    }
+
+public:
+    RxObservable_() 
+        : RxObservable(std::static_pointer_cast<Observable>(Observable_::get())), 
+        _ptr(std::static_pointer_cast<Observable_>(RxObservable::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxObservableTemplate_> t) {
+        this->_ptr->_template(t);
+    }
+    
+}; // END class RxObservable_
+
+class RxObservableBase_ : public RxObservableBase {
+    GDCLASS(RxObservableBase_, RxObservableBase)
+    _RX_WRAPPER(RxObservableBase_, ObservableBase_, RxObservableBase, ObservableBase)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxObservableBase_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxObservableBase_::_template);
+    }
+
+public:
+    RxObservableBase_() 
+        : RxObservableBase(std::static_pointer_cast<ObservableBase>(ObservableBase_::get())), 
+        _ptr(std::static_pointer_cast<ObservableBase_>(RxObservableBase::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxObservableTemplate_Base_> t) {
+        this->_ptr->_template(t);
+    }
+    
+}; // END class RxObservableBase_
 
 
 } // END namespace wrapper

@@ -26,6 +26,9 @@
 // wrappers
 #include "wrapper/abstract.h"
 #include "wrapper/lock.h"
+#include "wrapper/iterable.h"
+#include "wrapper/iterator.h"
+#include "wrapper/startable.h"
 #include "wrapper/scheduler.h"
 #include "wrapper/disposable.h"
 #include "wrapper/observer.h"
@@ -142,6 +145,26 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxPeriodicScheduler_>();
 	ClassDB::register_class<rx::wrappers::RxGodotSignalSchedulerTemplate_>();
 	ClassDB::register_class<rx::wrappers::RxGodotSignalScheduler_>();
+	ClassDB::register_class<rx::wrappers::RxDisposableTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxDisposable_>();
+	ClassDB::register_class<rx::wrappers::RxIterableTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxIterable_>();
+	ClassDB::register_class<rx::wrappers::RxIteratorTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxIterator_>();
+	ClassDB::register_class<rx::wrappers::RxLockTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxLock_>();
+	ClassDB::register_class<rx::wrappers::RxStartableTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxStartable_>();
+	ClassDB::register_class<rx::wrappers::RxObservableTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxObservable_>();
+	ClassDB::register_class<rx::wrappers::RxObservableTemplate_Base_>();
+	ClassDB::register_class<rx::wrappers::RxObservableBase_>();
+	ClassDB::register_class<rx::wrappers::RxObserverTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxObserver_>();
+	ClassDB::register_class<rx::wrappers::RxSubjectTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxSubject_>();
+	ClassDB::register_class<rx::wrappers::RxSubjectTemplate_Base_>();
+	ClassDB::register_class<rx::wrappers::RxSubjectBase_>();
 	// GodotRx Singleton
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 

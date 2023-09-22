@@ -3,10 +3,16 @@
 #include "abstract/disposable.h"
 
 #include "wrapper/abstract.h"
+#include "wrapper/lock.h"
 #include "wrapper/observable.h"
+#include "wrapper/observer.h"
+#include "wrapper/disposable.h"
 #include "wrapper/subject.h"
 #include "wrapper/notificationwrapper.h"
 #include "wrapper/scheduler.h"
+#include "wrapper/startable.h"
+#include "wrapper/iterator.h"
+#include "wrapper/iterable.h"
 
 using namespace rx::abstract;
 using namespace rx::wrappers;
@@ -63,6 +69,16 @@ RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
 RX_BASEPTR_IMPL(scheduler_, Scheduler_, RxScheduler_)
 RX_BASEPTR_IMPL(periodic_scheduler_, PeriodicScheduler_, RxPeriodicScheduler_)
 RX_BASEPTR_IMPL(gd_signal_scheduler_, GodotSignalScheduler_, RxGodotSignalScheduler_)
+RX_BASEPTR_IMPL(disposable_, Disposable_, RxDisposable_)
+RX_BASEPTR_IMPL(lock_, Lock_, RxLock_)
+RX_BASEPTR_IMPL(iterable_, Iterable_, RxIterable_)
+RX_BASEPTR_IMPL(iterator_, Iterator_, RxIterator_)
+RX_BASEPTR_IMPL(startable_, Startable_, RxStartable_)
+RX_BASEPTR_IMPL(observable_, Observable_, RxObservable_)
+RX_BASEPTR_IMPL(observable_base_, ObservableBase_, RxObservableBase_)
+RX_BASEPTR_IMPL(observer_, Observer_, RxObserver_)
+RX_BASEPTR_IMPL(subject_, Subject_, RxSubject_)
+RX_BASEPTR_IMPL(subject_base_, SubjectBase_, RxSubjectBase_)
 
 // #define RX_WRAPPERREF_IMPL
 

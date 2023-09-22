@@ -10,7 +10,10 @@
 #include "observer/scheduledobserver.h"
 #include "observer/observeonobserver.h"
 
+#include "templates/observer.h"
+
 using namespace rx::observer;
+using namespace rx::templates;
 
 namespace rx {
 namespace wrappers {
@@ -162,6 +165,34 @@ public:
     inline bool _get_is_stopped() { return this->_ptr->is_stopped; }
 
 }; // END class RxObserveOnObserver
+
+
+class RxObserver_ : public RxObserverBase {
+    GDCLASS(RxObserver_, RxObserverBase)
+    _RX_WRAPPER(RxObserver_, Observer_, RxObserverBase, ObserverBase)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxObserver_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxObserver_::_template);
+    }
+
+public:
+    RxObserver_() 
+        : RxObserverBase(std::static_pointer_cast<ObserverBase>(Observer_::get())), 
+        _ptr(std::static_pointer_cast<Observer_>(RxObserverBase::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxObserverTemplate_> t) {
+        this->_ptr->_template(t);
+    }
+    
+}; // END class RxObserver_
+
 
 } // END namespace wrappers
 } // END namespace rx

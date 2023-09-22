@@ -51,11 +51,13 @@ namespace templates {
     class Iterator_;
     class Lock_;
     class Observable_;
+    class ObservableBase_;
     class Observer_;
     class PeriodicScheduler_;
     class Scheduler_;
     class Startable_;
     class Subject_;
+    class SubjectBase_;
     class GodotSignalScheduler_;
 }
 class Notification;
@@ -101,11 +103,13 @@ namespace wrappers {
     class RxIterator_;
     class RxLock_;
     class RxObservable_;
+    class RxObservableBase_;
     class RxObserver_;
     class RxPeriodicScheduler_;
     class RxScheduler_;
     class RxStartable_;
     class RxSubject_;
+    class RxSubjectBase_;
     class RxGodotSignalScheduler_;
 };
 
@@ -152,13 +156,16 @@ RX_BASEPTR_DECLARE(rx::subject::Subject, rx_subject_t, rx::wrappers::RxSubject)
 
 RX_BASEPTR_DECLARE(rx::templates::Iterable_, iterable_, rx::wrappers::RxIterable_)
 RX_BASEPTR_DECLARE(rx::templates::Iterator_, iterator_, rx::wrappers::RxIterator_)
-RX_BASEPTR_DECLARE(rx::templates::Lock_, disposable_, rx::wrappers::RxLock_)
+RX_BASEPTR_DECLARE(rx::templates::Disposable_, disposable_, rx::wrappers::RxDisposable_)
+RX_BASEPTR_DECLARE(rx::templates::Lock_, lock_, rx::wrappers::RxLock_)
 RX_BASEPTR_DECLARE(rx::templates::Observable_, observable_, rx::wrappers::RxObservable_)
+RX_BASEPTR_DECLARE(rx::templates::ObservableBase_, observable_base_, rx::wrappers::RxObservableBase_)
 RX_BASEPTR_DECLARE(rx::templates::Observer_, observer_, rx::wrappers::RxObserver_)
 RX_BASEPTR_DECLARE(rx::templates::PeriodicScheduler_, periodic_scheduler_, rx::wrappers::RxPeriodicScheduler_)
 RX_BASEPTR_DECLARE(rx::templates::Scheduler_, scheduler_, rx::wrappers::RxScheduler_)
 RX_BASEPTR_DECLARE(rx::templates::Startable_, startable_, rx::wrappers::RxStartable_)
 RX_BASEPTR_DECLARE(rx::templates::Subject_, subject_, rx::wrappers::RxSubject_)
+RX_BASEPTR_DECLARE(rx::templates::SubjectBase_, subject_base_, rx::wrappers::RxSubjectBase_)
 RX_BASEPTR_DECLARE(rx::templates::GodotSignalScheduler_, gd_signal_scheduler_, rx::wrappers::RxGodotSignalScheduler_)
 
 /* Containers */

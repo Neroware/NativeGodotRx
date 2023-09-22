@@ -12,9 +12,12 @@
 #include "disposable/serialdisposable.h"
 #include "disposable/singleassignmentdisposable.h"
 
+#include "templates/disposable.h"
+
 #include "internal/iterator.h"
 
 using namespace rx::disposable;
+using namespace rx::templates;
 
 namespace rx {
 namespace wrappers {
@@ -260,6 +263,37 @@ public:
     inline bool empty() { return this->_ptr->size() == 0; }
 
 }; // END class RxCompositeDisposable
+
+/* ================================================================================ */
+//                                   TEMPLATES
+/* ================================================================================ */
+
+class RxDisposable_ : public RxDisposableBase {
+    GDCLASS(RxDisposable_, RxDisposableBase)
+    _RX_WRAPPER(RxDisposable_, Disposable_, RxDisposableBase, DisposableBase)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxDisposable_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxDisposable_::_template);
+    }
+
+public:
+    RxDisposable_() 
+        : RxDisposableBase(std::static_pointer_cast<DisposableBase>(Disposable_::get())), 
+        _ptr(std::static_pointer_cast<Disposable_>(RxDisposableBase::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxDisposableTemplate_> t) {
+        this->_ptr->_template(t);
+    }
+    
+
+}; // END class RxDisposable_
 
 } // END namespace rx
 } // END namespace wrapper

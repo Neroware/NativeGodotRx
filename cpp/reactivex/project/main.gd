@@ -39,6 +39,14 @@ class MySignalScheduler extends RxGodotSignalScheduler_:
 			print(">>>> ", name_)
 			return RxDisposable.get(func():print("END"))
 
+class MyDisposable extends RxDisposable_:
+	func _init():
+		self._template(self._Methods.new())
+	
+	class _Methods extends RxDisposableTemplate_:
+		func _dispose(this):
+			print("yay!")
+
 func _ready():
 	var scheduler = MyScheduler.new()
 	scheduler.schedule(func(__ = null, ___ = null): print("I'm here!"))
@@ -50,6 +58,9 @@ func _ready():
 	
 	var gds = MySignalScheduler.new()
 	gds.schedule_signal(self, "tree_enter", func(__ = null): print("Aaaloha!"))
+	
+	var d = MyDisposable.new()
+	d.dispose()
 	
 #	get_tree().quit()
 	
