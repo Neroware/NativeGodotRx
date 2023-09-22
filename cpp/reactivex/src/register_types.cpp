@@ -79,6 +79,7 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxPeriodicSchedulerBase>(true);
 	ClassDB::register_class<rx::wrappers::RxStartableBase>(true);
 	ClassDB::register_class<rx::wrappers::RxScheduler>(true);
+	ClassDB::register_class<rx::wrappers::RxPeriodicScheduler>(true);
 	ClassDB::register_class<rx::wrappers::RxObserverBase>(true);
 	ClassDB::register_class<rx::wrappers::RxObservableBase>(true);
 	ClassDB::register_class<rx::wrappers::RxObservable>(true);
@@ -135,8 +136,12 @@ void initialize_reactivex_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<rx::wrappers::RxOnCompleted>();
 	ClassDB::register_class<rx::wrappers::RxAction>();
 	ClassDB::register_class<rx::wrappers::RxPeriodicAction>();
-	ClassDB::register_class<rx::wrappers::RxSchedulerTemplate>();
+	ClassDB::register_class<rx::wrappers::RxSchedulerTemplate_>();
 	ClassDB::register_class<rx::wrappers::RxScheduler_>();
+	ClassDB::register_class<rx::wrappers::RxPeriodicSchedulerTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxPeriodicScheduler_>();
+	ClassDB::register_class<rx::wrappers::RxGodotSignalSchedulerTemplate_>();
+	ClassDB::register_class<rx::wrappers::RxGodotSignalScheduler_>();
 	// GodotRx Singleton
 	ClassDB::register_abstract_class<rx::__GDRxSingleton__>();
 

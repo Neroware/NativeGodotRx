@@ -19,6 +19,11 @@ static Callable _get_template_method(const Variant& target, const StringName& me
     }
     return res;
 }
+static bool _has_template_method(const Variant& target, const StringName& method) {
+    bool r_valid = true;
+    target.get_named(method, r_valid);
+    return r_valid;
+}
 
 namespace wrappers {
 
@@ -98,17 +103,17 @@ public:
 };
 
 
-class RxSchedulerTemplate : public RefCounted {
-    GDCLASS(RxSchedulerTemplate, RefCounted)
+class RxSchedulerTemplate_ : public RefCounted {
+    GDCLASS(RxSchedulerTemplate_, RefCounted)
 
 protected:
     inline static void _bind_methods() {
-        BIND_VIRTUAL_METHOD(RxSchedulerTemplate, _now);
-        BIND_VIRTUAL_METHOD(RxSchedulerTemplate, _invoke_action);
-        BIND_VIRTUAL_METHOD(RxSchedulerTemplate, _schedule);
-        BIND_VIRTUAL_METHOD(RxSchedulerTemplate, _schedule_relative);
-        BIND_VIRTUAL_METHOD(RxSchedulerTemplate, _schedule_absolute);
-        BIND_VIRTUAL_METHOD(RxSchedulerTemplate, _classname);
+        BIND_VIRTUAL_METHOD(RxSchedulerTemplate_, _now);
+        BIND_VIRTUAL_METHOD(RxSchedulerTemplate_, _invoke_action);
+        BIND_VIRTUAL_METHOD(RxSchedulerTemplate_, _schedule);
+        BIND_VIRTUAL_METHOD(RxSchedulerTemplate_, _schedule_relative);
+        BIND_VIRTUAL_METHOD(RxSchedulerTemplate_, _schedule_absolute);
+        BIND_VIRTUAL_METHOD(RxSchedulerTemplate_, _classname);
     }
 public:
     virtual Ref<AbsoluteTime> _now(Ref<RxSchedulerBase> self) {
@@ -131,15 +136,28 @@ public:
     }
 };
 
-class RxPeriodicSchedulerTemplate : public RxSchedulerTemplate {
-    GDCLASS(RxPeriodicSchedulerTemplate, RxSchedulerTemplate)
+class RxPeriodicSchedulerTemplate_ : public RxSchedulerTemplate_ {
+    GDCLASS(RxPeriodicSchedulerTemplate_, RxSchedulerTemplate_)
 
 protected:
     inline static void _bind_methods() {
-        BIND_VIRTUAL_METHOD(RxPeriodicSchedulerTemplate, _schedule_periodic);
+        BIND_VIRTUAL_METHOD(RxPeriodicSchedulerTemplate_, _schedule_periodic);
     }
 public:
-    Ref<RxDisposableBase> _schedule_periodic(Ref<RxSchedulerBase> self, Ref<RelativeTime> duetime, Ref<RxPeriodicAction> action, const Variant& state = Variant()) {
+    Ref<RxDisposableBase> _schedule_periodic(Ref<RxPeriodicSchedulerBase> self, Ref<RelativeTime> duetime, Ref<RxPeriodicAction> action, const Variant& state = Variant()) {
+        throw NotImplementedException();
+    }
+};
+
+class RxGodotSignalSchedulerTemplate_ : public RxSchedulerTemplate_ {
+    GDCLASS(RxGodotSignalSchedulerTemplate_, RxSchedulerTemplate_)
+
+protected:
+    inline static void _bind_methods() {
+        BIND_VIRTUAL_METHOD(RxGodotSignalSchedulerTemplate_, _schedule_signal);
+    }
+public:
+    Ref<RxDisposableBase> _schedule_signal(Ref<RxGodotSignalSchedulerBase> self, Object* owner, const StringName& signal, Ref<RxPeriodicAction> action, const Variant& state = Variant()) {
         throw NotImplementedException();
     }
 };

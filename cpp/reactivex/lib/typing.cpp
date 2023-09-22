@@ -61,6 +61,8 @@ RX_BASEPTR_IMPL(rx_readonly_reactive_property_t, ReadOnlyReactiveProperty, RxRea
 RX_BASEPTR_IMPL(rx_subject_t, Subject, RxSubject)
 
 RX_BASEPTR_IMPL(scheduler_, Scheduler_, RxScheduler_)
+RX_BASEPTR_IMPL(periodic_scheduler_, PeriodicScheduler_, RxPeriodicScheduler_)
+RX_BASEPTR_IMPL(gd_signal_scheduler_, GodotSignalScheduler_, RxGodotSignalScheduler_)
 
 // #define RX_WRAPPERREF_IMPL
 

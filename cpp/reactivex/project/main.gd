@@ -5,9 +5,9 @@ var custom_signal_emitted = null
 class MyScheduler extends RxScheduler_:
 	
 	func _init():
-		self._template(_Methods.new())
+		self._template(self._Methods.new())
 	
-	class _Methods extends RxSchedulerTemplate:
+	class _Methods extends RxSchedulerTemplate_:
 		
 		func _now(this) -> AbsoluteTime:
 			return AbsoluteTime.from_seconds(4.2)
@@ -19,11 +19,37 @@ class MyScheduler extends RxScheduler_:
 		func _classname() -> StringName:
 			return "MyScheduler"
 
+class MyPeriodicScheduler extends RxPeriodicScheduler_:
+	
+	func _init():
+		self._template(self._Methods.new())
+	
+	class _Methods extends RxPeriodicSchedulerTemplate_:
+		func _schedule_periodic(this, period : RelativeTime, action : RxPeriodicAction, state) -> RxDisposableBase:
+			action.invoke()
+			action.invoke()
+			return RxDisposable.get(func():print("END"))
+
+class MySignalScheduler extends RxGodotSignalScheduler_:
+	func _init():
+		self._template(self._Methods.new())
+	
+	class _Methods extends RxGodotSignalSchedulerTemplate_:
+		func _schedule_signal(this, owner_, name_, action : RxPeriodicAction, state) -> RxDisposableBase:
+			print(">>>> ", name_)
+			return RxDisposable.get(func():print("END"))
+
 func _ready():
 	var scheduler = MyScheduler.new()
 	scheduler.schedule(func(__ = null, ___ = null): print("I'm here!"))
+	
+	var pscheduler = MyPeriodicScheduler.new()
+	pscheduler.schedule_periodic(RelativeTime.from_seconds(0.0), func(__ = null): print("I'm here twice!"))
 	#scheduler._template(MySchedulerTemplate.new())
 	print("t> ", scheduler.now().to_sec())
+	
+	var gds = MySignalScheduler.new()
+	gds.schedule_signal(self, "tree_enter", func(__ = null): print("Aaaloha!"))
 	
 #	get_tree().quit()
 	

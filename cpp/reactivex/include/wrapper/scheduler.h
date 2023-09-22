@@ -35,6 +35,18 @@ public:
 
 }; // END class RxScheduler
 
+class RxPeriodicScheduler : public RxPeriodicSchedulerBase {
+    GDCLASS(RxPeriodicScheduler, RxPeriodicSchedulerBase)
+    RX_WRAPPER(RxPeriodicScheduler, PeriodicScheduler, RxPeriodicSchedulerBase, PeriodicSchedulerBase)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxPeriodicScheduler)
+    }
+public:
+
+}; // END class RxPeriodicScheduler
+
 class RxCatchScheduler : public RxScheduler {
     GDCLASS(RxCatchScheduler, RxScheduler)
     RX_WRAPPER(RxCatchScheduler, CatchScheduler, RxScheduler, Scheduler)
@@ -221,6 +233,10 @@ public:
 
 }; // END class RxGodotSignalScheduler
 
+/* ================================================================================ */
+//                                   TEMPLATES
+/* ================================================================================ */
+
 class RxScheduler_ : public RxScheduler {
     GDCLASS(RxScheduler_, RxScheduler)
     _RX_WRAPPER(RxScheduler_, Scheduler_, RxScheduler, Scheduler)
@@ -241,12 +257,66 @@ public:
             reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
     }
     
-    inline void _template(Ref<RxSchedulerTemplate> t) {
+    inline void _template(Ref<RxSchedulerTemplate_> t) {
         this->_ptr->_template(t);
     }
     
 
 }; // END class RxScheduler_
+
+class RxPeriodicScheduler_ : public RxPeriodicScheduler {
+    GDCLASS(RxPeriodicScheduler_, RxPeriodicScheduler)
+    _RX_WRAPPER(RxPeriodicScheduler_, PeriodicScheduler_, RxPeriodicScheduler, PeriodicScheduler)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxPeriodicScheduler_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxPeriodicScheduler_::_template);
+    }
+
+public:
+    RxPeriodicScheduler_() 
+        : RxPeriodicScheduler(std::static_pointer_cast<PeriodicScheduler>(PeriodicScheduler_::get())), 
+        _ptr(std::static_pointer_cast<PeriodicScheduler_>(RxPeriodicScheduler::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxPeriodicSchedulerTemplate_> t) {
+        this->_ptr->_template(t);
+    }
+    
+
+}; // END class RxPeriodicScheduler_
+
+class RxGodotSignalScheduler_ : public RxGodotSignalScheduler {
+    GDCLASS(RxGodotSignalScheduler_, RxGodotSignalScheduler)
+    _RX_WRAPPER(RxGodotSignalScheduler_, GodotSignalScheduler_, RxGodotSignalScheduler, GodotSignalScheduler)
+
+protected:
+    static inline void _bind_methods() {
+        RX_WRAPPER_CAST_BINDS(RxGodotSignalScheduler_)
+        ClassDB::bind_method(D_METHOD("_template", "t"), &RxGodotSignalScheduler_::_template);
+    }
+
+public:
+    RxGodotSignalScheduler_() 
+        : RxGodotSignalScheduler(std::static_pointer_cast<GodotSignalScheduler>(GodotSignalScheduler_::get())), 
+        _ptr(std::static_pointer_cast<GodotSignalScheduler_>(RxGodotSignalScheduler::getptr())) {}
+    
+    inline String _to_string() const {
+        return "[" + this->_ptr->classname() + ":" + UtilityFunctions::str(
+            reinterpret_cast<uint64_t>(this->_ptr.get())) + "]";
+    }
+    
+    inline void _template(Ref<RxGodotSignalSchedulerTemplate_> t) {
+        this->_ptr->_template(t);
+    }
+    
+
+}; // END class RxPeriodicScheduler_
 
 } // END namespace wrappers
 } // END namespace rx
